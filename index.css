@@ -289,3 +289,11 @@ body{
   background: #D64045;
   border-radius: 5px;
 }
+.owner{
+    color: #ffffff59;
+    font-size: 14px;
+    position: absolute;
+    bottom: 10px;
+    left: 13px;
+    font-family: monospace;
+}
