@@ -1,4 +1,4 @@
-var password;
+/*var password;
 
 
 var pass2="dlngr4768";
@@ -47,7 +47,7 @@ else
 {
 (window.location='https://dlngrofficial.free.nf/error.html');
 }
-
+*/
 
 
 // We enclose this in window.onload.
@@ -72,18 +72,22 @@ window.onload = function() {
   // We're going to use oBjEcT OrIeNtEd PrOgRaMmInG. Lol
   class MEME_CHAT{
     // Home() is used to create the home page
-    home(){
-      // First clear the body before adding in
-      // a title and the join form
-      document.body.innerHTML = ''
-      this.create_title()
-      this.create_join_form()
-    }
+ home(){
+  document.body.innerHTML = ''
+  addBackgroundVideo()
+  this.create_title()
+  this.create_join_form()
+}
+
     // chat() is used to create the chat page
-    chat(){
-      this.create_title()
-      this.create_chat()
-    }
+    
+     chat(){
+  addBackgroundVideo()
+  this.create_title()
+  this.create_chat()
+}
+
+    
     // create_title() is used to create the title
     create_title(){
       // This is the title creator. 🎉
@@ -127,11 +131,37 @@ window.onload = function() {
       join_input.onkeyup  = function(){
         if(join_input.value.length > 0){
           join_button.classList.add('enabled')
-          join_button.onclick = function(){
-            parent.save_name(join_input.value)
-            join_container.remove()
-            parent.create_chat()
-          }
+       join_button.onclick = function () {
+  const name = join_input.value.trim()
+  const lowerName = name.toLowerCase()
+
+  for (let i = 0; i < PROTECTED_NAMES.length; i++) {
+    const user = PROTECTED_NAMES[i]
+
+    if (lowerName.includes(user.keyword)) {
+      const enteredPassword = prompt(
+        `The name "${user.keyword}" is protected.\nEnter password to continue:`
+      )
+
+      if (enteredPassword !== user.password) {
+        alert("❌ Wrong password. Access denied.")
+        return
+      }
+
+      break // correct password, stop checking
+    }
+  }
+
+  // Check if name contains "udit" (case-insensitive)
+
+
+  // If verified or not required
+  parent.save_name(name)
+  join_container.remove()
+  parent.create_chat()
+}
+
+          
         }else{
           join_button.classList.remove('enabled')
         }
@@ -336,3 +366,32 @@ window.onload = function() {
   }
 }
 
+
+
+
+
+
+function addBackgroundVideo() {
+  if (document.querySelector('.video-bg')) return
+
+  const videoBg = document.createElement('div')
+  videoBg.className = 'video-bg'
+
+  videoBg.innerHTML = `
+    <video autoplay muted loop playsinline>
+      <source src="pink-puff-clouds.1920x1080.mp4" type="video/mp4">
+    </video>
+  `
+
+  document.body.appendChild(videoBg)
+}
+
+
+
+
+const PROTECTED_NAMES = [
+  { keyword: "udit", password: "dlngrreturn" },
+  { keyword: "dlngr", password: "dlngrreturn" },
+  { keyword: "moderator", password: "mod4768" },
+  { keyword: "admin", password: "admin999" }
+]
