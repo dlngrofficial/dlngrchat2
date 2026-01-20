@@ -146,7 +146,19 @@ window.onload = function() {
 
       var chat_input_send = document.createElement('button')
       chat_input_send.setAttribute('id', 'chat_input_send')
+      chat_input_send.innerHTML = `
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+fill="currentColor" viewBox="0 0 16 16">
+  <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855l-.452.18a.5.5 0 0 0-.082.887l.41.26 4.995 3.178
+  3.178 4.995.26.41a.5.5 0 0 0 .886-.083l6-15z"/>
+</svg>
+`
+
       chat_input_send.setAttribute('disabled', true)
+
+      chat_input_send.style.display = "flex"
+chat_input_send.style.opacity = "1"
+
 
       var chat_input = document.createElement('input')
       chat_input.setAttribute('id', 'chat_input')
@@ -180,7 +192,28 @@ window.onload = function() {
       }
 
       chat_input_container.append(chat_input, chat_input_send)
-      chat_inner_container.append(chat_content_container, chat_input_container)
+
+      // LOGOUT BUTTON
+var chat_logout_container = document.createElement('div')
+chat_logout_container.setAttribute('id', 'chat_logout_container')
+
+var chat_logout = document.createElement('button')
+chat_logout.setAttribute('id', 'chat_logout')
+chat_logout.textContent = `${parent.get_name()} • logout`
+
+chat_logout.onclick = function(){
+  localStorage.removeItem('name')
+  location.reload()
+}
+
+chat_logout_container.append(chat_logout)
+
+     chat_inner_container.append(
+  chat_content_container,
+  chat_input_container,
+  chat_logout_container
+)
+
       chat_container.append(chat_inner_container)
       document.body.append(chat_container)
 
