@@ -227,16 +227,12 @@ chat_logout_container.append(chat_logout)
 
     send_message(message){
       var parent = this
-      db.ref('chats/').once('value', function(message_object) {
-        var index = parseFloat(message_object.numChildren()) + 1
-        db.ref('chats/' + `message_${index}`).set({
-          name: parent.get_name(),
-          message: message,
-          index: index
-        }).then(function(){
-          parent.refresh_chat()
-        })
-      })
+db.ref('chats').push({
+  name: parent.get_name(),
+  message: message,
+  timestamp: Date.now()
+})
+
     }
 
     get_name(){
@@ -251,7 +247,9 @@ chat_logout_container.append(chat_logout)
     refresh_chat(){
       var chat_content_container = document.getElementById('chat_content_container')
 
-      db.ref('chats/').on('value', function(messages_object) {
+      db.ref('chats')
+  .orderByChild('timestamp')
+  .on('value', function(messages_object) {
         chat_content_container.innerHTML = ''
         if(messages_object.numChildren() == 0) return
 
@@ -348,7 +346,5 @@ const USER_ROLES = [
   { keyword: "vaibhav", tag: "ADMIN", color: "#a855f7" },
   { keyword: "dlngr", tag: "VERIFIED", color: "#22c55e" },
   { keyword: "pranadh", tag: "VIP", color: "#2ce90fff" },
-  { keyword: "harshit", tag: "MVP", color: "#e1ed0eff" }
+  { keyword: "harshit", tag: "MVP", color: "#0bdab0ff" }
 ]
-
-
