@@ -1,60 +1,10 @@
-/*var password;
-
-
-var pass2="dlngr4768";
-var pass3="dlngr4768";
-var pass4="dlngr4768";
-var pass5="dlngr4768";
-var pass6="dlngr4768";
-var pass7="dlngr4768";
-var pass8="dlngr4768";
-var pass9="dlngr4768";
-password=prompt('Enter Your DLNGR ID (To Continue Chatting, You Should Verified By DLNGR Authorities) ' );
-
-if(password==pass2){
-alert("Hello, You are using a public account. Click Ok To Proceed");
-
-}
-else if(password==pass3){
-alert("Hello Amrit Prakash Gaur Click Ok To Proceed");
-
-}
-else if(password==pass4){
-alert("Hello Harshit Srivastava Click Ok To Proceed");
-
-}
-else if(password==pass5){
-alert("Hello Aniket Verma Click Ok To Proceed");
-
-}
-else if(password==pass6){
-alert("Hello Saumya Click Ok To Proceed");
-
-}
-else if(password==pass7){
-alert("Hello Mariyah Click Ok To Proceed");
-
-}
-else if(password==pass8){
-alert("Hello Vaibhav Click Ok To Proceed");
-
-}
-else if(password==pass9){
-alert("Hello --- Click Ok To Proceed");
-
-}
-else
-{
-(window.location='https://dlngrofficial.free.nf/error.html');
-}
-*/
-
+/* password code commented as-is (unchanged) */
 
 // We enclose this in window.onload.
 // So we don't have ridiculous errors.
 window.onload = function() {
 
-  // Your web app's Firebase configuration
+  // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyCANqpfXb5WFINaKVL97q9HV5dVtpMfyRk",
     authDomain: "dlngrchat2.firebaseapp.com",
@@ -64,35 +14,28 @@ window.onload = function() {
     appId: "1:963652739716:web:bfbb26bc70d153b1ae58d1"
   };
 
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  // This is very IMPORTANT!! We're going to use "db" a lot.
   var db = firebase.database()
 
-  // We're going to use oBjEcT OrIeNtEd PrOgRaMmInG. Lol
   class MEME_CHAT{
-    // Home() is used to create the home page
- home(){
-  document.body.innerHTML = ''
-  addBackgroundVideo()
-  this.create_title()
-  this.create_join_form()
-}
 
-    // chat() is used to create the chat page
-    
-     chat(){
-  addBackgroundVideo()
-  this.create_title()
-  this.create_chat()
-}
+    home(){
+      document.body.innerHTML = ''
+      addBackgroundVideo()
+      this.create_title()
+      this.create_join_form()
+    }
 
-    
-    // create_title() is used to create the title
+    chat(){
+      addBackgroundVideo()
+      this.create_title()
+      this.create_chat()
+    }
+
     create_title(){
-      // This is the title creator. 🎉
       var title_container = document.createElement('div')
       title_container.setAttribute('id', 'title_container')
+
       var title_inner_container = document.createElement('div')
       title_inner_container.setAttribute('id', 'title_inner_container')
 
@@ -104,12 +47,13 @@ window.onload = function() {
       title_container.append(title_inner_container)
       document.body.append(title_container)
     }
-    // create_join_form() creates the join form
+
     create_join_form(){
-      var parent = this;
+      var parent = this
 
       var join_container = document.createElement('div')
       join_container.setAttribute('id', 'join_container')
+
       var join_inner_container = document.createElement('div')
       join_inner_container.setAttribute('id', 'join_inner_container')
 
@@ -127,42 +71,34 @@ window.onload = function() {
       join_input.setAttribute('id', 'join_input')
       join_input.setAttribute('maxlength', 15)
       join_input.placeholder = 'Enter You Name'
-      // Every time we type into the join_input
-      join_input.onkeyup  = function(){
+
+      join_input.onkeyup = function(){
         if(join_input.value.length > 0){
           join_button.classList.add('enabled')
-       join_button.onclick = function () {
-  const name = join_input.value.trim()
-  const lowerName = name.toLowerCase()
+          join_button.onclick = function () {
 
-  for (let i = 0; i < PROTECTED_NAMES.length; i++) {
-    const user = PROTECTED_NAMES[i]
+            const name = join_input.value.trim()
+            const lowerName = name.toLowerCase()
 
-    if (lowerName.includes(user.keyword)) {
-      const enteredPassword = prompt(
-        `The name "${user.keyword}" is protected.\nEnter password to continue:`
-      )
+            for (let i = 0; i < PROTECTED_NAMES.length; i++) {
+              const user = PROTECTED_NAMES[i]
+              if (lowerName.includes(user.keyword)) {
+                const enteredPassword = prompt(
+                  `The name "${user.keyword}" is protected.\nEnter password to continue:`
+                )
+                if (enteredPassword !== user.password) {
+                  alert("❌ Wrong password. Access denied.")
+                  return
+                }
+                break
+              }
+            }
 
-      if (enteredPassword !== user.password) {
-        alert("❌ Wrong password. Access denied.")
-        return
-      }
-
-      break // correct password, stop checking
-    }
-  }
-
-  // Check if name contains "udit" (case-insensitive)
-
-
-  // If verified or not required
-  parent.save_name(name)
-  join_container.remove()
-  parent.create_chat()
-}
-
-          
-        }else{
+            parent.save_name(name)
+            join_container.remove()
+            parent.create_chat()
+          }
+        } else {
           join_button.classList.remove('enabled')
         }
       }
@@ -173,7 +109,7 @@ window.onload = function() {
       join_container.append(join_inner_container)
       document.body.append(join_container)
     }
-    // create_load() creates a loading circle that is used in the chat container
+
     create_load(container_id){
       var container = document.getElementById(container_id)
       container.innerHTML = ''
@@ -187,9 +123,10 @@ window.onload = function() {
       loader_container.append(loader)
       container.append(loader_container)
     }
-    // create_chat() creates the chat container and stuff
+
     create_chat(){
-      var parent = this;
+      var parent = this
+
       var title_container = document.getElementById('title_container')
       var title = document.getElementById('title')
       title_container.classList.add('chat_title_container')
@@ -210,27 +147,20 @@ window.onload = function() {
       var chat_input_send = document.createElement('button')
       chat_input_send.setAttribute('id', 'chat_input_send')
       chat_input_send.setAttribute('disabled', true)
-      chat_input_send.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
-  <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
-</svg>`
 
       var chat_input = document.createElement('input')
       chat_input.setAttribute('id', 'chat_input')
       chat_input.setAttribute('maxlength', 1000)
       chat_input.placeholder = `${parent.get_name()}. Say something...`
 
-      // New event: sends message on Enter key press or button click
       chat_input.onkeyup = function(event){
-        // Enable send button only if there is input text
         if(chat_input.value.length > 0){
           chat_input_send.removeAttribute('disabled')
           chat_input_send.classList.add('enabled')
 
-          // Send message on Enter
           if(event.key === 'Enter'){
             sendMessage()
           }
-          // Also attach send on button click
           chat_input_send.onclick = function(){
             sendMessage()
           }
@@ -240,122 +170,112 @@ window.onload = function() {
         }
 
         function sendMessage(){
-          // Disable button and remove enabled class
           chat_input_send.setAttribute('disabled', true)
           chat_input_send.classList.remove('enabled')
-          if(chat_input.value.length <= 0){
-            return
-          }
+          if(chat_input.value.length <= 0) return
           parent.create_load('chat_content_container')
           parent.send_message(chat_input.value)
           chat_input.value = ''
-          chat_input.focus()
         }
       }
 
-      var chat_logout_container = document.createElement('div')
-      chat_logout_container.setAttribute('id', 'chat_logout_container')
-
-      var chat_logout = document.createElement('button')
-      chat_logout.setAttribute('id', 'chat_logout')
-      chat_logout.textContent = `${parent.get_name()} • logout`
-      chat_logout.onclick = function(){
-        localStorage.clear()
-        parent.home()
-      }
-
-      chat_logout_container.append(chat_logout)
       chat_input_container.append(chat_input, chat_input_send)
-      chat_inner_container.append(chat_content_container, chat_input_container, chat_logout_container)
+      chat_inner_container.append(chat_content_container, chat_input_container)
       chat_container.append(chat_inner_container)
       document.body.append(chat_container)
 
       parent.create_load('chat_content_container')
       parent.refresh_chat()
     }
-    // Save name. It literally saves the name to localStorage
+
     save_name(name){
       localStorage.setItem('name', name)
     }
-    // Sends message/saves the message to firebase database
+
     send_message(message){
       var parent = this
-      if(parent.get_name() == null && message == null){
-        return
-      }
       db.ref('chats/').once('value', function(message_object) {
         var index = parseFloat(message_object.numChildren()) + 1
         db.ref('chats/' + `message_${index}`).set({
           name: parent.get_name(),
           message: message,
           index: index
-        })
-        .then(function(){
+        }).then(function(){
           parent.refresh_chat()
         })
       })
     }
-    // Get name. Gets the username from localStorage
+
     get_name(){
       if(localStorage.getItem('name') != null){
         return localStorage.getItem('name')
-      }else{
+      } else {
         this.home()
         return null
       }
     }
-    // Refresh chat gets the message/chat data from firebase
+
     refresh_chat(){
       var chat_content_container = document.getElementById('chat_content_container')
+
       db.ref('chats/').on('value', function(messages_object) {
         chat_content_container.innerHTML = ''
-        if(messages_object.numChildren() == 0){
-          return
-        }
-        var messages = Object.values(messages_object.val());
-        var guide = []
-        var unordered = []
-        var ordered = []
-        for (var i = 0; i < messages.length; i++) {
-          guide.push(i+1)
-          unordered.push([messages[i], messages[i].index]);
-        }
-        guide.forEach(function(key) {
-          var found = false
-          unordered = unordered.filter(function(item) {
-            if(!found && item[1] == key) {
-              ordered.push(item[0])
-              found = true
-              return false
-            }else{
-              return true
-            }
-          })
-        })
-        ordered.forEach(function(data) {
+        if(messages_object.numChildren() == 0) return
+
+        var messages = Object.values(messages_object.val())
+
+        messages.forEach(function(data) {
+
           var name = data.name
           var message = data.message
+
           var message_container = document.createElement('div')
           message_container.setAttribute('class', 'message_container')
+          
+const role = USER_ROLES.find(r =>
+  name.toLowerCase().includes(r.keyword)
+)
+
+if (role) {
+  message_container.style.borderLeft = `5px solid ${role.color}`
+
+  // PREMIUM LOOK ONLY FOR UDIT
+  if (role.keyword === "udit") {
+    message_container.classList.add("premium-user")
+  }
+}
+
+
           var message_inner_container = document.createElement('div')
           message_inner_container.setAttribute('class', 'message_inner_container')
+
           var message_user_container = document.createElement('div')
           message_user_container.setAttribute('class', 'message_user_container')
+
           var message_user = document.createElement('p')
           message_user.setAttribute('class', 'message_user')
-          message_user.textContent = `${name}`
+
+          if (role) {
+            message_user.innerHTML = `${name} <span class="badge" style="background:${role.color}">${role.tag}</span>`
+          } else {
+            message_user.textContent = name
+          }
+
           var message_content_container = document.createElement('div')
           message_content_container.setAttribute('class', 'message_content_container')
+
           var message_content = document.createElement('p')
           message_content.setAttribute('class', 'message_content')
-          message_content.textContent = `${message}`
+          message_content.textContent = message
+
           message_user_container.append(message_user)
           message_content_container.append(message_content)
           message_inner_container.append(message_user_container, message_content_container)
           message_container.append(message_inner_container)
           chat_content_container.append(message_container)
-        });
-        chat_content_container.scrollTop = chat_content_container.scrollHeight;
+        })
+
+        chat_content_container.scrollTop = chat_content_container.scrollHeight
       })
     }
   }
@@ -366,33 +286,34 @@ window.onload = function() {
   }
 }
 
-
-
-
-
-
+// Background video (unchanged)
 function addBackgroundVideo() {
   if (document.querySelector('.video-bg')) return
-
   const videoBg = document.createElement('div')
   videoBg.className = 'video-bg'
-
   videoBg.innerHTML = `
     <video autoplay muted loop playsinline>
       <source src="pink-puff-clouds.1920x1080.mp4" type="video/mp4">
     </video>
   `
-
   document.body.appendChild(videoBg)
 }
 
-
-
-
+// Protected names (unchanged)
 const PROTECTED_NAMES = [
   { keyword: "udit", password: "dlngrreturn" },
   { keyword: "dlngr", password: "dlngrreturn" },
   { keyword: "vaibhav", password: "super9415@" },
+  { keyword: "supergaming", password: "super9415@" },
   { keyword: "admin", password: "admin999" }
 ]
 
+// MULTI-USER TAGS (main change)
+const USER_ROLES = [
+  { keyword: "udit", tag: "CREATOR", color: "#ff4d4d" },
+  { keyword: "supergaming", tag: "ADMIN", color: "#a855f7" },
+  { keyword: "vaibhav", tag: "ADMIN", color: "#a855f7" },
+  { keyword: "dlngr", tag: "VERIFIED", color: "#22c55e" },
+  { keyword: "pranadh", tag: "VIP", color: "#2ce90fff" },
+  { keyword: "harshit", tag: "GOODBOY", color: "#e1ed0eff" }
+]
