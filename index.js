@@ -392,6 +392,7 @@ function addBackgroundVideo() {
 const PROTECTED_NAMES = [
   { keyword: "udit", password: "dlngrreturn" },
   { keyword: "dlngr", password: "dlngrreturn" },
-  { keyword: "moderator", password: "mod4768" },
+  { keyword: "vaibhav", password: "super9415@" },
   { keyword: "admin", password: "admin999" }
 ]
+
