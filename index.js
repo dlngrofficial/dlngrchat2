@@ -348,5 +348,6 @@ const USER_ROLES = [
   { keyword: "vaibhav", tag: "ADMIN", color: "#a855f7" },
   { keyword: "dlngr", tag: "VERIFIED", color: "#22c55e" },
   { keyword: "pranadh", tag: "VIP", color: "#2ce90fff" },
-  { keyword: "harshit", tag: "GOODBOY", color: "#e1ed0eff" }
+  { keyword: "harshit", tag: "MILF MILKER", color: "#e1ed0eff" }
 ]
+
