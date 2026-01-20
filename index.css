@@ -328,3 +328,91 @@ body{
   inset: 0;
   background: rgba(0,0,0,0.4);
 }
+
+/* Special user styling */
+.message_container.udit-user .message_inner_container {
+  background-color: #1e1e2f;   /* dark blue */
+  border-left: 5px solid #ff4d4d;
+}
+
+.message_container.udit-user .message_user {
+  color: #ff4d4d;
+  font-weight: bold;
+}
+
+.message_container.udit-user .message_content {
+  color: #ffffff;
+}
+
+
+.user-tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  margin-left: 6px;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  margin-left: 6px;
+  border-radius: 6px;
+  color: white;
+}
+
+.creator-user { border-left: 4px solid #ff4d4d; }
+.admin-user { border-left: 4px solid #a855f7; }
+.verified-user { border-left: 4px solid #22c55e; }
+.mod-user { border-left: 4px solid #3b82f6; }
+
+.premium-user {
+  background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+  border-left: 5px solid #ff4d4d;
+  box-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
+  border-radius: 6px;
+}
+
+.premium-user .message_user {
+  color: #ffdddd;
+}
+
+.premium-user .badge {
+  background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+  color: white;
+  box-shadow: 0 0 6px rgba(255, 77, 77, 0.6);
+}
+
+.message_container {
+  background: white;
+  border-radius: 10px;
+}
+/* PREMIUM override (UDIT only) */
+.premium-user {
+  background: none !important;
+}
+
+.premium-user .message_inner_container {
+  background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
+}
+/* LIGHT TEXT FOR PREMIUM (UDIT) */
+.premium-user .message_content,
+.premium-user .message_user {
+  color: #f2f2f2 !important;
+}
+
+/* Slightly softer username for premium */
+.premium-user .message_user {
+  font-weight: 600;
+}
+
+/* Optional: improve readability */
+.premium-user .message_content {
+  opacity: 0.95;
+}
+
+
