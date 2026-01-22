@@ -157,8 +157,7 @@ fill="currentColor" viewBox="0 0 16 16">
       chat_input_send.setAttribute('disabled', true)
 
       chat_input_send.style.display = "flex"
-chat_input_send.style.opacity = "1"
-
+      chat_input_send.style.opacity = "1"
 
       var chat_input = document.createElement('input')
       chat_input.setAttribute('id', 'chat_input')
@@ -193,26 +192,25 @@ chat_input_send.style.opacity = "1"
 
       chat_input_container.append(chat_input, chat_input_send)
 
-      // LOGOUT BUTTON
-var chat_logout_container = document.createElement('div')
-chat_logout_container.setAttribute('id', 'chat_logout_container')
+      var chat_logout_container = document.createElement('div')
+      chat_logout_container.setAttribute('id', 'chat_logout_container')
 
-var chat_logout = document.createElement('button')
-chat_logout.setAttribute('id', 'chat_logout')
-chat_logout.textContent = `${parent.get_name()} • logout`
+      var chat_logout = document.createElement('button')
+      chat_logout.setAttribute('id', 'chat_logout')
+      chat_logout.textContent = `${parent.get_name()} • logout`
 
-chat_logout.onclick = function(){
-  localStorage.removeItem('name')
-  location.reload()
-}
+      chat_logout.onclick = function(){
+        localStorage.removeItem('name')
+        location.reload()
+      }
 
-chat_logout_container.append(chat_logout)
+      chat_logout_container.append(chat_logout)
 
-     chat_inner_container.append(
-  chat_content_container,
-  chat_input_container,
-  chat_logout_container
-)
+      chat_inner_container.append(
+        chat_content_container,
+        chat_input_container,
+        chat_logout_container
+      )
 
       chat_container.append(chat_inner_container)
       document.body.append(chat_container)
@@ -226,13 +224,11 @@ chat_logout_container.append(chat_logout)
     }
 
     send_message(message){
-      var parent = this
-db.ref('chats').push({
-  name: parent.get_name(),
-  message: message,
-  timestamp: Date.now()
-})
-
+      db.ref('chats').push({
+        name: this.get_name(),
+        message: message,
+        timestamp: Date.now()
+      })
     }
 
     get_name(){
@@ -248,66 +244,79 @@ db.ref('chats').push({
       var chat_content_container = document.getElementById('chat_content_container')
 
       db.ref('chats')
-  .orderByChild('timestamp')
-  .on('value', function(messages_object) {
-        chat_content_container.innerHTML = ''
-        if(messages_object.numChildren() == 0) return
+        .orderByChild('timestamp')
+        .on('value', function(snapshot) {
 
-        var messages = Object.values(messages_object.val())
+          chat_content_container.innerHTML = ''
+          if(!snapshot.exists()) return
 
-        messages.forEach(function(data) {
+          Object.entries(snapshot.val()).forEach(function([msgId, data]) {
 
-          var name = data.name
-          var message = data.message
+            var name = data.name
+            var message = data.message
 
-          var message_container = document.createElement('div')
-          message_container.setAttribute('class', 'message_container')
-          
-const role = USER_ROLES.find(r =>
-  name.toLowerCase().includes(r.keyword)
-)
+            var message_container = document.createElement('div')
+            message_container.setAttribute('class', 'message_container')
 
-if (role) {
-  message_container.style.borderLeft = `5px solid ${role.color}`
+            const role = USER_ROLES.find(r =>
+              name.toLowerCase().includes(r.keyword)
+            )
 
-  // PREMIUM LOOK ONLY FOR UDIT
-  if (role.keyword === "udit") {
-    message_container.classList.add("premium-user")
-  }
-}
+            if (role) {
+              message_container.style.borderLeft = `5px solid ${role.color}`
+              if (role.keyword === "udit") {
+                message_container.classList.add("premium-user")
+              }
+            }
 
+            var message_inner_container = document.createElement('div')
+            message_inner_container.setAttribute('class', 'message_inner_container')
 
-          var message_inner_container = document.createElement('div')
-          message_inner_container.setAttribute('class', 'message_inner_container')
+            var message_user_container = document.createElement('div')
+            message_user_container.setAttribute('class', 'message_user_container')
 
-          var message_user_container = document.createElement('div')
-          message_user_container.setAttribute('class', 'message_user_container')
+            var message_user = document.createElement('p')
+            message_user.setAttribute('class', 'message_user')
 
-          var message_user = document.createElement('p')
-          message_user.setAttribute('class', 'message_user')
+            if (role) {
+              message_user.innerHTML = `${name} <span class="badge" style="background:${role.color}">${role.tag}</span>`
+            } else {
+              message_user.textContent = name
+            }
 
-          if (role) {
-            message_user.innerHTML = `${name} <span class="badge" style="background:${role.color}">${role.tag}</span>`
-          } else {
-            message_user.textContent = name
-          }
+            message_user_container.append(message_user)
 
-          var message_content_container = document.createElement('div')
-          message_content_container.setAttribute('class', 'message_content_container')
+            if (isPrivilegedUser(app.get_name())) {
+              var delete_btn = document.createElement('span')
+              delete_btn.textContent = '✖'
+              delete_btn.style.cursor = 'pointer'
+              delete_btn.style.marginLeft = '10px'
+              delete_btn.style.color = '#ff5555'
+              delete_btn.style.fontSize = '12px'
 
-          var message_content = document.createElement('p')
-          message_content.setAttribute('class', 'message_content')
-          message_content.textContent = message
+              delete_btn.onclick = function () {
+                if (!confirm("Delete this message?")) return
+                db.ref('chats/' + msgId).remove()
+              }
 
-          message_user_container.append(message_user)
-          message_content_container.append(message_content)
-          message_inner_container.append(message_user_container, message_content_container)
-          message_container.append(message_inner_container)
-          chat_content_container.append(message_container)
+              message_user_container.append(delete_btn)
+            }
+
+            var message_content_container = document.createElement('div')
+            message_content_container.setAttribute('class', 'message_content_container')
+
+            var message_content = document.createElement('p')
+            message_content.setAttribute('class', 'message_content')
+            message_content.textContent = message
+
+            message_content_container.append(message_content)
+            message_inner_container.append(message_user_container, message_content_container)
+            message_container.append(message_inner_container)
+            chat_content_container.append(message_container)
+          })
+
+          chat_content_container.scrollTop = chat_content_container.scrollHeight
         })
-
-        chat_content_container.scrollTop = chat_content_container.scrollHeight
-      })
     }
   }
 
@@ -339,12 +348,20 @@ const PROTECTED_NAMES = [
   { keyword: "admin", password: "admin999" }
 ]
 
-// MULTI-USER TAGS (main change)
+// MULTI-USER TAGS (unchanged)
 const USER_ROLES = [
   { keyword: "udit", tag: "CREATOR", color: "#ff4d4d" },
   { keyword: "supergaming", tag: "ADMIN", color: "#a855f7" },
   { keyword: "vaibhav", tag: "ADMIN", color: "#a855f7" },
   { keyword: "dlngr", tag: "VERIFIED", color: "#22c55e" },
   { keyword: "pranadh", tag: "VIP", color: "#2ce90fff" },
+  { keyword: "amrit", tag: "MVP", color: "#0bdab0ff" },
   { keyword: "harshit", tag: "MVP", color: "#0bdab0ff" }
 ]
+
+function isPrivilegedUser(name) {
+  const role = USER_ROLES.find(r =>
+    name.toLowerCase().includes(r.keyword)
+  )
+  return role && (role.tag === "CREATOR" || role.tag === "ADMIN")
+}
