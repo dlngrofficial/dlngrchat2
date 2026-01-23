@@ -426,3 +426,46 @@ body{
 .message_user_container span:hover {
   opacity: 0.7;
 }
+/* COPY BUTTON STYLING */
+.message_content_container button {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: rgba(244, 7, 173, 0.583);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+}
+
+/* Hover effect */
+.message_content_container button:hover {
+  background: rgba(0, 0, 0, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Active (click) effect */
+.message_content_container button:active {
+  transform: translateY(0);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Copied state (when text changes to ✔) */
+.message_content_container button:contains("✔") {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+/* Mobile friendly */
+@media (max-width: 600px) {
+  .message_content_container button {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
