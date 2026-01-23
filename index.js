@@ -1,7 +1,5 @@
 /* password code commented as-is (unchanged) */
 
-// We enclose this in window.onload.
-// So we don't have ridiculous errors.
 window.onload = function() {
 
   // Firebase config
@@ -153,15 +151,11 @@ fill="currentColor" viewBox="0 0 16 16">
   3.178 4.995.26.41a.5.5 0 0 0 .886-.083l6-15z"/>
 </svg>
 `
-
       chat_input_send.setAttribute('disabled', true)
-
-      chat_input_send.style.display = "flex"
-      chat_input_send.style.opacity = "1"
 
       var chat_input = document.createElement('input')
       chat_input.setAttribute('id', 'chat_input')
-      chat_input.setAttribute('maxlength', 1000)
+      chat_input.setAttribute('maxlength', 10000) // ✅ increased for code
       chat_input.placeholder = `${parent.get_name()}. Say something...`
 
       chat_input.onkeyup = function(event){
@@ -286,6 +280,7 @@ fill="currentColor" viewBox="0 0 16 16">
 
             message_user_container.append(message_user)
 
+            // ✅ DELETE FEATURE (UNCHANGED)
             if (isPrivilegedUser(app.get_name())) {
               var delete_btn = document.createElement('span')
               delete_btn.textContent = '✖'
@@ -309,7 +304,24 @@ fill="currentColor" viewBox="0 0 16 16">
             message_content.setAttribute('class', 'message_content')
             message_content.textContent = message
 
-            message_content_container.append(message_content)
+            // ✅ PRESERVE CODE STRUCTURE
+            message_content.style.whiteSpace = 'pre-wrap'
+            message_content.style.fontFamily = 'monospace'
+
+            // ✅ COPY BUTTON (ADDED)
+            var copy_btn = document.createElement('button')
+            copy_btn.textContent = 'Copy'
+            copy_btn.style.marginTop = '6px'
+            copy_btn.style.fontSize = '11px'
+            copy_btn.style.cursor = 'pointer'
+
+            copy_btn.onclick = function(){
+              navigator.clipboard.writeText(message)
+              copy_btn.textContent = 'Copied ✔'
+              setTimeout(() => copy_btn.textContent = 'Copy', 1500)
+            }
+
+            message_content_container.append(message_content, copy_btn)
             message_inner_container.append(message_user_container, message_content_container)
             message_container.append(message_inner_container)
             chat_content_container.append(message_container)
@@ -366,4 +378,3 @@ function isPrivilegedUser(name) {
   )
   return role && (role.tag === "CREATOR" || role.tag === "ADMIN")
 }
-
