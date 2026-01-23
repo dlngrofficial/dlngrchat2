@@ -470,3 +470,68 @@ body{
   }
 }
 
+
+.message_container,
+.message_inner_container,
+.message_user,
+.message_content,
+.message_content_container,
+#chat_content_container,
+#chat_input {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+               "Helvetica Neue", Arial, sans-serif !important;
+}
+
+/* EMOJI BUTTON */
+#emoji_btn {
+  width: 40px;
+  height: 100%;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  color: #ccc;
+}
+
+#emoji_btn:hover {
+  color: #D64045;
+}
+
+/* EMOJI PICKER */
+#emoji_picker {
+  position: absolute;
+  bottom: 70px;
+  background: rgba(0,0,0,0.85);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 220px;
+  z-index: 999;
+}
+
+#emoji_picker span {
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.1s;
+}
+
+#emoji_picker span:hover {
+  transform: scale(1.3);
+}
+#chat_input_container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#chat_input {
+  flex: 1;
+}
+
+/* optional but recommended */
+#emoji_btn {
+  cursor: pointer;
+}
+
