@@ -142,6 +142,17 @@ window.onload = function() {
       var chat_input_container = document.createElement('div')
       chat_input_container.setAttribute('id', 'chat_input_container')
 
+      var chat_input = document.createElement('input')
+      chat_input.setAttribute('id', 'chat_input')
+      chat_input.setAttribute('maxlength', 10000)
+      chat_input.placeholder = `${parent.get_name()}. Say something...`
+
+      /* ✅ EMOJI BUTTON (ONLY ADDITION) */
+      var emoji_btn = document.createElement('button')
+      emoji_btn.setAttribute('id', 'emoji_btn')
+      emoji_btn.type = 'button'
+      emoji_btn.textContent = '😊'
+
       var chat_input_send = document.createElement('button')
       chat_input_send.setAttribute('id', 'chat_input_send')
       chat_input_send.innerHTML = `
@@ -152,11 +163,6 @@ fill="currentColor" viewBox="0 0 16 16">
 </svg>
 `
       chat_input_send.setAttribute('disabled', true)
-
-      var chat_input = document.createElement('input')
-      chat_input.setAttribute('id', 'chat_input')
-      chat_input.setAttribute('maxlength', 10000) // ✅ increased for code
-      chat_input.placeholder = `${parent.get_name()}. Say something...`
 
       chat_input.onkeyup = function(event){
         if(chat_input.value.length > 0){
@@ -184,7 +190,34 @@ fill="currentColor" viewBox="0 0 16 16">
         }
       }
 
-      chat_input_container.append(chat_input, chat_input_send)
+      chat_input_container.append(chat_input, emoji_btn, chat_input_send)
+
+      /* ✅ EMOJI PICKER (ONLY ADDITION) */
+      var emoji_picker = document.createElement('div')
+      emoji_picker.setAttribute('id', 'emoji_picker')
+      emoji_picker.style.display = 'none'
+
+      const emojis = ["😀","😂","🤣","😍","🥰","😎","😭","😡","👍","🔥","❤️","💀","🎉","💯"]
+
+      emojis.forEach(e => {
+        var span = document.createElement('span')
+        span.textContent = e
+        span.onclick = function(){
+          chat_input.value += e
+          chat_input.focus()
+        }
+        emoji_picker.append(span)
+      })
+
+      emoji_btn.onclick = function(e){
+        e.stopPropagation()
+        emoji_picker.style.display =
+          emoji_picker.style.display === 'none' ? 'flex' : 'none'
+      }
+
+      document.addEventListener('click', function(){
+        emoji_picker.style.display = 'none'
+      })
 
       var chat_logout_container = document.createElement('div')
       chat_logout_container.setAttribute('id', 'chat_logout_container')
@@ -202,6 +235,7 @@ fill="currentColor" viewBox="0 0 16 16">
 
       chat_inner_container.append(
         chat_content_container,
+        emoji_picker,
         chat_input_container,
         chat_logout_container
       )
@@ -280,7 +314,6 @@ fill="currentColor" viewBox="0 0 16 16">
 
             message_user_container.append(message_user)
 
-            // ✅ DELETE FEATURE (UNCHANGED)
             if (isPrivilegedUser(app.get_name())) {
               var delete_btn = document.createElement('span')
               delete_btn.textContent = '✖'
@@ -303,12 +336,9 @@ fill="currentColor" viewBox="0 0 16 16">
             var message_content = document.createElement('p')
             message_content.setAttribute('class', 'message_content')
             message_content.textContent = message
-
-            // ✅ PRESERVE CODE STRUCTURE
             message_content.style.whiteSpace = 'pre-wrap'
             message_content.style.fontFamily = 'monospace'
 
-            // ✅ COPY BUTTON (ADDED)
             var copy_btn = document.createElement('button')
             copy_btn.textContent = 'Copy'
             copy_btn.style.marginTop = '6px'
