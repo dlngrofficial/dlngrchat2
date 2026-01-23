@@ -197,7 +197,7 @@ fill="currentColor" viewBox="0 0 16 16">
       emoji_picker.setAttribute('id', 'emoji_picker')
       emoji_picker.style.display = 'none'
 
-      const emojis = ["😀","😂","🤣","😍","🥰","😎","😭","😡","👍","🔥","❤️","💀","🎉","💯"]
+      const emojis = ["😀","😂","🤣","😍","🥰","🥶","🤑","😎","😭","😡","👍","🔥","❤️","💀","🎉","☠️","😒","🤞","🎂","🥲","😵","💯"]
 
       emojis.forEach(e => {
         var span = document.createElement('span')
