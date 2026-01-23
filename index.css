@@ -435,7 +435,7 @@ body{
   font-weight: 500;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  background: rgba(244, 7, 173, 0.583);
+  background: rgb(117 0 147 / 63%);
   color: white;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -469,3 +469,4 @@ body{
     padding: 3px 8px;
   }
 }
+
