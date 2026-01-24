@@ -393,13 +393,15 @@ const PROTECTED_NAMES = [
 // MULTI-USER TAGS (unchanged)
 const USER_ROLES = [
   { keyword: "udit", tag: "CREATOR", color: "#ff4d4d" },
+  { keyword: "dlngr_official", tag: "LEGEND", color: "#ff4d4d" },
   { keyword: "supergaming", tag: "ADMIN", color: "#a855f7" },
   { keyword: "vaibhav", tag: "ADMIN", color: "#a855f7" },
   { keyword: "dlngr", tag: "VERIFIED", color: "#22c55e" },
   { keyword: "pranadh", tag: "VIP", color: "#2ce90fff" },
   { keyword: "amrit", tag: "MVP", color: "#0bdab0ff" },
   { keyword: "chintu", tag: "NOT CEO", color: "#0bdab0ff" },
-  { keyword: "harshit", tag: "MVP", color: "#0bdab0ff" }
+  { keyword: "harshit", tag: "#1 GOLDEN", color: "rgb(102 209 35)" },
+  
 ]
 
 function isPrivilegedUser(name) {
