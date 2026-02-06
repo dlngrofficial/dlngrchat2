@@ -401,6 +401,7 @@ const USER_ROLES = [
   { keyword: "amrit", tag: "MVP", color: "#0bdab0ff" },
   { keyword: "chintu", tag: "NOT CEO", color: "#0bdab0ff" },
   { keyword: "harshit", tag: "#1 GOLDEN", color: "rgb(102 209 35)" },
+   { keyword: "server", tag: "SERVER", color: "rgb(220, 38, 38)" }
   
 ]
 
@@ -410,3 +411,4 @@ function isPrivilegedUser(name) {
   )
   return role && (role.tag === "CREATOR" || role.tag === "ADMIN")
 }
+
