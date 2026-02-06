@@ -14,6 +14,66 @@ window.onload = function() {
 
   firebase.initializeApp(firebaseConfig);
   var db = firebase.database()
+/* ===== ONLINE USERS SYSTEM (ADD-ON ONLY) ===== */
+
+const presenceRef = db.ref("presence")
+const userName = () => app.get_name()
+
+function setUserOnline() {
+  if (!userName()) return
+
+  const userRef = presenceRef.child(userName())
+  userRef.set({
+    name: userName(),
+    timestamp: Date.now()
+  })
+
+  userRef.onDisconnect().remove()
+}
+
+function listenOnlineUsers() {
+  presenceRef.on("value", snapshot => {
+    const box = document.getElementById("online_users_list")
+    const count = document.getElementById("online_count")
+
+    if (!box || !count) return
+
+    box.innerHTML = ""
+    let total = 0
+
+    snapshot.forEach(child => {
+      total++
+      const name = child.val().name
+
+      const role = USER_ROLES.find(r =>
+        name.toLowerCase().includes(r.keyword)
+      )
+
+      const userDiv = document.createElement("div")
+      userDiv.className = "online-user"
+
+      const dot = document.createElement("span")
+      dot.className = "online-dot"
+
+      const username = document.createElement("span")
+      username.textContent = name
+
+      userDiv.append(dot, username)
+
+      if (role) {
+        const tag = document.createElement("span")
+        tag.className = "online-role"
+        tag.textContent = role.tag
+        tag.style.background = role.color
+        userDiv.append(tag)
+      }
+
+      box.append(userDiv)
+    })
+
+    count.textContent = total
+  })
+}
 
   class MEME_CHAT{
 
@@ -242,9 +302,21 @@ fill="currentColor" viewBox="0 0 16 16">
 
       chat_container.append(chat_inner_container)
       document.body.append(chat_container)
+      /* ONLINE USERS BOX (ADD-ON ONLY) */
+const onlineBox = document.createElement("div")
+onlineBox.id = "online_users_box"
+onlineBox.innerHTML = `
+  <h4>Online (<span id="online_count">0</span>)</h4>
+  <div id="online_users_list"></div>
+`
+document.body.append(onlineBox)
+
 
       parent.create_load('chat_content_container')
       parent.refresh_chat()
+      setUserOnline()
+      listenOnlineUsers()
+
     }
 
     save_name(name){
@@ -412,5 +484,4 @@ function isPrivilegedUser(name) {
   )
   return role && (role.tag === "CREATOR" || role.tag === "ADMIN")
 }
-
 
