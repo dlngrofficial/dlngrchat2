@@ -385,6 +385,7 @@ function addBackgroundVideo() {
 const PROTECTED_NAMES = [
   { keyword: "udit", password: "dlngrreturn" },
   { keyword: "dlngr", password: "dlngrreturn" },
+   { keyword: "server", password: "dlngrreturn" },
   { keyword: "vaibhav", password: "super9415@" },
   { keyword: "supergaming", password: "super9415@" },
   { keyword: "admin", password: "admin999" }
@@ -411,4 +412,5 @@ function isPrivilegedUser(name) {
   )
   return role && (role.tag === "CREATOR" || role.tag === "ADMIN")
 }
+
 
