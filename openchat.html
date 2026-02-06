@@ -16,7 +16,40 @@
     <link rel="stylesheet" href="https://dlngrofficial.github.io/dlngrchat2/index.css">
      <script type="text/javascript" src="https://dlngrofficial.github.io/dlngrchat2/index.js"></script>
    
+<style>
+  .dlngr-credit {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    background: rgba(31, 41, 55, 0.9); /* dark charcoal */
+    color: #e5e7eb;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    z-index: 9999;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    pointer-events: none; /* doesn't block clicks */
+  }
 
+  .dlngr-credit span {
+    color: #dc2626; /* crimson */
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  /* Mobile friendly */
+  @media (max-width: 480px) {
+    .dlngr-credit {
+      font-size: 12px;
+      padding: 8px 12px;
+      bottom: 12px;
+      left: 12px;
+    }
+  }
+</style>
   </head>
   <body>
  <div class="video-bg">
@@ -25,8 +58,11 @@
   </video>
 </div>
 
-    <h1 class="owner">CREATOR SIR, UDIT VISHWAKARMA CLASS 11TH</h1>
+   <div class="dlngr-credit">
+  Created by <span>Master. UDIT VISHWAKRMA</span>
+</div>
   </body>
 </html>
+
 
 
