@@ -465,7 +465,7 @@ const PROTECTED_NAMES = [
 
 // MULTI-USER TAGS (unchanged)
 const USER_ROLES = [
-  { keyword: "udit", tag: "CREATOR,LORD,MASTER", color: "#ff4d4d" },
+  { keyword: "udit", tag: "CREATOR", color: "#ff4d4d" },
   { keyword: "dlngr_official", tag: "LEGEND", color: "#ff4d4d" },
   { keyword: "supergaming", tag: "ADMIN", color: "#a855f7" },
   { keyword: "vaibhav", tag: "ADMIN", color: "#a855f7" },
@@ -484,5 +484,6 @@ function isPrivilegedUser(name) {
   )
   return role && (role.tag === "CREATOR" || role.tag === "ADMIN")
 }
+
 
 
