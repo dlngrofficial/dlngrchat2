@@ -583,3 +583,145 @@ body{
   font-size: 10px;
   color: white;
 }
+#meme67 {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+#meme67 .hand {
+  position: absolute;
+  top: 50%;
+  width: 220px;
+  transform: translateY(-50%);
+  animation: grab67 3s ease-in-out forwards;
+}
+
+#meme67 .left {
+  left: -250px;
+}
+
+#meme67 .right {
+  right: -250px;
+  animation-name: grab67right;
+}
+
+@keyframes grab67 {
+  0% { left: -250px; }
+  40% { left: 40%; }
+  70% { left: 40%; }
+  100% { left: -250px; }
+}
+
+@keyframes grab67right {
+  0% { right: -250px; }
+  40% { right: 40%; }
+  70% { right: 40%; }
+  100% { right: -250px; }
+}
+.mod-btn {
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+}
+
+.mod-btn.kick {
+  background: #f59e0b;
+  color: black;
+}
+
+.mod-btn.block {
+  background: #dc2626;
+  color: white;
+}
+.online-role:contains("CREATOR") {
+  box-shadow: 0 0 8px gold;
+}
+#yt_overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.yt_box {
+  width: 80%;
+  max-width: 720px;
+  background: black;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.yt_box iframe {
+  width: 100%;
+  height: 400px;
+  border-radius: 8px;
+}
+
+#yt_close {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  background: crimson;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+#yt_panel {
+  position: fixed;
+  left: 10px;
+  top: 120px;
+  width: 360px;
+  height: 200px;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  display: none;
+  z-index: 999;
+}
+
+#yt_iframe {
+  width: 100%;
+  height: 100%;
+}
+#yt_panel {
+  position: fixed;
+  top: 80px;
+  left: 10px;
+  width: 360px;
+  height: 202px;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 9999;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+#yt_panel iframe {
+  width: 100%;
+  height: 100%;
+}
+#yt_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  color: white;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+#yt_close_btn {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  font-size: 16px;
+  cursor: pointer;
+}
