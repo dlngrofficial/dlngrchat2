@@ -183,6 +183,37 @@ function listenOnlineUsers() {
     }
 
     create_chat(){
+      // ===== YOUTUBE EMBED PANEL (CREATOR ONLY) =====
+if (!document.getElementById("yt_panel")) {
+  const ytPanel = document.createElement("div")
+  ytPanel.id = "yt_panel"
+  ytPanel.style.display = "none"
+
+ytPanel.innerHTML = `
+  <div id="yt_header">
+    <span>🎬 YouTube</span>
+    <button id="yt_close_btn">✖</button>
+  </div>
+  <iframe
+    id="yt_iframe"
+    src=""
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen>
+  </iframe>
+`
+
+
+  document.body.append(ytPanel)
+  document.getElementById("yt_close_btn").onclick = function () {
+  const panel = document.getElementById("yt_panel")
+  const iframe = document.getElementById("yt_iframe")
+  iframe.src = ""
+  panel.style.display = "none"
+}
+
+}
+
       var parent = this
 
       var title_container = document.getElementById('title_container')
@@ -354,6 +385,59 @@ document.body.append(onlineBox)
 
             var name = data.name
             var message = data.message
+            // ========== /yt CREATOR-ONLY ==========
+// ========== /yt CREATOR EMBED ==========
+if (message.startsWith("/yt ")) {
+  const arg = message.replace("/yt ", "").trim()
+
+  const senderRole = USER_ROLES.find(r =>
+    name.toLowerCase().includes(r.keyword)
+  )
+
+  // ❌ not creator → ignore command
+  if (!senderRole || senderRole.tag !== "CREATOR") {
+    return
+  }
+
+  const iframe = document.getElementById("yt_iframe")
+  const panel = document.getElementById("yt_panel")
+
+  // ✅ /yt close (NO videoUrl needed)
+  if (arg === "close") {
+    if (iframe && panel) {
+      iframe.src = ""
+      panel.style.display = "none"
+    }
+    message = "⏹ Creator closed the YouTube player"
+  }
+
+  // ▶ /yt play
+  else {
+    const YT_CUSTOM = {
+      "67": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    }
+
+    let videoUrl = YT_CUSTOM[arg] || arg
+    const videoId = getYouTubeId(videoUrl)
+
+    if (videoId && iframe && panel) {
+      iframe.src =
+        `https://www.youtube-nocookie.com/embed/${videoId}` +
+        `?autoplay=1&rel=0&modestbranding=1&origin=${location.origin}`
+
+      panel.style.display = "block"
+      message = "▶ Creator played a YouTube video"
+    }
+  }
+}
+
+
+// ========== END /yt ==========
+
+
+// ================== END /yt ==================
+
+
 
             var message_container = document.createElement('div')
             message_container.setAttribute('class', 'message_container')
@@ -451,6 +535,9 @@ function addBackgroundVideo() {
     </video>
   `
   document.body.appendChild(videoBg)
+  
+
+
 }
 
 // Protected names (unchanged)
@@ -486,4 +573,17 @@ function isPrivilegedUser(name) {
 }
 
 
-
+function getYouTubeId(url) {
+  try {
+    if (url.includes("youtu.be/")) {
+      return url.split("youtu.be/")[1].split(/[?&]/)[0]
+    }
+    if (url.includes("/shorts/")) {
+      return url.split("/shorts/")[1].split(/[?&]/)[0]
+    }
+    if (url.includes("v=")) {
+      return url.split("v=")[1].split("&")[0]
+    }
+  } catch (e) {}
+  return null
+}
