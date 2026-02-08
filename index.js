@@ -414,7 +414,8 @@ if (message.startsWith("/yt ")) {
   // ▶ /yt play
   else {
     const YT_CUSTOM = {
-      "67": "https://www.youtube.com/watch?v=L7ejl_Hj3A8"
+      "67": "https://www.youtube.com/watch?v=L7ejl_Hj3A8",
+      "gojo": "https://www.youtube.com/shorts/v848mhO7v4o"
       
     }
 
@@ -588,3 +589,4 @@ function getYouTubeId(url) {
   } catch (e) {}
   return null
 }
+
