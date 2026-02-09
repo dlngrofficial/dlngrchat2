@@ -725,3 +725,18 @@ body{
   font-size: 16px;
   cursor: pointer;
 }
+/* ===== PANEL FLOW SYSTEM ===== */
+
+
+@media (max-width: 768px) {
+  body.panel-open #chat_container {
+    margin-left: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
+  #yt_panel,
+  #web_panel {
+    width: 100% !important;
+  }
+}
