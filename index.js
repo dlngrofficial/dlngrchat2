@@ -452,10 +452,7 @@ document.body.classList.add("panel-open")
 message = "🌐 Website opened by creator"
 
   }
-  if (!url.startsWith("https://")) {
-  message = "❌ Only HTTPS websites can be embedded"
-  return
-}
+
 
 }
 
