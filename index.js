@@ -211,7 +211,8 @@ ytPanel.innerHTML = `
   webPanel.id = "web_panel"
   webPanel.style.display = "none"
   webPanel.style.position = "fixed"
-  webPanel.style.left = "0"
+  webPanel.style.right = "0"
+  webPanel.style.left = "auto"
   webPanel.style.top = "0"
   webPanel.style.width = "35%"
   webPanel.style.height = "100%"
@@ -232,11 +233,11 @@ ytPanel.innerHTML = `
       z-index:10000;
     ">✖</button>
 
-    <iframe
-      id="web_iframe"
-      style="width:100%;height:100%;border:none;"
-      sandbox="allow-scripts allow-same-origin allow-forms"
-    ></iframe>
+ <iframe
+  id="web_iframe"
+  style="width:100%;height:100%;border:none;"
+></iframe>
+
   `
 
   document.body.append(webPanel)
@@ -451,6 +452,11 @@ document.body.classList.add("panel-open")
 message = "🌐 Website opened by creator"
 
   }
+  if (!url.startsWith("https://")) {
+  message = "❌ Only HTTPS websites can be embedded"
+  return
+}
+
 }
 
 if (message.startsWith("/yt ")) {
