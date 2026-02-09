@@ -204,7 +204,44 @@ ytPanel.innerHTML = `
 `
 
 
+
   document.body.append(ytPanel)
+  if (!document.getElementById("web_panel")) {
+  const webPanel = document.createElement("div")
+  webPanel.id = "web_panel"
+  webPanel.style.display = "none"
+  webPanel.style.position = "fixed"
+  webPanel.style.left = "0"
+  webPanel.style.top = "0"
+  webPanel.style.width = "35%"
+  webPanel.style.height = "100%"
+  webPanel.style.background = "#0f0f0f"
+  webPanel.style.borderRight = "2px solid #222"
+  webPanel.style.zIndex = "9999"
+
+  webPanel.innerHTML = `
+    <button onclick="closeWebsite()" style="
+      position:absolute;
+      top:10px;
+      right:10px;
+      background:red;
+      color:white;
+      border:none;
+      padding:6px 10px;
+      cursor:pointer;
+      z-index:10000;
+    ">✖</button>
+
+    <iframe
+      id="web_iframe"
+      style="width:100%;height:100%;border:none;"
+      sandbox="allow-scripts allow-same-origin allow-forms"
+    ></iframe>
+  `
+
+  document.body.append(webPanel)
+}
+
   document.getElementById("yt_close_btn").onclick = function () {
   const panel = document.getElementById("yt_panel")
   const iframe = document.getElementById("yt_iframe")
@@ -387,6 +424,35 @@ document.body.append(onlineBox)
             var message = data.message
             // ========== /yt CREATOR-ONLY ==========
 // ========== /yt CREATOR EMBED ==========
+if (message.startsWith("/website ")) {
+  const url = message.replace("/website ", "").trim()
+
+  const senderRole = USER_ROLES.find(r =>
+    name.toLowerCase().includes(r.keyword)
+  )
+
+  // creator-only (remove this if you want everyone)
+  if (!senderRole || senderRole.tag !== "CREATOR") return
+
+  const panel = document.getElementById("web_panel")
+  const iframe = document.getElementById("web_iframe")
+
+  if (url === "close") {
+  iframe.src = ""
+panel.style.display = "none"
+
+message = "🌐 Website panel closed"
+
+  } 
+  else {
+   iframe.src = url
+panel.style.display = "block"
+document.body.classList.add("panel-open")
+message = "🌐 Website opened by creator"
+
+  }
+}
+
 if (message.startsWith("/yt ")) {
   const arg = message.replace("/yt ", "").trim()
 
@@ -405,8 +471,10 @@ if (message.startsWith("/yt ")) {
   // ✅ /yt close (NO videoUrl needed)
   if (arg === "close") {
     if (iframe && panel) {
-      iframe.src = ""
-      panel.style.display = "none"
+     iframe.src = ""
+panel.style.display = "none"
+document.body.classList.remove("panel-open")
+
     }
     message = "⏹ Creator closed the YouTube player"
   }
@@ -414,9 +482,8 @@ if (message.startsWith("/yt ")) {
   // ▶ /yt play
   else {
     const YT_CUSTOM = {
-      "67": "https://www.youtube.com/shorts/NGyWMCWGU6s",
-      "gojo": "https://www.youtube.com/shorts/v848mhO7v4o",
-      "gvs": "https://www.youtube.com/watch?v=44pt8w67S8I"
+      "67": "https://www.youtube.com/watch?v=L7ejl_Hj3A8",
+      "gojo": "https://www.youtube.com/shorts/v848mhO7v4o"
       
     }
 
@@ -429,6 +496,8 @@ if (message.startsWith("/yt ")) {
         `?autoplay=1&rel=0&modestbranding=1&origin=${location.origin}`
 
       panel.style.display = "block"
+document.body.classList.add("panel-open")
+
       message = "▶ Creator played a YouTube video"
     }
   }
@@ -590,9 +659,22 @@ function getYouTubeId(url) {
   } catch (e) {}
   return null
 }
+function closeWebsite() {
+  const panel = document.getElementById("web_panel")
+  const iframe = document.getElementById("web_iframe")
+  iframe.src = ""
+  panel.style.display = "none"
+}
+function closeYT() {
+  const p = document.getElementById("yt_panel")
+  const i = document.getElementById("yt_iframe")
+  if (p) p.style.display = "none"
+  if (i) i.src = ""
+}
 
-
-
-
-
-
+function closeWebsite() {
+  const p = document.getElementById("web_panel")
+  const i = document.getElementById("web_iframe")
+  if (p) p.style.display = "none"
+  if (i) i.src = ""
+}
