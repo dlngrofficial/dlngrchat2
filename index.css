@@ -740,3 +740,101 @@ body{
     width: 100% !important;
   }
 }
+#download_popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+#download_popup_inner {
+  background: #111;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+      color: white;
+    font-family: system-ui;
+  width: 350px;
+  box-shadow: 0 0 20px rgba(255,0,80,0.4);
+  animation: popupFade 0.3s ease;
+}
+
+.download-btn {
+  background: #ff2e63;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-right: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.close-btn {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+@keyframes popupFade {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ===== STAND OUT DOWNLOAD BAR ===== */
+
+#floating_download_bar {
+  position: fixed;
+  left: 0;
+  top: 35%;
+  background: linear-gradient( #0b04717a, #3e066b);
+  padding: 16px 20px;
+  border-radius: 0 16px 16px 0;
+  cursor: pointer;
+  z-index: 9999;
+  transition: 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 8px 25px rgba(0, 114, 255, 0.4);
+  animation: attentionBounce 2.5s infinite;
+}
+
+#download_inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+#download_icon {
+  font-size: 18px;
+}
+
+#new_badge {
+  background: #ff3b3b;
+  color: white;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 12px;
+  margin-left: 6px;
+  font-weight: bold;
+}
+
+/* Hover effect */
+#floating_download_bar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 114, 255, 0.6);
+}
+
+/* Attention animation */
+@keyframes attentionBounce {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
+  100% { transform: translateX(0); }
+}
