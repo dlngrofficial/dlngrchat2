@@ -1,7 +1,37 @@
 /* password code commented as-is (unchanged) */
 
 window.onload = function() {
+// ===== DOWNLOAD APP POPUP =====
+function showDownloadPopup() {
 
+  if (localStorage.getItem("downloadPopupClosed")) return
+
+  const popup = document.createElement("div")
+  popup.id = "download_popup"
+
+  popup.innerHTML = `
+    <div id="download_popup_inner">
+      <h2> Get DLNGR Chat Desktop</h2>
+      <p>Install Windows app for DLNGR CHAT (Only for Windows 64x)</p>
+      <div class="popup-buttons">
+        <a href="https://dlngrofficial.github.io/dlngrchat2/DLNGR CHAT app.exe" target="_blank">
+          <button class="download-btn">Download App</button>
+        </a>
+        <button class="close-btn">Maybe Later</button>
+      </div>
+    </div>
+  `
+
+  document.body.appendChild(popup)
+
+  document.querySelector(".close-btn").onclick = function() {
+    popup.remove()
+    localStorage.setItem("downloadPopupClosed", "true")
+  }
+}
+
+// Show popup after 2 seconds
+setTimeout(showDownloadPopup, 2000)
   // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyCANqpfXb5WFINaKVL97q9HV5dVtpMfyRk",
@@ -594,6 +624,28 @@ document.body.classList.add("panel-open")
   }
 
   var app = new MEME_CHAT()
+  // ===== PREMIUM FLOATING DOWNLOAD BAR =====
+
+// Hide bar if inside desktop app (pywebview adds this)
+if (!window.pywebview) {
+
+  const downloadBar = document.createElement("div")
+  downloadBar.id = "floating_download_bar"
+
+downloadBar.innerHTML = `
+  <div id="download_inner">
+    <span id="download_icon">⬇</span>
+    <span>Download App</span>
+    <span id="new_badge">NEW</span>
+  </div>
+`
+
+  downloadBar.onclick = function() {
+    window.open("https://dlngrofficial.github.io/dlngrchat2/DLNGR CHAT app.exe", "_blank")
+  }
+
+  document.body.appendChild(downloadBar)
+}
   if(app.get_name() != null){
     app.chat()
   }
