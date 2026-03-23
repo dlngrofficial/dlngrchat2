@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const firebaseConfig = window.firebaseConfig;
   const SERVER_TIME = firebase.firestore.FieldValue.serverTimestamp;
   const ONLINE_WINDOW_MS = 2 * 60 * 1000;
@@ -630,14 +630,18 @@
       return;
     }
 
-    const precheck = isLoginMode ? Promise.resolve("") : validateDisplayName(displayName, "");
-    precheck.then(function (validationError) {
-      if (validationError) {
-        throw new Error(validationError);
+    const action = isLoginMode ? auth.signInWithEmailAndPassword(email, password) : auth.createUserWithEmailAndPassword(email, password);
+    action.then(function (credential) {
+      if (!isLoginMode) {
+        return validateDisplayName(displayName, credential.user.uid).then(function (validationError) {
+          if (!validationError) return credential;
+          return credential.user.delete().then(function () {
+            throw new Error(validationError);
+          });
+        }).then(function () {
+          return ensureUserProfile(credential.user, displayName);
+        });
       }
-      return isLoginMode ? auth.signInWithEmailAndPassword(email, password) : auth.createUserWithEmailAndPassword(email, password);
-    }).then(function (credential) {
-      if (!isLoginMode) return ensureUserProfile(credential.user, displayName);
       return null;
     }).then(function () {
       authNameInput.value = "";
