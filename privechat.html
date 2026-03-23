@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PriveChat - DLNGR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Lobster&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-glow page-glow-left"></div>
+  <div class="page-glow page-glow-right"></div>
+  <button class="floating-menu-button" id="menuToggleButton" type="button" aria-label="Open menu">☰</button>
+
+  <section class="auth-view" id="authView">
+    <div class="auth-card">
+      <p class="eyebrow">DLNGR-STUDIOS Presents</p>
+      <h1 id="authTitle">Welcome back</h1>
+      <p class="auth-copy" id="authSubtitle">Sign in to your live PriveChat-DLNGR.</p>
+
+      <form id="authForm" class="auth-form"> 
+        <label class="field" id="authNameField" hidden>
+          <span>Full name</span>
+          <input id="authNameInput" type="text" placeholder="Your name">
+        </label>
+
+        <label class="field">
+          <span>Email</span>
+          <input id="authEmailInput" type="email" placeholder="you@example.com" required>
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input id="authPasswordInput" type="password" placeholder="Minimum 6 characters" required>
+        </label>
+
+        <p class="auth-status" id="authStatus"></p>
+        <button class="send-button auth-submit" id="authSubmitButton" type="submit">Login</button>
+        <button class="text-button" id="authToggleButton" type="button">Need an account? Sign up</button>
+      </form>
+    </div>
+  </section>
+
+  <div class="setup-banner" id="setupBanner" hidden>
+    DLNGR-AI config is missing. Add your project keys in <code>firebase-config.js</code>.
+  </div>
+
+  <main class="app-shell" id="appShell" hidden>
+    <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-row">
+        <div>
+          <p class="eyebrow">DLNGR-STUDIOS</p>
+          <h1>PriveChat</h1>
+        </div>
+        <div class="brand-actions">
+          <button class="icon-button" id="newChatButton" type="button" aria-label="Start new chat">+</button>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Primary">
+        <button class="nav-item is-active" type="button"><span class="nav-icon">H</span><span class="nav-label">Home</span></button>
+        <button class="nav-item" type="button"><span class="nav-icon">E</span><span class="nav-label">Explore</span></button>
+        <button class="nav-item" type="button"><span class="nav-icon">M</span><span class="nav-label">Messages</span></button>
+        <button class="nav-item" type="button"><span class="nav-icon">A</span><span class="nav-label">Activity</span></button>
+      </nav>
+
+      <section class="story-strip" aria-label="Available people">
+        <div class="section-head">
+          <h2><span class="live-dot"></span>People</h2>
+          <span>Live now</span>
+        </div>
+        <div class="stories" id="peopleList"></div>
+      </section>
+
+      <section class="promo-card current-user-card">
+        <p class="promo-label">Logged in as</p>
+          <div class="current-user-row">
+            <div class="avatar-ring"><div class="avatar" id="currentUserAvatar">ME</div></div>
+            <div>
+              <h3 id="currentUserName">User</h3>
+              <p id="currentUserHandle"></p>
+              <div id="currentUserBadges"></div>
+            </div>
+          </div>
+        <div class="account-actions">
+          <button class="pill-button logout-button" id="logoutButton" type="button">Logout</button>
+          <button class="pill-button danger-button logout-button" id="deleteAccountButton" type="button">Delete account</button>
+        </div>
+      </section>
+    </aside>
+
+    <section class="messenger">
+      <div class="messenger-grid">
+        <section class="thread-list-panel">
+          <div class="panel-head">
+            <h3>Recent chats</h3>
+            <div class="thread-actions">
+              <button class="pill-button" type="button" id="openPickerButton">Pick from People</button>
+              <button class="pill-button danger-button" type="button" id="clearChatsButton">Clear all</button>
+            </div>
+          </div>
+
+          <label class="search thread-search">
+            <span class="search-icon">S</span>
+            <input id="searchInput" type="search" placeholder="Search chats">
+          </label>
+
+          <div class="thread-list" id="threadList" role="listbox" aria-label="Conversation list"></div>
+        </section>
+
+        <section class="conversation-panel">
+          <header class="conversation-head">
+            <button class="icon-button soft mobile-back-button" id="mobileBackButton" type="button" aria-label="Back to chats">←</button>
+            <div class="conversation-user">
+              <div class="avatar-ring large"><div class="avatar" id="activeAvatar">..</div></div>
+              <div>
+                <h3 id="activeName">No chat selected</h3>
+                <p id="activeStatus">Pick or create a chat</p>
+                <div id="activeUserBadges"></div>
+              </div>
+            </div>
+            <div class="conversation-toolbar">
+              <button class="pill-button danger-button" type="button" id="removeUserButton" hidden>Remove user</button>
+              <button class="pill-button danger-button" type="button" id="banUserButton" hidden>Ban user</button>
+              <button class="pill-button danger-button" type="button" id="deleteChatButton">Delete chat</button>
+            </div>
+          </header>
+
+          <div class="chat-stage">
+            <div class="request-panel" id="requestPanel" hidden>
+              <div class="request-copy">
+                <strong id="requestTitle">Conversation request</strong>
+                <p id="requestText">This user wants to start chatting with you.</p>
+              </div>
+              <div class="request-actions" id="requestActions">
+                <button class="pill-button accept-button" type="button" id="acceptRequestButton">Accept</button>
+                <button class="pill-button danger-button" type="button" id="rejectRequestButton">Decline</button>
+              </div>
+            </div>
+            <div class="message-list" id="messageList" aria-live="polite"></div>
+          </div>
+
+          <form class="composer" id="messageForm">
+            <button class="icon-button soft" type="button" aria-label="New chat">+</button>
+            <input id="messageInput" type="text" placeholder="Message..." autocomplete="off">
+            <button class="send-button" type="submit">Send</button>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
