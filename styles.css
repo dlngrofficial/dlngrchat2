@@ -965,7 +965,7 @@ input {
 
   .thread-list-panel,
   .conversation-panel {
-    height: calc(100vh - 1.1rem);
+    height: calc(100dvh - 1.1rem);
     border-radius: 20px;
   }
 
@@ -983,38 +983,48 @@ input {
 
   .mobile-back-button {
     display: inline-grid;
-    order: 2;
-    margin-left: auto;
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 0;
   }
 
   .conversation-head {
-    flex-wrap: wrap;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: start;
     gap: 0.9rem;
   }
 
   .conversation-user {
-    flex: 1;
+    grid-column: 1;
+    grid-row: 1 / span 2;
     min-width: 0;
   }
 
   .conversation-toolbar {
-    order: 3;
-    width: 100%;
+    grid-column: 3;
+    grid-row: 1;
+    width: auto;
     margin-left: 0;
+    align-self: start;
   }
 
   .conversation-toolbar .pill-button {
-    width: 100%;
+    width: auto;
   }
 
   .conversation-toolbar .delete-chat-button {
     width: 2.7rem;
     min-width: 2.7rem;
     height: 2.7rem;
-    margin-left: auto;
+    margin-left: 0;
     padding: 0;
     border-radius: 14px;
+  }
+
+  .conversation-toolbar #removeUserButton,
+  .conversation-toolbar #banUserButton {
+    display: none !important;
   }
 
   .conversation-toolbar .delete-chat-label {
@@ -1047,7 +1057,7 @@ input {
 
   .thread-list-panel,
   .conversation-panel {
-    height: calc(100vh - 0.7rem);
+    height: calc(100dvh - 0.7rem);
     border-radius: 18px;
   }
 
