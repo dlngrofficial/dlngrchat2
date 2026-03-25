@@ -14,7 +14,9 @@
     usersUnsubscribe: null,
     filterValue: "",
     isMobileChatOpen: false,
-    isSidebarOpen: false
+    isSidebarOpen: false,
+    isChatPickerOpen: false,
+    isDeletingAccount: false
   };
 
   const authView = document.getElementById("authView");
@@ -30,6 +32,9 @@
   const appShell = document.getElementById("appShell");
   const sidebar = document.getElementById("sidebar");
   const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+  const chatPickerBackdrop = document.getElementById("chatPickerBackdrop");
+  const chatPickerList = document.getElementById("chatPickerList");
+  const closeChatPickerButton = document.getElementById("closeChatPickerButton");
   const menuToggleButton = document.getElementById("menuToggleButton");
   const mobileBackButton = document.getElementById("mobileBackButton");
   const threadList = document.getElementById("threadList");
@@ -59,6 +64,7 @@
   const requestActions = document.getElementById("requestActions");
   const acceptRequestButton = document.getElementById("acceptRequestButton");
   const rejectRequestButton = document.getElementById("rejectRequestButton");
+  const conversationVideo = document.getElementById("conversationVideo");
 
   let isLoginMode = true;
   let auth = null;
@@ -199,6 +205,35 @@
     menuToggleButton.hidden = !isAuthenticated;
   }
 
+  function tryPlayConversationVideo() {
+    if (!conversationVideo) return;
+    conversationVideo.muted = true;
+    conversationVideo.defaultMuted = true;
+    conversationVideo.loop = true;
+    const playPromise = conversationVideo.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(function () {
+        return null;
+      });
+    }
+  }
+
+  function resetToAuthScreen(message) {
+    cleanupListeners();
+    state.currentUser = null;
+    state.currentProfile = null;
+    state.chats = [];
+    state.users = [];
+    state.activeChatId = null;
+    threadList.innerHTML = "";
+    messageList.innerHTML = '<div class="empty-state">Choose a chat to start messaging.</div>';
+    setSidebarOpen(false);
+    setMobileChatOpen(false);
+    setAuthenticatedUi(false);
+    setAuthMode(true);
+    setAuthStatus(message || "");
+  }
+
   function setSidebarOpen(isOpen) {
     state.isSidebarOpen = isOpen;
     appShell.classList.toggle("sidebar-open", isOpen);
@@ -209,6 +244,16 @@
   function setMobileChatOpen(isOpen) {
     state.isMobileChatOpen = isOpen;
     appShell.classList.toggle("mobile-chat-open", isOpen);
+  }
+
+  function setChatPickerOpen(isOpen) {
+    state.isChatPickerOpen = isOpen;
+    if (chatPickerBackdrop) {
+      chatPickerBackdrop.hidden = !isOpen;
+    }
+    if (isOpen) {
+      renderChatPickerList();
+    }
   }
 
   function stopActiveChatListener() {
@@ -307,6 +352,34 @@
         if (isMobileViewport()) setSidebarOpen(false);
       });
       peopleList.appendChild(button);
+    });
+  }
+
+  function renderChatPickerList() {
+    if (!chatPickerList) return;
+    chatPickerList.innerHTML = "";
+
+    const otherUsers = state.users.filter(function (user) {
+      return user.uid !== state.currentUser.uid && !user.banned && isUserLive(user);
+    });
+
+    if (!otherUsers.length) {
+      chatPickerList.innerHTML = '<div class="empty-state">No online users available right now.</div>';
+      return;
+    }
+
+    otherUsers.forEach(function (user) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "chat-picker-item";
+      button.innerHTML =
+        '<span class="avatar-ring"><span class="avatar">' + escapeHtml(initialsFromName(normalizeDisplayName(user))) + '</span></span>' +
+        '<span class="chat-picker-copy"><strong>' + escapeHtml(normalizeDisplayName(user)) + '</strong><span>Online now</span>' + renderBadges(user) + '</span>';
+      button.addEventListener("click", function () {
+        setChatPickerOpen(false);
+        startDirectChat(user.uid);
+      });
+      chatPickerList.appendChild(button);
     });
   }
 
@@ -566,6 +639,7 @@
         }
       }
       renderPeopleList();
+      renderChatPickerList();
       renderThreadList();
       const activeChat = getActiveChat();
       if (activeChat) {
@@ -660,6 +734,9 @@
     const password = window.prompt("Enter your password to confirm this action:");
     if (password === null) {
       return Promise.reject(new Error("Action cancelled."));
+    }
+    if (!password.trim()) {
+      return Promise.reject(new Error("Password is required."));
     }
     const credential = firebase.auth.EmailAuthProvider.credential(state.currentUser.email, password);
     return state.currentUser.reauthenticateWithCredential(credential);
@@ -757,6 +834,8 @@
     if (!window.confirm("Delete your account permanently? This will remove your chats and you will need to sign up again.")) return;
 
     const uid = state.currentUser.uid;
+    const accountEmail = state.currentUser.email;
+    state.isDeletingAccount = true;
     reauthenticateCurrentUser().then(function () {
       return deleteChatsForUser(uid);
     }).then(function () {
@@ -770,8 +849,19 @@
       return state.currentUser.delete();
     }).then(function () {
       authNotice = "Account deleted. Sign up again to return.";
+      resetToAuthScreen("Account deleted for " + accountEmail + ". Sign up again to return.");
+      if (auth) {
+        return auth.signOut().catch(function () {
+          return null;
+        });
+      }
+      return null;
     }).catch(function (error) {
+      state.isDeletingAccount = false;
       console.error(error);
+      if (error && error.message === "Action cancelled.") {
+        return;
+      }
       setAuthStatus(error.message || "Could not delete account.");
     });
   }
@@ -830,6 +920,9 @@
 
     auth.onAuthStateChanged(function (user) {
       cleanupListeners();
+      if (state.isDeletingAccount && !user) {
+        state.isDeletingAccount = false;
+      }
       if (!user) {
         state.currentUser = null;
         state.currentProfile = null;
@@ -842,6 +935,10 @@
           setAuthStatus(authNotice);
           authNotice = "";
         }
+        return;
+      }
+
+      if (state.isDeletingAccount) {
         return;
       }
 
@@ -881,13 +978,19 @@
     handleDeleteMessage(deleteButton.getAttribute("data-message-id"));
   });
   newChatButton.addEventListener("click", function () {
-    setSidebarOpen(true);
+    setChatPickerOpen(true);
   });
   openPickerButton.addEventListener("click", function () {
-    setSidebarOpen(true);
+    setChatPickerOpen(true);
   });
   menuToggleButton.addEventListener("click", function () { setSidebarOpen(!state.isSidebarOpen); });
   sidebarBackdrop.addEventListener("click", function () { setSidebarOpen(false); });
+  chatPickerBackdrop.addEventListener("click", function (event) {
+    if (event.target === chatPickerBackdrop) {
+      setChatPickerOpen(false);
+    }
+  });
+  closeChatPickerButton.addEventListener("click", function () { setChatPickerOpen(false); });
   mobileBackButton.addEventListener("click", function () { setMobileChatOpen(false); });
   logoutButton.addEventListener("click", function () {
     updatePresence(false).finally(function () {
@@ -905,6 +1008,7 @@
     if (state.currentUser) updatePresence(false);
   });
   document.addEventListener("visibilitychange", function () {
+    tryPlayConversationVideo();
     if (!state.currentUser) return;
     updatePresence(document.visibilityState === "visible");
   });
@@ -916,5 +1020,15 @@
   });
 
   setAuthMode(true);
+  if (conversationVideo) {
+    conversationVideo.addEventListener("loadeddata", tryPlayConversationVideo);
+    conversationVideo.addEventListener("canplay", tryPlayConversationVideo);
+    conversationVideo.addEventListener("pause", function () {
+      if (document.visibilityState === "visible") {
+        tryPlayConversationVideo();
+      }
+    });
+    tryPlayConversationVideo();
+  }
   initFirebase();
 })();
