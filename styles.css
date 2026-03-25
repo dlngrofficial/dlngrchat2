@@ -20,7 +20,9 @@
 [hidden] {
   display: none !important;
 }
-
+.expo{
+ text-decoration:non; 
+}
 html,
 body {
   margin: 0;
