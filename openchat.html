@@ -1,76 +1,201 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title> DLNGR CHAT </title>
-    <link rel="icon" type="image/png" href="dlngrchat.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@500&display=swap" rel="stylesheet">
-    <!-- Google fonts. -->
-    <link href='https://fonts.googleapis.com/css?family=Bungee Outline' rel='stylesheet'/>
-    <link href='https://fonts.googleapis.com/css?family=Varela Round' rel='stylesheet'/>
-    <!-- Use font awesome icons. -->
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <!-- Use firebase app and database. -->
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DLNGR Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dlngrchat.css">
+</head>
+<body>
+  <div class="video-bg">
+    <video autoplay muted loop playsinline>
+      <source src="https://dlngrofficial.github.io/dlngrchat2/pink-puff-clouds.1920x1080.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="page-shell">
+    <section class="join-panel" id="joinPanel">
+      <div class="join-card">
+        <p class="eyebrow">Open room</p>
+        <h1>DLNGR Chat</h1>
+        <p class="join-copy">
+          Enter a name and start your conversation with people.
+        </p>
 
-    <!-- The CSS and JS file must be declared after the things above-->
-    <link rel="stylesheet" href="https://dlngrofficial.github.io/dlngrchat2/index.css">
-     <script type="text/javascript" src="https://dlngrofficial.github.io/dlngrchat2/index.js"></script>
-   
-<style>
-  .dlngr-credit {
-    position: fixed;
-    bottom: 16px;
-    left: 16px;
-    background: rgba(31, 41, 55, 0.9); /* dark charcoal */
-    color: #e5e7eb;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: 14px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-    z-index: 9999;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    pointer-events: none; /* doesn't block clicks */
-  }
+        <form class="join-form" id="joinForm">
+          <label for="username" class="label">Your name</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            maxlength="24"
+            placeholder="Type your name"
+            autocomplete="nickname"
+            required
+          >
+          <div class="password-wrap hidden" id="passwordWrap">
+            <label for="roomPassword" class="label">Password</label>
+            <input
+              id="roomPassword"
+              name="roomPassword"
+              type="password"
+              placeholder="Enter password"
+              autocomplete="current-password"
+            >
+          </div>
+          <button type="submit" class="primary-btn">Join Chat</button>
+          <p class="helper-text" id="joinStatus">Your name is only used inside this chat.</p>
+        </form>
+      </div>
+    </section>
 
-  .dlngr-credit span {
-    color: #dc2626; /* crimson */
-    font-weight: 600;
-    margin-left: 4px;
-  }
+    <main class="chat-panel hidden" id="chatPanel">
+      <aside class="media-panel hidden" id="mediaPanel">
+        <div class="media-panel__header">
+          <p class="eyebrow">Live media</p>
+          <button type="button" class="media-close-btn" id="mediaCloseBtn" aria-label="Close shared media">X</button>
+        </div>
+        <div class="media-panel__body" id="mediaPanelBody"></div>
+      </aside>
+      <button type="button" class="mobile-toggle" id="mobileSidebarToggle" aria-label="Open details panel">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <button type="button" class="mobile-bell-toggle" id="mobileBellToggle" aria-label="Open notifications">
+        <span class="mobile-bell-toggle__icon">&#128276;</span>
+        <span class="mobile-bell-toggle__badge hidden" id="mobileBellBadge">0</span>
+      </button>
+      <div class="mobile-brand">DLNGR CHAT</div>
+      <button type="button" class="mobile-media-toggle hidden" id="mobileMediaToggle" aria-label="Open shared media">
+        <span class="mobile-media-toggle__dot"></span>
+        <span class="mobile-media-toggle__badge">1</span>
+      </button>
+      <div class="mobile-overlay hidden" id="mobileOverlay"></div>
+      <div class="notification-panel hidden" id="notificationPanel">
+        <div class="notification-panel__header">
+          <p class="eyebrow">Mentions</p>
+          <button type="button" class="media-close-btn" id="notificationCloseBtn" aria-label="Close notifications">X</button>
+        </div>
+        <div class="notification-list" id="notificationList"></div>
+      </div>
+      <aside class="mobile-drawer hidden" id="mobileDrawer">
+        <div class="mobile-drawer__header">
+          <p class="eyebrow">Details</p>
+          <button type="button" class="media-close-btn" id="mobileDrawerCloseBtn" aria-label="Close details">X</button>
+        </div>
+        <div class="mobile-drawer__content">
+          <div class="user-pill">
+            <span class="user-pill__label">You:</span>
+            <strong id="mobileActiveUsername">Guest</strong>
+            <span class="tag-badge hidden" id="mobileActiveUserTag"></span>
+          </div>
+          <div class="room-card">
+            <a class="explore-btn" id="mobileRoomNote" href="https://dlngrofficial.github.io/dlngrapps/">Explore DLNGR</a>
+          </div>
+          <div class="sidebar-actions">
+            <button type="button" class="secondary-btn" id="mobileChangeNameBtn">Change Name</button>
+            <button type="button" class="secondary-btn" id="mobileClearChatBtn">Clear Chat</button>
+            <button type="button" class="secondary-btn" id="mobileLogoutBtn">Log Out</button>
+          </div>
+          <div class="users-header">
+            <p class="eyebrow">Live users</p>
+            <h2 class="users-title">Online now</h2>
+            <p class="users-count" id="mobileOnlineCount">0 users online</p>
+          </div>
+          <div class="users-list" id="mobileOnlineUsers"></div>
+        </div>
+      </aside>
+      <div class="mobile-media hidden" id="mobileMedia">
+        <div class="mobile-media__header">
+          <button type="button" class="media-close-btn" id="mobileMediaCloseBtn" aria-label="Close shared media">X</button>
+        </div>
+        <div class="mobile-media__body" id="mobileMediaBody"></div>
+      </div>
+      <aside class="chat-sidebar chat-sidebar--left">
+        <div class="chat-header">
+          <h1 class="chat-title">DLNGR CHAT</h1>
 
-  /* Mobile friendly */
-  @media (max-width: 480px) {
-    .dlngr-credit {
-      font-size: 12px;
-      padding: 8px 12px;
-      bottom: 12px;
-      left: 12px;
-    }
-  }
-</style>
-  </head>
-  <body>
- <div class="video-bg">
-  <video autoplay muted loop playsinline>
-    <source src="https://dlngrofficial.github.io/dlngrchat2/pink-puff-clouds.1920x1080.mp4" type="video/mp4">
-  </video>
-</div>
+        </div>
+        <div class="sidebar-stack">
+          <div class="user-pill">
+            <span class="user-pill__label">You:</span>
+            <strong id="activeUsername">Guest</strong>
+            <span class="tag-badge hidden" id="activeUserTag"></span>
+          </div>
 
-   <div class="dlngr-credit">
-  Created by <span>LORD, UDIT VISHWAKRMA</span>
-</div>
-  </body>
+          <div class="room-card">
+            <a class="explore-btn" id="roomNote" href="https://dlngrofficial.github.io/dlngrapps/">Explore DLNGR</a>
+          </div>
+
+          <div class="sidebar-actions">
+            <button type="button" class="secondary-btn" id="changeNameBtn">Change Name</button>
+            <button type="button" class="secondary-btn" id="clearChatBtn">Clear Chat</button>
+            <button type="button" class="secondary-btn" id="logoutBtn">Log Out</button>
+          </div>
+        </div>
+      </aside>
+
+      <section class="chat-room">
+        <div class="messages" id="messages" aria-live="polite"></div>
+
+        <form class="message-form" id="messageForm">
+          <label for="messageInput" class="sr-only">Write a message</label>
+          <textarea
+            id="messageInput"
+            name="messageInput"
+            rows="1"
+            placeholder="Write your message..."
+            required
+          ></textarea>
+          <button type="submit" class="send-icon-btn" id="sendMessageBtn" aria-label="Send message">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3.4 20.4 21 12 3.4 3.6l2.2 6.5 8.2 1.9-8.2 1.9-2.2 6.5Z" />
+            </svg>
+          </button>
+        </form>
+      </section>
+
+      <aside class="chat-sidebar chat-sidebar--right">
+        <div class="users-header">
+          <p class="eyebrow">Live users</p>
+          <div class="users-title-row">
+            <h2 class="users-title">Online now</h2>
+            <button type="button" class="desktop-bell-toggle" id="desktopBellToggle" aria-label="Open notifications">
+              <span class="desktop-bell-toggle__icon">&#128276;</span>
+              <span class="desktop-bell-toggle__badge hidden" id="desktopBellBadge">0</span>
+            </button>
+          </div>
+          <p class="users-count" id="onlineCount">0 users online</p>
+        </div>
+        <div class="users-list" id="onlineUsers"></div>
+        <div class="users-footer">
+          <a class="download-app-btn" href="https://dlngrofficial.github.io/dlngrchat2/DLNGR%20CHAT%20app.exe">Download The App</a>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <template id="messageTemplate">
+    <article class="message">
+      <div class="message__meta">
+        <div class="message__author-wrap">
+          <strong class="message__author"></strong>
+          <span class="tag-badge hidden message__tag"></span>
+        </div>
+        <span class="message__time"></span>
+      </div>
+      <p class="message__text"></p>
+      <div class="message__actions">
+        <button type="button" class="message-action message__copy">Copy</button>
+        <button type="button" class="message-action message__delete hidden">Delete</button>
+      </div>
+    </article>
+  </template>
+
+  <script type="module" src="dlngrchat.js"></script>
+</body>
 </html>
-
-
-
-
-
-
-
-
