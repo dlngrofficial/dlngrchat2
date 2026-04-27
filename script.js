@@ -12,6 +12,8 @@
     activeChatUnsubscribe: null,
     chatsUnsubscribe: null,
     usersUnsubscribe: null,
+    globalSessionUnsubscribe: null,
+    userKickoutUnsubscribe: null,
     filterValue: "",
     isMobileChatOpen: false,
     isSidebarOpen: false,
@@ -273,10 +275,77 @@
       state.usersUnsubscribe();
       state.usersUnsubscribe = null;
     }
+    if (state.globalSessionUnsubscribe) {
+      state.globalSessionUnsubscribe();
+      state.globalSessionUnsubscribe = null;
+    }
+    if (state.userKickoutUnsubscribe) {
+      state.userKickoutUnsubscribe();
+      state.userKickoutUnsubscribe = null;
+    }
     if (presenceTimer) {
       window.clearInterval(presenceTimer);
       presenceTimer = null;
     }
+  }
+
+  function didSessionStartBeforeControl(user, control) {
+    if (!user || !control || !control.issuedAt) return false;
+    try {
+      const issuedAt = control.issuedAt.toDate ? control.issuedAt.toDate() : new Date(control.issuedAt);
+      const lastSignIn = user.metadata && user.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime) : null;
+      if (!lastSignIn || Number.isNaN(lastSignIn.getTime()) || Number.isNaN(issuedAt.getTime())) return false;
+      return lastSignIn.getTime() <= issuedAt.getTime();
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function startGlobalSessionListener() {
+    if (state.globalSessionUnsubscribe) {
+      state.globalSessionUnsubscribe();
+    }
+
+    state.globalSessionUnsubscribe = db.collection("adminControls").doc("globalSession").onSnapshot(function (snapshot) {
+      if (!snapshot.exists || !state.currentUser || isCreator(state.currentProfile || state.currentUser)) {
+        return;
+      }
+
+      const control = snapshot.data();
+      if (!didSessionStartBeforeControl(state.currentUser, control)) {
+        return;
+      }
+
+      authNotice = "You were signed out by the creator across DLNGR apps.";
+      updatePresence(false).finally(function () {
+        return auth.signOut();
+      });
+    });
+  }
+
+  function startUserKickoutListener() {
+    if (state.userKickoutUnsubscribe) {
+      state.userKickoutUnsubscribe();
+    }
+
+    state.userKickoutUnsubscribe = db.collection("adminControls").doc("userKickout").onSnapshot(function (snapshot) {
+      if (!snapshot.exists || !state.currentUser || isCreator(state.currentProfile || state.currentUser)) {
+        return;
+      }
+
+      const control = snapshot.data();
+      if (!control || control.targetUid !== state.currentUser.uid) {
+        return;
+      }
+      if (!didSessionStartBeforeControl(state.currentUser, control)) {
+        return;
+      }
+
+      authNotice = "You were logged out by the creator across DLNGR apps.";
+      updatePresence(false).finally(function () {
+        return auth.signOut();
+      });
+    });
   }
 
   function getActiveChat() {
@@ -956,6 +1025,8 @@
           startPresenceTracking();
           startUserListener();
           startChatListListener();
+          startGlobalSessionListener();
+          startUserKickoutListener();
         })
         .catch(function (error) {
           console.error(error);
