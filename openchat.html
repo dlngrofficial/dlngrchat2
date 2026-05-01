@@ -12,7 +12,7 @@
 
 </head>
 <body>
-  <div class="video-bg">
+ <div class="video-bg">
     <video autoplay muted loop playsinline>
       <source src="https://dlngrofficial.github.io/dlngrchat2/pink-puff-clouds.1920x1080.mp4" type="video/mp4">
     </video>
@@ -52,6 +52,25 @@
 
     <!-- CHAT PANEL -->
     <main class="chat-panel hidden" id="chatPanel">
+      <!-- MOBILE FIXED HEADER -->
+      <header class="mobile-header">
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button type="button" class="mobile-bell-toggle" id="mobileBellToggle" aria-label="Open notifications">
+            <span class="mobile-bell-toggle__icon">🔔</span>
+            <span class="mobile-bell-toggle__badge hidden" id="mobileBellBadge">0</span>
+          </button>
+          <button type="button" class="mobile-media-toggle hidden" id="mobileMediaToggle" aria-label="Open shared media">
+
+          </button>
+        </div>
+        
+        <div class="mobile-brand">DLNGR CHAT</div>
+
+        <button type="button" class="mobile-toggle" id="mobileSidebarToggle" aria-label="Open details panel">
+          <span></span><span></span><span></span><span></span>
+        </button>
+      </header>
+
       <aside class="media-panel hidden" id="mediaPanel">
         <div class="media-panel__header">
           <p class="eyebrow">// Live Feed</p>
@@ -60,18 +79,6 @@
         <div class="media-panel__body" id="mediaPanelBody"></div>
       </aside>
 
-      <button type="button" class="mobile-toggle" id="mobileSidebarToggle" aria-label="Open details panel">
-        <span></span><span></span><span></span><span></span>
-      </button>
-      <button type="button" class="mobile-bell-toggle" id="mobileBellToggle" aria-label="Open notifications">
-        <span class="mobile-bell-toggle__icon">🔔</span>
-        <span class="mobile-bell-toggle__badge hidden" id="mobileBellBadge">0</span>
-      </button>
-      <div class="mobile-brand">DLNGR CHAT</div>
-      <button type="button" class="mobile-media-toggle hidden" id="mobileMediaToggle" aria-label="Open shared media">
-        <span class="mobile-media-toggle__dot"></span>
-        <span class="mobile-media-toggle__badge">1</span>
-      </button>
       <div class="mobile-overlay hidden" id="mobileOverlay"></div>
 
       <div class="notification-panel hidden" id="notificationPanel">
@@ -194,7 +201,6 @@
       </div>
     </article>
   </template>
-
 <script type="module" src="index.js"></script>
 </body>
 </html>
