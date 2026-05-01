@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DLNGR Chat</title>
-  <link rel="icon" type="image/png" href="dlngrchat.png">
+    <link rel="icon" type="image/png" href="dlngrchat.png">
+     <link rel="stylesheet" href="index.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+
 </head>
 <body>
   <div class="video-bg">
@@ -16,58 +17,54 @@
       <source src="https://dlngrofficial.github.io/dlngrchat2/pink-puff-clouds.1920x1080.mp4" type="video/mp4">
     </video>
   </div>
+
   <div class="page-shell">
+    <!-- JOIN PANEL -->
     <section class="join-panel" id="joinPanel">
       <div class="join-card">
-        <p class="eyebrow">Open room</p>
-        <h1>DLNGR Chat</h1>
-        <p class="join-copy">
-          Enter a name and start your conversation with people.
-        </p>
+        <span class="corner corner--tl"></span>
+        <span class="corner corner--tr"></span>
+        <span class="corner corner--bl"></span>
+        <span class="corner corner--br"></span>
+
+        <div class="dlngr-logo">
+          <span class="logo-dl">DL</span><span class="logo-ngr">NGR</span>
+        </div>
+
+        <p class="eyebrow">// Open Channel</p>
+        <h1>Chat</h1>
+        <p class="join-copy">Enter a handle and connect to the room.</p>
 
         <form class="join-form" id="joinForm">
-          <label for="username" class="label">Your name</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            maxlength="24"
-            placeholder="Type your name"
-            autocomplete="nickname"
-            required
-          >
+          <label for="username" class="label">Your handle</label>
+          <input id="username" name="username" type="text" maxlength="24"
+            placeholder="Enter callsign..." autocomplete="nickname" required>
           <div class="password-wrap hidden" id="passwordWrap">
-            <label for="roomPassword" class="label">Password</label>
-            <input
-              id="roomPassword"
-              name="roomPassword"
-              type="password"
-              placeholder="Enter password"
-              autocomplete="current-password"
-            >
+            <label for="roomPassword" class="label">Access Code</label>
+            <input id="roomPassword" name="roomPassword" type="password"
+              placeholder="Enter code..." autocomplete="current-password">
           </div>
-          <button type="submit" class="primary-btn">Join Chat</button>
-          <p class="helper-text" id="joinStatus">Your name is only used inside this chat.</p>
+          <button type="submit" class="primary-btn">Initialize Connection</button>
+          <p class="helper-text" id="joinStatus">Your handle is only visible inside this channel.</p>
         </form>
       </div>
     </section>
 
+    <!-- CHAT PANEL -->
     <main class="chat-panel hidden" id="chatPanel">
       <aside class="media-panel hidden" id="mediaPanel">
         <div class="media-panel__header">
-          <p class="eyebrow">Live media</p>
-          <button type="button" class="media-close-btn" id="mediaCloseBtn" aria-label="Close shared media">X</button>
+          <p class="eyebrow">// Live Feed</p>
+          <button type="button" class="media-close-btn" id="mediaCloseBtn" aria-label="Close shared media">✕</button>
         </div>
         <div class="media-panel__body" id="mediaPanelBody"></div>
       </aside>
+
       <button type="button" class="mobile-toggle" id="mobileSidebarToggle" aria-label="Open details panel">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span><span></span>
       </button>
       <button type="button" class="mobile-bell-toggle" id="mobileBellToggle" aria-label="Open notifications">
-        <span class="mobile-bell-toggle__icon">&#128276;</span>
+        <span class="mobile-bell-toggle__icon">🔔</span>
         <span class="mobile-bell-toggle__badge hidden" id="mobileBellBadge">0</span>
       </button>
       <div class="mobile-brand">DLNGR CHAT</div>
@@ -76,21 +73,23 @@
         <span class="mobile-media-toggle__badge">1</span>
       </button>
       <div class="mobile-overlay hidden" id="mobileOverlay"></div>
+
       <div class="notification-panel hidden" id="notificationPanel">
         <div class="notification-panel__header">
-          <p class="eyebrow">Mentions</p>
-          <button type="button" class="media-close-btn" id="notificationCloseBtn" aria-label="Close notifications">X</button>
+          <p class="eyebrow">// Mentions</p>
+          <button type="button" class="media-close-btn" id="notificationCloseBtn" aria-label="Close notifications">✕</button>
         </div>
         <div class="notification-list" id="notificationList"></div>
       </div>
+
       <aside class="mobile-drawer hidden" id="mobileDrawer">
         <div class="mobile-drawer__header">
-          <p class="eyebrow">Details</p>
-          <button type="button" class="media-close-btn" id="mobileDrawerCloseBtn" aria-label="Close details">X</button>
+          <p class="eyebrow">// Node Details</p>
+          <button type="button" class="media-close-btn" id="mobileDrawerCloseBtn" aria-label="Close details">✕</button>
         </div>
         <div class="mobile-drawer__content">
           <div class="user-pill">
-            <span class="user-pill__label">You:</span>
+            <span class="user-pill__label">NODE:</span>
             <strong id="mobileActiveUsername">Guest</strong>
             <span class="tag-badge hidden" id="mobileActiveUserTag"></span>
           </div>
@@ -98,75 +97,74 @@
             <a class="explore-btn" id="mobileRoomNote" href="https://dlngrofficial.github.io/dlngrapps/">Explore DLNGR</a>
           </div>
           <div class="sidebar-actions">
-            <button type="button" class="secondary-btn" id="mobileChangeNameBtn">Change Name</button>
-            <button type="button" class="secondary-btn" id="mobileClearChatBtn">Clear Chat</button>
-            <button type="button" class="secondary-btn" id="mobileLogoutBtn">Log Out</button>
+            <button type="button" class="secondary-btn" id="mobileChangeNameBtn">Change Handle</button>
+            <button type="button" class="secondary-btn" id="mobileClearChatBtn">Clear Channel</button>
+            <button type="button" class="secondary-btn" id="mobileLogoutBtn">Disconnect</button>
           </div>
           <div class="users-header">
-            <p class="eyebrow">Live users</p>
-            <h2 class="users-title">Online now</h2>
+            <p class="eyebrow">// Active Nodes</p>
+            <h2 class="users-title">Online Now</h2>
             <p class="users-count" id="mobileOnlineCount">0 users online</p>
           </div>
           <div class="users-list" id="mobileOnlineUsers"></div>
         </div>
       </aside>
+
       <div class="mobile-media hidden" id="mobileMedia">
         <div class="mobile-media__header">
-          <button type="button" class="media-close-btn" id="mobileMediaCloseBtn" aria-label="Close shared media">X</button>
+          <button type="button" class="media-close-btn" id="mobileMediaCloseBtn" aria-label="Close shared media">✕</button>
         </div>
         <div class="mobile-media__body" id="mobileMediaBody"></div>
       </div>
+
+      <!-- LEFT SIDEBAR -->
       <aside class="chat-sidebar chat-sidebar--left">
         <div class="chat-header">
-          <h1 class="chat-title">DLNGR CHAT</h1>
-
+          <div class="dlngr-logo" style="font-size:1.4rem; margin-bottom:8px;">
+            <span class="logo-dl">DL</span><span class="logo-ngr">NGR</span>
+          </div>
+          <h1 class="chat-title">Chat</h1>
         </div>
         <div class="sidebar-stack">
           <div class="user-pill">
-            <span class="user-pill__label">You:</span>
+            <span class="user-pill__label">NODE:</span>
             <strong id="activeUsername">Guest</strong>
             <span class="tag-badge hidden" id="activeUserTag"></span>
           </div>
-
           <div class="room-card">
             <a class="explore-btn" id="roomNote" href="https://dlngrofficial.github.io/dlngrapps/">Explore DLNGR</a>
           </div>
-
           <div class="sidebar-actions">
-            <button type="button" class="secondary-btn" id="changeNameBtn">Change Name</button>
-            <button type="button" class="secondary-btn" id="clearChatBtn">Clear Chat</button>
-            <button type="button" class="secondary-btn" id="logoutBtn">Log Out</button>
+            <button type="button" class="secondary-btn" id="changeNameBtn">Change Handle</button>
+            <button type="button" class="secondary-btn" id="clearChatBtn">Clear Channel</button>
+            <button type="button" class="secondary-btn" id="logoutBtn">Disconnect</button>
           </div>
         </div>
       </aside>
 
+      <!-- CHAT ROOM -->
       <section class="chat-room">
         <div class="messages" id="messages" aria-live="polite"></div>
-
         <form class="message-form" id="messageForm">
           <label for="messageInput" class="sr-only">Write a message</label>
-          <textarea
-            id="messageInput"
-            name="messageInput"
-            rows="1"
-            placeholder="Write your message..."
-            required
-          ></textarea>
+          <textarea id="messageInput" name="messageInput" rows="1"
+            placeholder="Transmit message..." required></textarea>
           <button type="submit" class="send-icon-btn" id="sendMessageBtn" aria-label="Send message">
             <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3.4 20.4 21 12 3.4 3.6l2.2 6.5 8.2 1.9-8.2 1.9-2.2 6.5Z" />
+              <path d="M3.4 20.4 21 12 3.4 3.6l2.2 6.5 8.2 1.9-8.2 1.9-2.2 6.5Z"/>
             </svg>
           </button>
         </form>
       </section>
 
+      <!-- RIGHT SIDEBAR -->
       <aside class="chat-sidebar chat-sidebar--right">
         <div class="users-header">
-          <p class="eyebrow">Live users</p>
+          <p class="eyebrow">// Active Nodes</p>
           <div class="users-title-row">
-            <h2 class="users-title">Online now</h2>
+            <h2 class="users-title">Online Now</h2>
             <button type="button" class="desktop-bell-toggle" id="desktopBellToggle" aria-label="Open notifications">
-              <span class="desktop-bell-toggle__icon">&#128276;</span>
+              <span class="desktop-bell-toggle__icon">🔔</span>
               <span class="desktop-bell-toggle__badge hidden" id="desktopBellBadge">0</span>
             </button>
           </div>
@@ -197,6 +195,6 @@
     </article>
   </template>
 
-  <script type="module" src="index.js"></script>
+<script type="module" src="index.js"></script>
 </body>
 </html>
