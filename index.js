@@ -1,4 +1,5 @@
 
+    
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   addDoc,
@@ -46,7 +47,8 @@ const STORAGE_KEYS = {
   draft: "dlngrchat_draft",
   sessionId: "dlngrchat_session_id",
   seenMentions: "dlngrchat_seen_mentions",
-  handledLogoutAll: "dlngrchat_handled_logout_all"
+  handledLogoutAll: "dlngrchat_handled_logout_all",
+  handledBroadcast: "dlngrchat_handled_broadcast"
 };
 
 const ROOM_NAME = "main-room";
@@ -67,8 +69,6 @@ const activeUsername = document.getElementById("activeUsername");
 const activeUserTag = document.getElementById("activeUserTag");
 const mobileActiveUsername = document.getElementById("mobileActiveUsername");
 const mobileActiveUserTag = document.getElementById("mobileActiveUserTag");
-const roomNote = document.getElementById("roomNote");
-const mobileRoomNote = document.getElementById("mobileRoomNote");
 const onlineUsers = document.getElementById("onlineUsers");
 const onlineCount = document.getElementById("onlineCount");
 const mobileOnlineUsers = document.getElementById("mobileOnlineUsers");
@@ -78,9 +78,11 @@ const messageTemplate = document.getElementById("messageTemplate");
 const changeNameBtn = document.getElementById("changeNameBtn");
 const clearChatBtn = document.getElementById("clearChatBtn");
 const logoutBtn = document.getElementById("logoutBtn");
+const problemBtn = document.getElementById("problemBtn");
 const mobileSidebarToggle = document.getElementById("mobileSidebarToggle");
 const mobileOverlay = document.getElementById("mobileOverlay");
 const sendMessageBtn = document.getElementById("sendMessageBtn");
+const editCancelBtn = document.getElementById("editCancelBtn");
 const mediaPanel = document.getElementById("mediaPanel");
 const mediaPanelBody = document.getElementById("mediaPanelBody");
 const mediaCloseBtn = document.getElementById("mediaCloseBtn");
@@ -93,13 +95,36 @@ const mobileDrawerCloseBtn = document.getElementById("mobileDrawerCloseBtn");
 const mobileChangeNameBtn = document.getElementById("mobileChangeNameBtn");
 const mobileClearChatBtn = document.getElementById("mobileClearChatBtn");
 const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
+const mobileProblemBtn = document.getElementById("mobileProblemBtn");
 const desktopBellToggle = document.getElementById("desktopBellToggle");
 const desktopBellBadge = document.getElementById("desktopBellBadge");
 const mobileBellToggle = document.getElementById("mobileBellToggle");
 const mobileBellBadge = document.getElementById("mobileBellBadge");
+const desktopPinToggle = document.getElementById("desktopPinToggle");
+const desktopPinBadge = document.getElementById("desktopPinBadge");
+const mobilePinToggle = document.getElementById("mobilePinToggle");
+const mobilePinBadge = document.getElementById("mobilePinBadge");
+const globalAlertToggle = document.getElementById("globalAlertToggle");
+const globalAlertBadge = document.getElementById("globalAlertBadge");
+const mobileGlobalAlertToggle = document.getElementById("mobileGlobalAlertToggle");
+const mobileGlobalAlertBadge = document.getElementById("mobileGlobalAlertBadge");
+const pinPanel = document.getElementById("pinPanel");
+const pinPanelBody = document.getElementById("pinPanelBody");
+const pinPanelCloseBtn = document.getElementById("pinPanelCloseBtn");
 const notificationPanel = document.getElementById("notificationPanel");
 const notificationList = document.getElementById("notificationList");
 const notificationCloseBtn = document.getElementById("notificationCloseBtn");
+const alertPanel = document.getElementById("alertPanel");
+const alertPanelBody = document.getElementById("alertPanelBody");
+const alertPanelCloseBtn = document.getElementById("alertPanelCloseBtn");
+const broadcastToast = document.getElementById("broadcastToast");
+const broadcastToastText = document.getElementById("broadcastToastText");
+const problemModal = document.getElementById("problemModal");
+const problemCloseBtn = document.getElementById("problemCloseBtn");
+const problemForm = document.getElementById("problemForm");
+const problemSubjectInput = document.getElementById("problemSubject");
+const problemMessageInput = document.getElementById("problemMessage");
+const problemStatus = document.getElementById("problemStatus");
 
 let currentUser = "";
 let messages = [];
@@ -109,17 +134,28 @@ let messagesRef = null;
 let presenceRef = null;
 let sharedMediaRef = null;
 let controlRef = null;
+let pinnedRef = null;
+let creatorInboxRef = null;
+let siteNotificationsRef = null;
 let unsubscribeMessages = null;
 let unsubscribePresence = null;
 let unsubscribeMedia = null;
 let unsubscribeControl = null;
+let unsubscribePinned = null;
+let unsubscribeSiteNotifications = null;
 let firebaseReady = false;
 let presenceHeartbeat = null;
 let presencePruneTimer = null;
 let currentPresenceId = null;
 let sharedMediaState = null;
-let lastMentionCount = 0;
+let pinnedMessages = [];
+let activeBroadcast = null;
+let siteNotifications = [];
+let lastDirectMentionCount = 0;
 let seenMentions = new Set();
+let broadcastToastTimer = null;
+let broadcastExpiryTimer = null;
+let editingMessageId = null;
 
 function hasFirebaseConfig() {
   return Object.values(firebaseConfig).every((value) => value && !String(value).startsWith("PASTE_YOUR_"));
@@ -137,6 +173,10 @@ function autoResizeTextarea() {
   messageInput.style.height = `${messageInput.scrollHeight}px`;
 }
 function updateSendButtonState() { sendMessageBtn.disabled = !messageInput.value.trim(); }
+function updateEditStateUI() {
+  editCancelBtn.classList.toggle("hidden", !editingMessageId);
+  messageInput.placeholder = editingMessageId ? "Editing message..." : "Transmit message...";
+}
 function setJoinStatus(message, isError = false) {
   joinStatus.textContent = message;
   joinStatus.style.color = isError ? "var(--warning)" : "";
@@ -161,11 +201,39 @@ function isElevatedUser(name = currentUser) {
   return tag?.key === "creator" || tag?.key === "admin";
 }
 function isCreatorUser(name = currentUser) { return getTagDefinition(name)?.key === "creator"; }
-function messageMentionsCurrentUser(text) {
+function getLiveUsers() {
+  return onlineSessions
+    .filter((user) => Date.now() - user.lastSeen < PRESENCE_TTL_MS)
+    .sort((l, r) => l.name.localeCompare(r.name));
+}
+function getOnlineMentionTargets() {
+  const targets = new Set();
+  getLiveUsers().forEach((user) => {
+    const key = normalizeNameKey(user.name);
+    if (key) targets.add(key);
+  });
+  return [...targets];
+}
+function buildMentionMeta(text) {
+  const mentionAll = /(^|\s)@everyone(?=\b|\s|$)/i.test(text || "");
+  return {
+    mentionAll,
+    mentionAllFor: mentionAll ? getOnlineMentionTargets() : []
+  };
+}
+function messageMentionsCurrentUser(messageOrText) {
   const nameKey = normalizeNameKey(currentUser);
-  if (!nameKey || !text) return false;
+  if (!nameKey) return false;
+  const message = typeof messageOrText === "string" ? { text: messageOrText } : (messageOrText || {});
+  const text = message.text || "";
   const mentionRegex = new RegExp(`(^|\\s)@${nameKey}(?=\\b|\\s|$)`, "i");
-  return mentionRegex.test(text);
+  if (mentionRegex.test(text)) return true;
+  return Array.isArray(message.mentionAllFor) && message.mentionAllFor.includes(nameKey);
+}
+function hasOnlyEveryoneMention(message) {
+  if (!message?.mentionAll) return false;
+  const withoutEveryone = (message.text || "").replace(/@everyone/ig, "");
+  return !/@[a-z0-9_]+/i.test(withoutEveryone);
 }
 function applyTagBadge(element, tagDefinition) {
   element.className = "tag-badge";
@@ -181,7 +249,34 @@ function updatePasswordPrompt() {
   if (!requiredPassword) passwordInput.value = "";
 }
 function closeNotifications() { notificationPanel.classList.add("hidden"); }
-function toggleNotifications() { notificationPanel.classList.toggle("hidden"); }
+function toggleNotifications() {
+  closePinPanel();
+  closeAlertPanel();
+  notificationPanel.classList.toggle("hidden");
+}
+function closePinPanel() { pinPanel.classList.add("hidden"); }
+function togglePinPanel() {
+  if (!pinnedMessages.length) return;
+  closeNotifications();
+  closeAlertPanel();
+  pinPanel.classList.toggle("hidden");
+}
+function closeAlertPanel() { alertPanel.classList.add("hidden"); }
+function toggleAlertPanel() {
+  closeNotifications();
+  closePinPanel();
+  alertPanel.classList.toggle("hidden");
+}
+function openProblemModal() {
+  problemModal.classList.remove("hidden");
+  problemModal.setAttribute("aria-hidden", "false");
+  problemStatus.textContent = "";
+  setTimeout(() => problemSubjectInput.focus(), 30);
+}
+function closeProblemModal() {
+  problemModal.classList.add("hidden");
+  problemModal.setAttribute("aria-hidden", "true");
+}
 function scrollToMessage(messageId) {
   const target = messagesContainer.querySelector(`[data-message-id="${messageId}"]`);
   if (!target) return;
@@ -189,10 +284,133 @@ function scrollToMessage(messageId) {
   target.classList.add("message--mention-flash");
   window.setTimeout(() => target.classList.remove("message--mention-flash"), 2200);
 }
+function showBroadcastToast(text) {
+  if (!text) return;
+  broadcastToastText.textContent = text;
+  broadcastToast.classList.remove("hidden");
+  if (broadcastToastTimer) window.clearTimeout(broadcastToastTimer);
+  broadcastToastTimer = window.setTimeout(() => {
+    broadcastToast.classList.add("hidden");
+  }, 5000);
+}
+function scheduleBroadcastExpiryRender() {
+  if (broadcastExpiryTimer) window.clearTimeout(broadcastExpiryTimer);
+  if (!activeBroadcast?.expiresAt) return;
+  const delay = activeBroadcast.expiresAt - Date.now();
+  if (delay <= 0) return;
+  broadcastExpiryTimer = window.setTimeout(() => renderBroadcastState(), delay + 120);
+}
+function renderPinnedState() {
+  const hasPinned = pinnedMessages.length > 0;
+  const badgeText = pinnedMessages.length > 99 ? "99+" : String(pinnedMessages.length);
+  desktopPinBadge.textContent = badgeText;
+  mobilePinBadge.textContent = badgeText;
+  desktopPinBadge.classList.toggle("hidden", !hasPinned);
+  mobilePinBadge.classList.toggle("hidden", !hasPinned);
+  if (!hasPinned) {
+    pinPanelBody.innerHTML = "<p class='empty-users'>No pinned message yet.</p>";
+    return;
+  }
+  pinPanelBody.innerHTML = "";
+  pinnedMessages.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "pinned-preview";
+    card.innerHTML = `
+      <div class="pinned-preview__top">
+        <strong>${escapeHtml(item.author || "Unknown")}</strong>
+        <span class="pinned-preview__meta">Pinned by ${escapeHtml(item.pinnedBy || "Creator")} • ${formatTime(item.pinnedAt || Date.now())}</span>
+      </div>
+      <p class="pinned-preview__text">${escapeHtml(item.text).replaceAll("\n", "<br>")}</p>
+      <div class="pinned-preview__actions">
+        <button type="button" class="mini-action-btn" data-pin-jump="${escapeHtml(item.messageId)}">Jump To Message</button>
+        ${isCreatorUser() ? `<button type="button" class="mini-action-btn" data-pin-remove="${escapeHtml(item.messageId)}">Unpin</button>` : ""}
+      </div>
+    `;
+    pinPanelBody.appendChild(card);
+  });
+  pinPanelBody.querySelectorAll("[data-pin-jump]").forEach((button) => {
+    button.addEventListener("click", () => {
+      closePinPanel();
+      scrollToMessage(button.getAttribute("data-pin-jump"));
+    });
+  });
+  pinPanelBody.querySelectorAll("[data-pin-remove]").forEach((button) => {
+    button.addEventListener("click", () => {
+      clearPinnedMessage(button.getAttribute("data-pin-remove")).catch(() => { setJoinStatus("Could not clear pinned message.", true); });
+    });
+  });
+}
+function renderBroadcastState() {
+  const isActive = Boolean(activeBroadcast?.text) && Number(activeBroadcast.expiresAt || 0) > Date.now();
+  if (!isActive) {
+    broadcastToast.classList.add("hidden");
+    return;
+  }
+  scheduleBroadcastExpiryRender();
+}
+function maybeShowActiveBroadcast() {
+  const handled = localStorage.getItem(STORAGE_KEYS.handledBroadcast) || "";
+  const isActive = Boolean(activeBroadcast?.text) && Number(activeBroadcast.expiresAt || 0) > Date.now();
+  if (!isActive || !currentUser || handled === activeBroadcast.id) return;
+  localStorage.setItem(STORAGE_KEYS.handledBroadcast, activeBroadcast.id);
+  showBroadcastToast(activeBroadcast.text);
+}
+function renderSiteNotifications() {
+  const count = siteNotifications.length;
+  globalAlertBadge.textContent = count > 99 ? "99+" : String(count);
+  mobileGlobalAlertBadge.textContent = count > 99 ? "99+" : String(count);
+  globalAlertBadge.classList.toggle("hidden", count === 0);
+  mobileGlobalAlertBadge.classList.toggle("hidden", count === 0);
+  if (count === 0) {
+    alertPanelBody.innerHTML = "<p class='empty-users'>No site notifications yet.</p>";
+    return;
+  }
+  alertPanelBody.innerHTML = "";
+  siteNotifications.forEach((item) => {
+    const card = document.createElement("article");
+    card.className = "site-notification-item";
+    card.innerHTML = `
+      <div class="site-notification-item__top">
+        <strong class="site-notification-item__title">${escapeHtml(item.title || "Notification")}</strong>
+        <span class="site-notification-item__meta">${escapeHtml(item.senderName || "DLNGR Creator")} • ${formatTime(item.createdAt || Date.now())}</span>
+      </div>
+      <p class="site-notification-item__body">${escapeHtml(item.body || "").replaceAll("\n", "<br>")}</p>
+    `;
+    alertPanelBody.appendChild(card);
+  });
+}
+function cancelEditingMessage(statusMessage = "Message edit cancelled.") {
+  editingMessageId = null;
+  messageInput.value = "";
+  localStorage.removeItem(STORAGE_KEYS.draft);
+  autoResizeTextarea();
+  updateSendButtonState();
+  updateEditStateUI();
+  if (statusMessage) setJoinStatus(statusMessage);
+}
+function startEditingMessage(message) {
+  editingMessageId = message.id;
+  messageInput.value = message.text;
+  localStorage.setItem(STORAGE_KEYS.draft, messageInput.value);
+  autoResizeTextarea();
+  updateSendButtonState();
+  updateEditStateUI();
+  messageInput.focus();
+  messageInput.setSelectionRange(messageInput.value.length, messageInput.value.length);
+  setJoinStatus("Editing message. Press Enter to save or Esc to cancel.");
+}
+function getLatestEditableMessage() {
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = messages[index];
+    if (canEditMessage(message)) return message;
+  }
+  return null;
+}
 
 function renderNotifications() {
-  const mentionMessages = messages.filter((m) => m.type === "user" && m.author !== currentUser && messageMentionsCurrentUser(m.text));
+  const mentionMessages = messages.filter((m) => m.type === "user" && m.author !== currentUser && messageMentionsCurrentUser(m));
   const unseenMentions = mentionMessages.filter((m) => !seenMentions.has(m.id));
+  const unseenDirectMentions = unseenMentions.filter((message) => !hasOnlyEveryoneMention(message));
   const count = unseenMentions.length;
   const countText = String(count);
   desktopBellBadge.textContent = countText;
@@ -201,11 +419,11 @@ function renderNotifications() {
   mobileBellBadge.classList.toggle("hidden", count === 0);
   if (count === 0) {
     notificationList.innerHTML = "<p class='empty-users'>No mentions yet.</p>";
-    lastMentionCount = 0;
+    lastDirectMentionCount = 0;
     return;
   }
-  if (count > lastMentionCount) notificationPanel.classList.remove("hidden");
-  lastMentionCount = count;
+  if (unseenDirectMentions.length > lastDirectMentionCount) notificationPanel.classList.remove("hidden");
+  lastDirectMentionCount = unseenDirectMentions.length;
   notificationList.innerHTML = "";
   mentionMessages.slice().reverse().forEach((message) => {
     const button = document.createElement("button");
@@ -285,18 +503,33 @@ async function forceLogoutAll() {
   if (!controlRef) return;
   await setDoc(controlRef, { logoutAllAt: Date.now(), updatedAt: serverTimestamp() }, { merge: true });
 }
+async function sendCreatorBroadcast(text) {
+  if (!controlRef || !isCreatorUser()) return;
+  await setDoc(controlRef, {
+    broadcast: {
+      id: crypto.randomUUID(),
+      text,
+      createdBy: currentUser,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 5000
+    },
+    updatedAt: serverTimestamp()
+  }, { merge: true });
+}
 async function performLocalLogout(message = "Connection terminated.") {
   await stopPresence();
   currentUser = "";
   localStorage.removeItem(STORAGE_KEYS.username);
   localStorage.removeItem(STORAGE_KEYS.draft);
   localStorage.removeItem(STORAGE_KEYS.sessionId);
+  editingMessageId = null;
   messageInput.value = "";
   passwordInput.value = "";
   usernameInput.value = "";
   clearChatBtn.classList.add("hidden");
   mobileClearChatBtn.classList.add("hidden");
   setChatView(false);
+  closeProblemModal();
   updatePasswordPrompt();
   autoResizeTextarea();
   updateSendButtonState();
@@ -324,6 +557,7 @@ function parseCreatorCommand(text) {
   }
   if (command === "/full") return { kind: "full", enabled: argument.toLowerCase() !== "close" };
   if (command === "/logoutall") return { kind: "logoutall" };
+  if (command === "/notify") return { kind: "notify", text: argument };
   return null;
 }
 async function handleCreatorCommand(text) {
@@ -337,6 +571,12 @@ async function handleCreatorCommand(text) {
     return true;
   }
   if (command.kind === "logoutall") { await forceLogoutAll(); return true; }
+  if (command.kind === "notify") {
+    if (!command.text) { setJoinStatus("Use /notify followed by your alert text.", true); return true; }
+    await sendCreatorBroadcast(command.text);
+    setJoinStatus("Creator notification sent.");
+    return true;
+  }
   if (!command.url) { setJoinStatus("That command needs a valid URL.", true); return true; }
   await updateSharedMedia({ type: command.type, url: command.url, fullForViewers: false });
   setJoinStatus("Feed opened.");
@@ -349,6 +589,8 @@ function setChatView(enabled) {
   mobileOverlay.classList.add("hidden");
   mobileDrawer.classList.add("hidden");
   closeNotifications();
+  closePinPanel();
+  closeAlertPanel();
   if (enabled) {
     activeUsername.textContent = currentUser;
     mobileActiveUsername.textContent = currentUser;
@@ -356,6 +598,9 @@ function setChatView(enabled) {
     applyTagBadge(mobileActiveUserTag, getTagDefinition(currentUser));
     updateSendButtonState();
     renderSharedMedia();
+    renderPinnedState();
+    renderBroadcastState();
+    maybeShowActiveBroadcast();
     setTimeout(() => messageInput.focus(), 30);
   } else {
     setTimeout(() => usernameInput.focus(), 30);
@@ -373,12 +618,16 @@ function persistUser(name) {
 }
 async function addMessage(message) {
   if (!firebaseReady || !messagesRef) throw new Error("Firebase not ready.");
+  const mentionMeta = buildMentionMeta(message.text);
   return addDoc(messagesRef, {
     author: message.author,
     text: message.text,
     type: message.type,
     tagKey: message.tagKey || null,
     ownerSessionId: message.ownerSessionId || currentPresenceId || null,
+    mentionAll: mentionMeta.mentionAll,
+    mentionAllFor: mentionMeta.mentionAllFor,
+    editedAt: null,
     createdAt: serverTimestamp()
   });
 }
@@ -386,6 +635,14 @@ function canDeleteMessage(message) {
   if (message.type === "system") return false;
   if (isElevatedUser()) return true;
   return Boolean(currentPresenceId && message.ownerSessionId === currentPresenceId);
+}
+function canEditMessage(message) {
+  if (message.type !== "user") return false;
+  if (isElevatedUser()) return true;
+  return Boolean(currentPresenceId && message.ownerSessionId === currentPresenceId);
+}
+function canPinMessage(message) {
+  return isCreatorUser() && message.type === "user";
 }
 async function copyMessageText(text, button) {
   try {
@@ -399,6 +656,47 @@ async function deleteMessageById(id) {
   if (!messagesRef || !id) return;
   try { await deleteDoc(doc(db, "rooms", ROOM_NAME, "messages", id)); }
   catch { setJoinStatus("Could not delete that message.", true); }
+}
+async function saveEditedMessage(id, nextText) {
+  if (!messagesRef || !id || !nextText) return;
+  const mentionMeta = buildMentionMeta(nextText);
+  await setDoc(doc(db, "rooms", ROOM_NAME, "messages", id), {
+    text: nextText,
+    mentionAll: mentionMeta.mentionAll,
+    mentionAllFor: mentionMeta.mentionAllFor,
+    editedAt: serverTimestamp()
+  }, { merge: true });
+}
+async function pinMessageById(message) {
+  if (!pinnedRef || !canPinMessage(message)) return;
+  const nextPins = [
+    ...pinnedMessages.filter((item) => item.messageId !== message.id),
+    {
+      messageId: message.id,
+      text: message.text,
+      author: message.author,
+      pinnedBy: currentUser,
+      pinnedAt: Date.now()
+    }
+  ];
+  await setDoc(pinnedRef, {
+    items: nextPins,
+    updatedAt: serverTimestamp()
+  }, { merge: true });
+}
+async function clearPinnedMessage(messageId) {
+  if (!pinnedRef || !isCreatorUser()) return;
+  const nextPins = messageId
+    ? pinnedMessages.filter((item) => item.messageId !== messageId)
+    : [];
+  await setDoc(pinnedRef, {
+    items: nextPins,
+    updatedAt: serverTimestamp()
+  }, { merge: true });
+}
+function renderMessageText(message) {
+  const editedSuffix = Number(message.editedAt || 0) > 0 ? " <span class=\"message__edited\">(edited)</span>" : "";
+  return `${escapeHtml(message.text).replaceAll("\n", "<br>")}${editedSuffix}`;
 }
 function renderMessages() {
   messagesContainer.innerHTML = "";
@@ -417,19 +715,34 @@ function renderMessages() {
     const text = fragment.querySelector(".message__text");
     const tagBadge = fragment.querySelector(".message__tag");
     const copyButton = fragment.querySelector(".message__copy");
+    const editButton = fragment.querySelector(".message__edit");
+    const pinButton = fragment.querySelector(".message__pin");
     const deleteButton = fragment.querySelector(".message__delete");
     const tagDefinition = USER_TAGS.find((tag) => tag.key === message.tagKey) || getTagDefinition(message.author);
-    const hasMention = messageMentionsCurrentUser(message.text);
+    const hasMention = messageMentionsCurrentUser(message);
     author.textContent = message.author;
     time.textContent = formatTime(message.timestamp || Date.now());
-    text.innerHTML = escapeHtml(message.text).replaceAll("\n", "<br>");
+    text.innerHTML = renderMessageText(message);
     applyTagBadge(tagBadge, tagDefinition);
     copyButton.addEventListener("click", () => copyMessageText(message.text, copyButton));
     card.dataset.messageId = message.id;
     if (message.type === "system") card.classList.add("message--system");
     else if (message.author === currentUser) card.classList.add("message--self");
     if (hasMention) card.classList.add("message--mention");
+    const isPinned = pinnedMessages.some((item) => item.messageId === message.id);
+    if (isPinned) card.classList.add("message--pinned");
     if (tagDefinition?.messageClass) card.classList.add("message--tagged", tagDefinition.messageClass);
+    if (canEditMessage(message)) {
+      editButton.classList.remove("hidden");
+      editButton.addEventListener("click", () => startEditingMessage(message));
+    }
+    if (canPinMessage(message)) {
+      pinButton.classList.remove("hidden");
+      pinButton.textContent = isPinned ? "Pinned" : "Pin";
+      pinButton.addEventListener("click", () => {
+        pinMessageById(message).catch(() => { setJoinStatus("Could not pin that message.", true); });
+      });
+    }
     if (canDeleteMessage(message)) {
       deleteButton.classList.remove("hidden");
       deleteButton.addEventListener("click", () => deleteMessageById(message.id));
@@ -468,9 +781,7 @@ function renderUserList(target, users) {
   });
 }
 function renderOnlineUsers() {
-  const liveUsers = onlineSessions
-    .filter((user) => Date.now() - user.lastSeen < PRESENCE_TTL_MS)
-    .sort((l, r) => l.name.localeCompare(r.name));
+  const liveUsers = getLiveUsers();
   const countText = `${liveUsers.length} node${liveUsers.length === 1 ? "" : "s"} online`;
   onlineCount.textContent = countText;
   mobileOnlineCount.textContent = countText;
@@ -485,11 +796,16 @@ function setupFirebase() {
   presenceRef = collection(db, "rooms", ROOM_NAME, "presence");
   sharedMediaRef = doc(db, "rooms", ROOM_NAME, "shared", "media");
   controlRef = doc(db, "rooms", ROOM_NAME, "shared", "control");
+  pinnedRef = doc(db, "rooms", ROOM_NAME, "shared", "pinned");
+  creatorInboxRef = collection(db, "creatorInbox");
+  siteNotificationsRef = collection(db, "siteNotifications");
   firebaseReady = true;
   subscribeToMessages();
   subscribeToPresence();
   subscribeToSharedMedia();
   subscribeToControls();
+  subscribeToPinnedMessage();
+  subscribeToSiteNotifications();
 }
 function subscribeToMessages() {
   if (!firebaseReady || !messagesRef) return;
@@ -504,7 +820,10 @@ function subscribeToMessages() {
         type: data.type || "user",
         tagKey: data.tagKey || null,
         ownerSessionId: data.ownerSessionId || null,
-        timestamp: data.createdAt?.toMillis?.() || Date.now()
+        mentionAll: Boolean(data.mentionAll),
+        mentionAllFor: Array.isArray(data.mentionAllFor) ? data.mentionAllFor : [],
+        timestamp: data.createdAt?.toMillis?.() || Date.now(),
+        editedAt: data.editedAt?.toMillis?.() || 0
       };
     });
     renderMessages();
@@ -539,6 +858,57 @@ function subscribeToControls() {
       localStorage.setItem(STORAGE_KEYS.handledLogoutAll, String(logoutAllAt));
       performLocalLogout("Creator terminated all sessions.").catch(() => {});
     }
+    const broadcast = data?.broadcast || null;
+    activeBroadcast = broadcast?.text ? {
+      id: broadcast.id || "",
+      text: broadcast.text || "",
+      expiresAt: Number(broadcast.expiresAt || 0)
+    } : null;
+    renderBroadcastState();
+    maybeShowActiveBroadcast();
+  });
+}
+function subscribeToPinnedMessage() {
+  if (!firebaseReady || !pinnedRef) return;
+  unsubscribePinned = onSnapshot(pinnedRef, (snapshot) => {
+    const data = snapshot.data();
+    pinnedMessages = Array.isArray(data?.items)
+      ? data.items.map((item) => ({
+          messageId: item.messageId || "",
+          text: item.text || "",
+          author: item.author || "",
+          pinnedBy: item.pinnedBy || "Creator",
+          pinnedAt: Number(item.pinnedAt || 0)
+        }))
+      : (data?.text ? [{
+          messageId: data.messageId || "",
+          text: data.text || "",
+          author: data.author || "",
+          pinnedBy: data.pinnedBy || "Creator",
+          pinnedAt: Number(data.pinnedAt || 0)
+        }] : []);
+    renderPinnedState();
+    renderMessages();
+  });
+}
+function subscribeToSiteNotifications() {
+  if (!firebaseReady || !siteNotificationsRef) return;
+  const notificationQuery = query(siteNotificationsRef, orderBy("createdAt", "desc"), limit(30));
+  unsubscribeSiteNotifications = onSnapshot(notificationQuery, (snapshot) => {
+    siteNotifications = snapshot.docs.map((snapshotDoc) => {
+      const data = snapshotDoc.data();
+      return {
+        id: snapshotDoc.id,
+        title: data.title || "Notification",
+        body: data.body || "",
+        senderName: data.senderName || "DLNGR Creator",
+        createdAt: data.createdAt?.toMillis?.() || Date.now()
+      };
+    });
+    renderSiteNotifications();
+  }, () => {
+    siteNotifications = [];
+    renderSiteNotifications();
   });
 }
 async function startPresence(name) {
@@ -570,6 +940,26 @@ async function joinChat(name) {
   renderMessages();
   renderOnlineUsers();
 }
+function hasActiveDuplicateName(name) {
+  const normalized = normalizeNameKey(name);
+  return getLiveUsers().some((user) => normalizeNameKey(user.name) === normalized && user.sessionId !== currentPresenceId);
+}
+async function submitProblemReport() {
+  if (!creatorInboxRef || !currentUser) throw new Error("Join the chat first.");
+  const subject = problemSubjectInput.value.trim();
+  const body = problemMessageInput.value.trim();
+  if (!subject || !body) throw new Error("Fill in both fields.");
+  await addDoc(creatorInboxRef, {
+    type: "chat_problem",
+    title: `Chat Problem: ${subject}`,
+    message: body,
+    meta: {
+      room: ROOM_NAME,
+      senderName: currentUser
+    },
+    createdAt: serverTimestamp()
+  });
+}
 
 // ── EVENT LISTENERS ──
 joinForm.addEventListener("submit", async (event) => {
@@ -579,6 +969,7 @@ joinForm.addEventListener("submit", async (event) => {
   const submittedPassword = passwordInput.value;
   if (!name) { setJoinStatus("Enter a callsign before connecting.", true); return; }
   if (requiredPassword && submittedPassword !== requiredPassword) { setJoinStatus("Protected callsign. Enter the correct access code.", true); return; }
+  if (hasActiveDuplicateName(name)) { setJoinStatus("That handle is already online. Choose a different one.", true); return; }
   if (!firebaseReady) { setJoinStatus("System not ready. Check Firebase config.", true); return; }
   try {
     setJoinStatus("Establishing connection...");
@@ -594,6 +985,18 @@ messageForm.addEventListener("submit", async (event) => {
   const text = messageInput.value.trim();
   if (!text || !currentUser || !firebaseReady) return;
   try {
+    if (editingMessageId) {
+      await saveEditedMessage(editingMessageId, text);
+      editingMessageId = null;
+      messageInput.value = "";
+      localStorage.removeItem(STORAGE_KEYS.draft);
+      autoResizeTextarea();
+      updateSendButtonState();
+      updateEditStateUI();
+      messageInput.focus();
+      setJoinStatus("Message updated.");
+      return;
+    }
     if (isCreatorUser() && await handleCreatorCommand(text)) {
       messageInput.value = "";
       localStorage.removeItem(STORAGE_KEYS.draft);
@@ -618,6 +1021,19 @@ messageInput.addEventListener("input", () => {
   updateSendButtonState();
 });
 messageInput.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowUp" && !messageInput.value.trim() && !editingMessageId) {
+    const latestMessage = getLatestEditableMessage();
+    if (latestMessage) {
+      event.preventDefault();
+      startEditingMessage(latestMessage);
+    }
+    return;
+  }
+  if (event.key === "Escape" && editingMessageId) {
+    event.preventDefault();
+    cancelEditingMessage();
+    return;
+  }
   if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); messageForm.requestSubmit(); }
 });
 
@@ -631,6 +1047,32 @@ mobileChangeNameBtn.addEventListener("click", async () => {
 });
 logoutBtn.addEventListener("click", async () => { await performLocalLogout("Connection terminated."); });
 mobileLogoutBtn.addEventListener("click", async () => { closeMobileSidebar(); await performLocalLogout("Connection terminated."); });
+[problemBtn, mobileProblemBtn].forEach((button) => {
+  button.addEventListener("click", () => {
+    if (button === mobileProblemBtn) closeMobileSidebar();
+    openProblemModal();
+  });
+});
+problemCloseBtn.addEventListener("click", closeProblemModal);
+problemModal.addEventListener("click", (event) => {
+  if (event.target === problemModal) closeProblemModal();
+});
+problemForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  problemStatus.textContent = "Sending...";
+  try {
+    await submitProblemReport();
+    problemStatus.textContent = "Issue sent to the creator inbox.";
+    problemForm.reset();
+    window.setTimeout(() => {
+      problemStatus.textContent = "";
+      closeProblemModal();
+    }, 900);
+  } catch (error) {
+    problemStatus.textContent = error.message || "Could not send your issue.";
+  }
+});
+editCancelBtn.addEventListener("click", () => cancelEditingMessage());
 
 clearChatBtn.addEventListener("click", async () => {
   if (!firebaseReady || !messagesRef || !isElevatedUser()) return;
@@ -666,14 +1108,52 @@ updatePasswordPrompt();
 messageInput.value = savedDraft;
 renderMessages();
 renderOnlineUsers();
+renderPinnedState();
+renderBroadcastState();
+renderSiteNotifications();
 autoResizeTextarea();
 updateSendButtonState();
+updateEditStateUI();
 
-if (savedUser && firebaseReady && !getRequiredPassword(savedUser)) {
+if (savedUser && firebaseReady && !getRequiredPassword(savedUser) && !hasActiveDuplicateName(savedUser)) {
   joinChat(savedUser).catch(() => { setJoinStatus("Saved node could not auto-connect. Join manually.", true); });
 } else {
+  if (savedUser && hasActiveDuplicateName(savedUser)) {
+    setJoinStatus("Your saved handle is already online elsewhere. Join with a different one.", true);
+  }
   usernameInput.focus();
 }
+
+// ── MOBILE POPUP (pin & alert on mobile) ──
+const mobilePopupOverlay = document.getElementById("mobilePopupOverlay");
+const mobilePopupTitle = document.getElementById("mobilePopupTitle");
+const mobilePopupBody = document.getElementById("mobilePopupBody");
+const mobilePopupCloseBtn = document.getElementById("mobilePopupCloseBtn");
+
+function openMobilePopup(title, contentEl) {
+  mobilePopupTitle.textContent = title;
+  mobilePopupBody.innerHTML = contentEl ? contentEl.innerHTML : "<p class='empty-users'>Nothing here yet.</p>";
+  mobilePopupOverlay.classList.remove("hidden");
+  mobilePopupOverlay.classList.add("active");
+}
+function closeMobilePopup() {
+  mobilePopupOverlay.classList.add("hidden");
+  mobilePopupOverlay.classList.remove("active");
+}
+mobilePopupCloseBtn.addEventListener("click", closeMobilePopup);
+mobilePopupOverlay.addEventListener("click", (e) => { if (e.target === mobilePopupOverlay) closeMobilePopup(); });
+
+// On mobile, pin and alert buttons open the center popup instead of the floating panel
+mobilePinToggle.addEventListener("click", () => {
+  if (window.innerWidth <= 1080) {
+    openMobilePopup("// Pinned Message", pinPanelBody);
+  }
+});
+mobileGlobalAlertToggle.addEventListener("click", () => {
+  if (window.innerWidth <= 1080) {
+    openMobilePopup("// DLNGR Notifications", alertPanelBody);
+  }
+});
 
 function closeMobileSidebar() {
   chatPanel.classList.remove("is-sidebar-open");
@@ -699,7 +1179,11 @@ mobileMediaCloseBtn.addEventListener("click", closeMobileMedia);
 mobileDrawerCloseBtn.addEventListener("click", closeMobileSidebar);
 desktopBellToggle.addEventListener("click", toggleNotifications);
 mobileBellToggle.addEventListener("click", toggleNotifications);
+desktopPinToggle.addEventListener("click", togglePinPanel);
+pinPanelCloseBtn.addEventListener("click", closePinPanel);
+globalAlertToggle.addEventListener("click", toggleAlertPanel);
 notificationCloseBtn.addEventListener("click", closeNotifications);
+alertPanelCloseBtn.addEventListener("click", closeAlertPanel);
 mediaCloseBtn.addEventListener("click", () => {
   if (isCreatorUser()) closeSharedMedia().catch(() => { setJoinStatus("Could not close feed.", true); });
 });
@@ -709,6 +1193,10 @@ window.addEventListener("beforeunload", () => {
   if (unsubscribePresence) unsubscribePresence();
   if (unsubscribeMedia) unsubscribeMedia();
   if (unsubscribeControl) unsubscribeControl();
+  if (unsubscribePinned) unsubscribePinned();
+  if (unsubscribeSiteNotifications) unsubscribeSiteNotifications();
   if (presencePruneTimer) window.clearInterval(presencePruneTimer);
+  if (broadcastExpiryTimer) window.clearTimeout(broadcastExpiryTimer);
   stopPresence();
 });
+
