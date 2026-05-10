@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DLNGR Chat</title>
     <link rel="icon" type="image/png" href="dlngrchat.png">
      <link rel="stylesheet" href="index.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="icon" type="image/png" href="dlngrchat.png">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200..700,0..1,-50..200" />
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 
 </head>
@@ -54,27 +57,33 @@
     <main class="chat-panel hidden" id="chatPanel">
       <!-- MOBILE FIXED HEADER -->
       <header class="mobile-header">
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <button type="button" class="mobile-bell-toggle" id="mobileBellToggle" aria-label="Open notifications">
-            <span class="mobile-bell-toggle__icon">🔔</span>
-            <span class="mobile-bell-toggle__badge hidden" id="mobileBellBadge">0</span>
-          </button>
-          <button type="button" class="mobile-media-toggle hidden" id="mobileMediaToggle" aria-label="Open shared media">
-
-          </button>
-        </div>
-        
         <div class="mobile-brand">DLNGR CHAT</div>
 
-        <button type="button" class="mobile-toggle" id="mobileSidebarToggle" aria-label="Open details panel">
-          <span></span><span></span><span></span><span></span>
-        </button>
+        <div class="mobile-header__right">
+          
+          </button>
+          <button type="button" class="global-alert-toggle" id="mobileGlobalAlertToggle" aria-label="Open creator alert">
+            <span class="material-symbols-outlined">campaign</span>
+            <span class="global-alert-toggle__badge hidden" id="mobileGlobalAlertBadge">!</span>
+          </button>
+          <button type="button" class="mobile-bell-toggle" id="mobileBellToggle" aria-label="Open notifications">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="mobile-bell-toggle__badge hidden" id="mobileBellBadge">0</span>
+          </button>
+          <button type="button" class="mobile-pin-toggle" id="mobilePinToggle" aria-label="View pinned message">
+            <span class="material-symbols-outlined">push_pin</span>
+            <span class="mobile-pin-toggle__badge hidden" id="mobilePinBadge">1</span>
+          </button>
+          <button type="button" class="mobile-toggle" id="mobileSidebarToggle" aria-label="Open details panel">
+            <span></span><span></span><span></span><span></span>
+          </button>
+        </div>
       </header>
 
       <aside class="media-panel hidden" id="mediaPanel">
         <div class="media-panel__header">
           <p class="eyebrow">// Live Feed</p>
-          <button type="button" class="media-close-btn" id="mediaCloseBtn" aria-label="Close shared media">✕</button>
+          <button type="button" class="media-close-btn" id="mediaCloseBtn" aria-label="Close shared media"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
         </div>
         <div class="media-panel__body" id="mediaPanelBody"></div>
       </aside>
@@ -84,7 +93,7 @@
       <div class="notification-panel hidden" id="notificationPanel">
         <div class="notification-panel__header">
           <p class="eyebrow">// Mentions</p>
-          <button type="button" class="media-close-btn" id="notificationCloseBtn" aria-label="Close notifications">✕</button>
+          <button type="button" class="media-close-btn" id="notificationCloseBtn" aria-label="Close notifications"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
         </div>
         <div class="notification-list" id="notificationList"></div>
       </div>
@@ -92,7 +101,7 @@
       <aside class="mobile-drawer hidden" id="mobileDrawer">
         <div class="mobile-drawer__header">
           <p class="eyebrow">// Node Details</p>
-          <button type="button" class="media-close-btn" id="mobileDrawerCloseBtn" aria-label="Close details">✕</button>
+          <button type="button" class="media-close-btn" id="mobileDrawerCloseBtn" aria-label="Close details"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
         </div>
         <div class="mobile-drawer__content">
           <div class="user-pill">
@@ -107,6 +116,7 @@
             <button type="button" class="secondary-btn" id="mobileChangeNameBtn">Change Handle</button>
             <button type="button" class="secondary-btn" id="mobileClearChatBtn">Clear Channel</button>
             <button type="button" class="secondary-btn" id="mobileLogoutBtn">Disconnect</button>
+            <button type="button" class="secondary-btn" id="mobileProblemBtn">Having Problem</button>
           </div>
           <div class="users-header">
             <p class="eyebrow">// Active Nodes</p>
@@ -119,7 +129,7 @@
 
       <div class="mobile-media hidden" id="mobileMedia">
         <div class="mobile-media__header">
-          <button type="button" class="media-close-btn" id="mobileMediaCloseBtn" aria-label="Close shared media">✕</button>
+          <button type="button" class="media-close-btn" id="mobileMediaCloseBtn" aria-label="Close shared media"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
         </div>
         <div class="mobile-media__body" id="mobileMediaBody"></div>
       </div>
@@ -130,7 +140,13 @@
           <div class="dlngr-logo" style="font-size:1.4rem; margin-bottom:8px;">
             <span class="logo-dl">DL</span><span class="logo-ngr">NGR</span>
           </div>
-          <h1 class="chat-title">Chat</h1>
+          <div class="chat-title-row">
+            <h1 class="chat-title">Chat</h1>
+            <button type="button" class="global-alert-toggle" id="globalAlertToggle" aria-label="Open creator alert">
+              <span class="material-symbols-outlined">campaign</span>
+              <span class="global-alert-toggle__badge hidden" id="globalAlertBadge">!</span>
+            </button>
+          </div>
         </div>
         <div class="sidebar-stack">
           <div class="user-pill">
@@ -145,6 +161,7 @@
             <button type="button" class="secondary-btn" id="changeNameBtn">Change Handle</button>
             <button type="button" class="secondary-btn" id="clearChatBtn">Clear Channel</button>
             <button type="button" class="secondary-btn" id="logoutBtn">Disconnect</button>
+            <button type="button" class="secondary-btn" id="problemBtn">Having Problem</button>
           </div>
         </div>
       </aside>
@@ -156,6 +173,7 @@
           <label for="messageInput" class="sr-only">Write a message</label>
           <textarea id="messageInput" name="messageInput" rows="1"
             placeholder="Transmit message..." required></textarea>
+          <button type="button" class="edit-cancel-btn hidden" id="editCancelBtn" aria-label="Cancel editing"><span class="material-symbols-outlined" style="font-size:20px;">close</span></button>
           <button type="submit" class="send-icon-btn" id="sendMessageBtn" aria-label="Send message">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M3.4 20.4 21 12 3.4 3.6l2.2 6.5 8.2 1.9-8.2 1.9-2.2 6.5Z"/>
@@ -170,10 +188,16 @@
           <p class="eyebrow">// Active Nodes</p>
           <div class="users-title-row">
             <h2 class="users-title">Online Now</h2>
-            <button type="button" class="desktop-bell-toggle" id="desktopBellToggle" aria-label="Open notifications">
-              <span class="desktop-bell-toggle__icon">🔔</span>
-              <span class="desktop-bell-toggle__badge hidden" id="desktopBellBadge">0</span>
-            </button>
+            <div class="title-actions">
+              <button type="button" class="desktop-bell-toggle" id="desktopBellToggle" aria-label="Open notifications">
+                <span class="desktop-bell-toggle__icon"><span class="material-symbols-outlined" style="color: #FFFF55;">notification_add</span></span>
+                <span class="desktop-bell-toggle__badge hidden" id="desktopBellBadge">0</span>
+              </button>
+              <button type="button" class="desktop-pin-toggle" id="desktopPinToggle" aria-label="View pinned message">
+                <span><span class="material-symbols-outlined" style="color: #FFFF55;">pinboard</span></span>
+                <span class="desktop-pin-toggle__badge hidden" id="desktopPinBadge">1</span>
+              </button>
+            </div>
           </div>
           <p class="users-count" id="onlineCount">0 users online</p>
         </div>
@@ -197,10 +221,70 @@
       <p class="message__text"></p>
       <div class="message__actions">
         <button type="button" class="message-action message__copy">Copy</button>
+        <button type="button" class="message-action message__edit hidden">Edit</button>
+        <button type="button" class="message-action message__pin hidden">Pin</button>
         <button type="button" class="message-action message__delete hidden">Delete</button>
       </div>
     </article>
   </template>
+
+  <div class="pin-panel hidden" id="pinPanel">
+    <div class="pin-panel__header">
+      <p class="eyebrow">// Pinned Message</p>
+      <button type="button" class="media-close-btn" id="pinPanelCloseBtn" aria-label="Close pinned message"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    </div>
+    <div class="pin-panel__body" id="pinPanelBody">
+      <p class="empty-users">No pinned message yet.</p>
+    </div>
+  </div>
+
+  <div class="site-alert-panel hidden" id="alertPanel">
+    <div class="site-alert-panel__header">
+      <p class="eyebrow">// DLNGR Notifications</p>
+      <button type="button" class="media-close-btn" id="alertPanelCloseBtn" aria-label="Close creator alert"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    </div>
+    <div class="site-alert-panel__body" id="alertPanelBody">
+      <p class="empty-users">No site notifications yet.</p>
+    </div>
+  </div>
+
+  <div class="broadcast-toast hidden" id="broadcastToast">
+    <p class="broadcast-toast__eyebrow">Creator Notification</p>
+    <p class="broadcast-toast__text" id="broadcastToastText"></p>
+  </div>
+
+  <div class="problem-modal hidden" id="problemModal" aria-hidden="true">
+    <div class="problem-modal__card">
+      <div class="problem-modal__header">
+        <div>
+          <p class="eyebrow">// Creator Inbox</p>
+          <h2 class="problem-modal__title">Having Problem</h2>
+          <p class="problem-modal__copy">Send the issue straight to the creator inbox from chat.</p>
+        </div>
+        <button type="button" class="media-close-btn" id="problemCloseBtn" aria-label="Close problem form"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+      </div>
+      <form class="problem-form" id="problemForm">
+        <input id="problemSubject" type="text" maxlength="80" placeholder="Problem title" required>
+        <textarea id="problemMessage" rows="5" placeholder="Describe what happened..." required></textarea>
+        <button type="submit" class="primary-btn">Send To Creator Inbox</button>
+        <p class="problem-status" id="problemStatus"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- MOBILE POPUP OVERLAY (for pin & alert on mobile) -->
+  <div class="mobile-popup-overlay hidden" id="mobilePopupOverlay">
+    <div class="mobile-popup-card" id="mobilePopupCard">
+      <div class="mobile-popup-card__header">
+        <p class="eyebrow" id="mobilePopupTitle">// Info</p>
+        <button type="button" class="media-close-btn" id="mobilePopupCloseBtn" aria-label="Close popup">
+          <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+        </button>
+      </div>
+      <div class="mobile-popup-card__body" id="mobilePopupBody"></div>
+    </div>
+  </div>
 <script type="module" src="index.js"></script>
+
 </body>
 </html>
