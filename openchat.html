@@ -5,20 +5,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DLNGR Chat</title>
-    <link rel="icon" type="image/png" href="dlngrchat.png">
-     <link rel="stylesheet" href="index.css">
+  <link rel="icon" type="image/png" href="dlngrchat.png">
+  <link rel="stylesheet" href="index.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="icon" type="image/png" href="dlngrchat.png">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200..700,0..1,-50..200" />
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
+  <style>
      
     :root {
       --bg: #080808;
       --bg2: #0f0f0f;
-      --panel: rgba(204, 27, 27, 0.92);
-      --panel-strong: rgba(6, 6, 6, 0.97);
+      --panel: rgba(6, 6, 6, 0.65);
+      --panel-strong: rgba(6, 6, 6, 0.78);
       --line: rgba(220, 30, 30, 0.18);
       --line-soft: rgba(255, 255, 255, 0.07);
       --text: #f0f0f0;
@@ -38,13 +37,339 @@
       --mobile-header-h: calc(var(--header-h) + env(safe-area-inset-top, 0px));
     }
 
-    * { box-sizing: border-box; }
+    body.light-theme {
+      --bg: #f7f5f0;
+      --bg2: #eceae2;
+      --panel: rgba(253, 252, 249, 0.65);
+      --panel-strong: rgba(253, 252, 249, 0.78);
+      --line: rgba(171, 29, 29, 0.2);
+      --line-soft: rgba(44, 40, 36, 0.06);
+      --text: #2c2824;
+      --muted: #726860;
+      --red: #ab1d1d;
+      --red-bright: #d42222;
+      --red-glow: rgba(171, 29, 29, 0.3);
+      --red-soft: rgba(171, 29, 29, 0.06);
+      --white-glow: rgba(44, 40, 36, 0.15);
+      --shadow: 0 24px 64px rgba(44, 40, 36, 0.06);
+      --glow-red: 0 0 16px rgba(171, 29, 29, 0.2), 0 0 40px rgba(171, 29, 29, 0.08);
+      --glow-white: 0 0 10px rgba(44, 40, 36, 0.03);
+    }
+    body.light-theme::before,
+    body.light-theme::after {
+      content: none !important;
+      display: none !important;
+    }
+    body.light-theme {
+      scrollbar-color: #c5c0b8 #f7f5f0;
+    }
+    body.light-theme::-webkit-scrollbar-track {
+      background: #f7f5f0;
+    }
+    body.light-theme::-webkit-scrollbar-thumb {
+      background: #c5c0b8;
+    }
+    body.light-theme::-webkit-scrollbar-thumb:hover {
+      background: #b5b0a6;
+    }
+    body.light-theme::-webkit-scrollbar-thumb:active {
+      background: #ab1d1d;
+    }
+    body.light-theme .video-bg::after {
+      background:
+        linear-gradient(180deg, rgba(247,245,240,0.85), rgba(247,245,240,0.92)),
+        radial-gradient(circle at 20% 80%, rgba(171,29,29,0.03), transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(171,29,29,0.015), transparent 30%);
+    }
+    body.light-theme .video-bg video {
+      filter: saturate(0.4) brightness(1.3);
+    }
+    body.light-theme .join-card {
+      background: rgba(253,252,249,0.68);
+      box-shadow: 0 32px 100px rgba(44,40,36,0.08), var(--glow-red);
+    }
+    body.light-theme .chat-sidebar {
+      background: rgba(253,252,249,0.68);
+    }
+    body.light-theme .chat-room {
+      background: rgba(253,252,249,0.65);
+    }
+    body.light-theme .media-panel {
+      background: rgba(253,252,249,0.68);
+    }
+    body.light-theme .mobile-header {
+      background: rgba(253, 252, 249, 0.75);
+    }
+    body.light-theme .mobile-drawer {
+      background: rgba(253,252,249,0.78);
+    }
+    body.light-theme .mobile-popup-card {
+      background: rgba(253,252,249,0.88);
+    }
+    body.light-theme .join-popup__card {
+      background: rgba(253,252,249,0.95);
+      color: var(--text);
+    }
+    body.light-theme .join-popup__title {
+      color: var(--text);
+    }
+    body.light-theme .join-popup__message {
+      color: var(--muted);
+    }
+    body.light-theme .message {
+      background: #fdfdfb;
+      border: 1px solid rgba(44, 40, 36, 0.08);
+      border-left: 3px solid rgba(44, 40, 36, 0.3);
+      box-shadow: 0 2px 8px rgba(44, 40, 36, 0.03);
+    }
+    body.light-theme .message--self {
+      background: #faf5f2;
+      border-color: rgba(171, 29, 29, 0.12);
+      border-right: 3px solid var(--red);
+      border-left: 1px solid rgba(171, 29, 29, 0.12);
+      box-shadow: 0 2px 8px rgba(171, 29, 29, 0.02);
+    }
+    body.light-theme .message--creator {
+      background: #faf0f0;
+      border-color: rgba(171, 29, 29, 0.22);
+      border-left: 3px solid var(--red);
+      box-shadow: 0 2px 10px rgba(171, 29, 29, 0.04);
+    }
+    body.light-theme .message--admin {
+      background: #faf4eb;
+      border-color: rgba(255, 140, 0, 0.2);
+      border-left: 3px solid #ff8c00;
+      box-shadow: 0 2px 10px rgba(255, 140, 0, 0.04);
+    }
+    body.light-theme .message--system {
+      background: rgba(44, 40, 36, 0.02);
+      border-color: rgba(44, 40, 36, 0.04);
+      color: var(--muted);
+    }
+    body.light-theme input, body.light-theme textarea {
+      background: #fdfcf9;
+      border: 1px solid rgba(171, 29, 29, 0.3);
+      color: #2c2824;
+      box-shadow: inset 0 1px 3px rgba(44, 40, 36, 0.04);
+    }
+    body.light-theme input:focus, body.light-theme textarea:focus {
+      background: #fdfcf9;
+      border-color: var(--red);
+      box-shadow: 0 0 0 2px rgba(171, 29, 29, 0.12), inset 0 1px 3px rgba(44, 40, 36, 0.04);
+    }
+    body.light-theme .mobile-brand {
+      color: var(--text);
+    }
+    body.light-theme #captchaCanvas {
+      background: rgba(0, 0, 0, 0.04) !important;
+      border: 1px solid rgba(220, 30, 30, 0.25) !important;
+    }
+    body.light-theme .desktop-bell-toggle .material-symbols-outlined,
+    body.light-theme .desktop-pin-toggle .material-symbols-outlined,
+    body.light-theme .global-alert-toggle .material-symbols-outlined,
+    body.light-theme .mobile-bell-toggle .material-symbols-outlined,
+    body.light-theme .mobile-pin-toggle .material-symbols-outlined,
+    body.light-theme .mobile-theme-toggle .material-symbols-outlined,
+    body.light-theme .desktop-bell-toggle__icon .material-symbols-outlined,
+    body.light-theme .desktop-pin-toggle span .material-symbols-outlined {
+      color: var(--red) !important;
+    }
+    body.light-theme .option-toggle {
+      background: rgba(0,0,0,0.015);
+      border-color: rgba(220,30,30,0.1);
+    }
+    body.light-theme .option-toggle small {
+      color: rgba(0,0,0,0.5);
+    }
+    body.light-theme .identity-code {
+      color: var(--red) !important;
+      font-weight: 600;
+    }
+    body.light-theme .secondary-btn {
+      color: #1a1a1a !important;
+      background: #ffffff !important;
+      border: 1px solid rgba(220, 30, 30, 0.45) !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+    }
+    body.light-theme .secondary-btn:hover {
+      background: rgba(220, 30, 30, 0.05) !important;
+      border-color: var(--red) !important;
+      color: #1a1a1a !important;
+    }
+    body.light-theme .join-card,
+    body.light-theme .chat-sidebar,
+    body.light-theme .chat-room,
+    body.light-theme .mobile-header,
+    body.light-theme .pin-panel,
+    body.light-theme .site-alert-panel,
+    body.light-theme .notification-panel,
+    body.light-theme .problem-modal__card,
+    body.light-theme .custom-dropdown,
+    body.light-theme .dropdown-menu {
+      border-color: rgba(220, 30, 30, 0.45) !important;
+    }
+    body.light-theme .notification-panel,
+    body.light-theme .pin-panel,
+    body.light-theme .site-alert-panel {
+      background: rgba(253, 252, 249, 0.92) !important;
+      color: var(--text) !important;
+      box-shadow: 0 12px 32px rgba(44, 40, 36, 0.08) !important;
+    }
+    body.light-theme .notification-item {
+      background: rgba(44, 40, 36, 0.02) !important;
+      border-color: rgba(171, 29, 29, 0.1) !important;
+      color: var(--text) !important;
+    }
+    body.light-theme .notification-item:hover {
+      background: rgba(171, 29, 29, 0.05) !important;
+      border-color: var(--red) !important;
+    }
+    body.light-theme .notification-item__meta {
+      color: var(--muted) !important;
+    }
+    body.light-theme .notification-item__text {
+      color: var(--text) !important;
+    }
+    body.light-theme .message-action {
+      background: #1a1a1a !important;
+      color: #ffffff !important;
+      border: 1px solid #000000 !important;
+      padding: 3px 8px !important;
+      font-weight: 500 !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15) !important;
+      border-radius: 3px !important;
+    }
+    body.light-theme .message-action:hover {
+      background: #000000 !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25) !important;
+    }
+    body.light-theme .broadcast-toast {
+      background: rgba(255,255,255,0.96);
+      border-color: rgba(220,30,30,0.45) !important;
+    }
+    body.light-theme .problem-modal__card {
+      background: rgba(255,255,255,0.98);
+    }
+    body.light-theme .problem-modal__copy {
+      color: var(--muted);
+    }
+    body.light-theme #moderationModal select {
+      background: #ffffff !important;
+      color: #1a1a1a !important;
+      border-color: rgba(220,30,30,0.35) !important;
+    }
+    body.light-theme .message__reply-quote {
+      background: rgba(220,30,30,0.04);
+      border-left-color: #ff0000;
+    }
+    body.light-theme .message__reply-quote:hover {
+      background: rgba(220,30,30,0.08);
+    }
+    body.light-theme .reply-bar {
+      background: #f5f5f5 !important;
+      border-bottom-color: rgba(220,30,30,0.2) !important;
+    }
+    body.light-theme #emojiDrawer,
+    body.light-theme #gifDrawer {
+      background: rgba(255, 255, 255, 0.98) !important;
+      border-color: rgba(220, 30, 30, 0.3) !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important;
+    }
+    body.light-theme #gifSearchInput {
+      background: #ffffff !important;
+      color: #1a1a1a !important;
+      border-color: rgba(220, 30, 30, 0.3) !important;
+    }
+    body.light-theme .input-action-btn:hover {
+      color: var(--red) !important;
+    }
+    body.light-theme .pinned-preview,
+    body.light-theme .site-notification-item {
+      background: rgba(0,0,0,0.015);
+      border-color: rgba(220,30,30,0.12);
+    }
+    body.light-theme .human-check {
+      background: rgba(0,0,0,0.015);
+      border-color: rgba(220,30,30,0.12);
+    }
+    body.light-theme .user-card,
+    body.light-theme .room-card {
+      background: rgba(0,0,0,0.015);
+      border-color: rgba(0,0,0,0.04);
+    }
+    body.light-theme .empty-users {
+      color: var(--muted);
+    }
+    body.light-theme .logo-dl {
+      color: #fff;
+      background: #1a1a1a;
+    }
+    .theme-icon-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 3px;
+      display: inline-grid;
+      place-items: center;
+      color: var(--text);
+      background: rgba(220,30,30,0.1);
+      border: 1px solid rgba(220,30,30,0.25);
+      transition: all 160ms ease;
+      cursor: pointer;
+      z-index: 5;
+    }
+    .theme-icon-btn:hover {
+      background: rgba(220,30,30,0.2);
+      border-color: var(--red);
+    }
 
+    * { box-sizing: border-box; }
+/* ── SYSTEM-WIDE BLACK SCROLLBAR ── */
+
+/* Modern Standard (Firefox and others) */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #1a1a1a #080808; /* Thumb color | Track color */
+}
+
+/* WebKit Engines (Chrome, Edge, Safari, Opera, iOS, Android) */
+html::-webkit-scrollbar {
+  width: 8px;  /* Vertical scrollbar width */
+  height: 8px; /* Horizontal scrollbar height */
+}
+
+/* The background track of the scrollbar */
+html::-webkit-scrollbar-track {
+  background: #080808; 
+  border-left: 1px solid rgba(220, 30, 30, 0.05); /* Optional subtle red edge line */
+}
+
+/* The draggable scrollbar handle */
+html::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.03); /* Tiny highlight highlight border */
+  transition: background 0.2s ease;
+}
+
+/* Handle hover state */
+html::-webkit-scrollbar-thumb:hover {
+  background: #262626;
+  border-color: rgba(220, 30, 30, 0.3); /* Subtle dark red glow accent on hover */
+}
+
+/* Handle when active/clicked */
+html::-webkit-scrollbar-thumb:active {
+  background: #dc1e1e; /* Changes to pure DLNGR Red when dragged */
+}
     html, body {
       margin: 0;
       min-height: 100%;
       height: 100%;
-      overflow: hidden;
+      
       overscroll-behavior: none;
     }
 
@@ -322,6 +647,79 @@
       resize: none;
     }
 
+    .human-check {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid rgba(220,30,30,0.16);
+      border-radius: 3px;
+      background: rgba(255,255,255,0.025);
+    }
+    .human-check__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .captcha-prompt {
+      margin: 0;
+      color: var(--text);
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+    }
+    .privacy-note {
+      margin: 0;
+      color: rgba(240,240,240,0.46);
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.72rem;
+      line-height: 1.45;
+    }
+    .bot-field {
+      position: absolute;
+      left: -10000px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .join-options {
+      display: grid;
+      gap: 8px;
+    }
+    .option-toggle {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(220,30,30,0.14);
+      border-radius: 3px;
+      background: rgba(255,255,255,0.025);
+      color: var(--text);
+    }
+    .option-toggle input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex: 0 0 auto;
+      accent-color: var(--red);
+    }
+    .option-toggle span {
+      display: grid;
+      gap: 2px;
+      line-height: 1.35;
+    }
+    .option-toggle strong {
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .option-toggle small {
+      color: rgba(240,240,240,0.5);
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.72rem;
+    }
+
     button { cursor: pointer; border: 0; }
 
     /* ── BUTTONS ── */
@@ -410,7 +808,7 @@
       height: calc(100vh - 40px);
       min-height: calc(100vh - 40px);
       display: grid;
-      grid-template-columns: minmax(240px, 300px) minmax(0,1fr) minmax(200px, 260px);
+      grid-template-columns: minmax(240px, 300px) minmax(0,1fr) minmax(240px, 300px);
       gap: 16px;
       align-items: stretch;
       position: relative;
@@ -419,7 +817,7 @@
 
     .chat-panel--with-media .media-panel { display: grid; }
     .chat-panel--with-media {
-      grid-template-columns: minmax(0,340px) minmax(240px,300px) minmax(0,1fr) minmax(200px,260px);
+      grid-template-columns: minmax(0,340px) minmax(240px,300px) minmax(0,1fr) minmax(240px,300px);
     }
     .chat-panel.media-full-viewer { grid-template-columns: minmax(0,1fr); }
     .chat-panel.media-full-viewer .media-panel { grid-column: 1/-1; }
@@ -479,7 +877,7 @@
       display: grid;
       align-content: start;
       gap: 16px;
-      background: rgba(8,8,8,0.9);
+      background: rgba(8,8,8,0.65);
       border: 1px solid var(--line);
       position: relative;
       overflow: hidden;
@@ -511,6 +909,17 @@
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
+
+    /* FIX: Extremely faint/barely visible Identity Code */
+    .identity-code {
+      color: rgba(240,240,240,0.35);
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.65em;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      opacity: 0.4;
+    }
+    body.codes-hidden .identity-code { display: none; }
 
     /* ── ROOM CARD ── */
     .room-card {
@@ -553,7 +962,7 @@
       display: grid;
       grid-template-rows: minmax(0,1fr) auto;
       gap: 16px;
-      background: rgba(8,8,8,0.85);
+      background: rgba(8, 8, 8, 0.122);
       border: 1px solid var(--line);
       overflow: hidden;
       position: relative;
@@ -571,6 +980,7 @@
       min-height: 0;
       height: 100%;
       overflow-y: auto;
+      overflow-x: hidden !important;
       padding-right: 6px;
       display: grid;
       align-content: start;
@@ -580,6 +990,56 @@
     .messages::-webkit-scrollbar-thumb, .users-list::-webkit-scrollbar-thumb {
       background: rgba(220,30,30,0.3);
       border-radius: 2px;
+    }
+
+    /* ── REPLY SYSTEM STYLES ── */
+    .message {
+      transition: transform 0.2s ease, background-color 0.2s ease !important;
+    }
+    .message--dragging {
+      transition: none !important;
+    }
+    .message__reply-btn {
+      position: absolute;
+      right: -50px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--red);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s ease, right 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      padding: 6px;
+    }
+    .message:hover .message__reply-btn {
+      opacity: 1;
+      right: -32px;
+    }
+    .message__reply-quote {
+      margin-bottom: 6px;
+      padding: 6px 10px;
+      background: rgba(220,30,30,0.06);
+      border-left: 2px solid var(--red);
+      border-radius: 2px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-align: left;
+    }
+    .message__reply-quote:hover {
+      background: rgba(220,30,30,0.12);
+    }
+    @keyframes highlightFlash {
+      0% { background: rgba(220, 30, 30, 0.45); }
+      100% { background: transparent; }
+    }
+    .message--highlight {
+      animation: highlightFlash 1.5s ease-out;
     }
 
     /* ── MESSAGE CARDS ── */
@@ -745,6 +1205,22 @@
       background: var(--admin-gradient);
       box-shadow: 0 0 12px rgba(255,140,0,0.35);
     }
+    .tag-badge--verified {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      box-shadow: 0 0 12px rgba(0,114,255,0.45);
+      position: relative;
+      padding-right: 22px;
+    }
+    .tag-badge--verified::after {
+      content: "\2713";
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: bold;
+    }
 
     /* ── RIGHT SIDEBAR ── */
     .users-header { display: grid; gap: 6px; }
@@ -848,12 +1324,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
     .title-actions {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .chat-title-row {
       display: flex;
@@ -863,7 +1340,7 @@
     }
 
     /* ── BELL TOGGLES ── */
-    .desktop-bell-toggle, .mobile-bell-toggle, .desktop-pin-toggle, .mobile-pin-toggle, .global-alert-toggle {
+    .desktop-bell-toggle, .mobile-bell-toggle, .desktop-pin-toggle, .mobile-pin-toggle, .global-alert-toggle, .desktop-theme-toggle, .mobile-theme-toggle {
       position: relative;
       width: 40px;
       height: 40px;
@@ -879,11 +1356,13 @@
     .mobile-bell-toggle .material-symbols-outlined,
     .desktop-pin-toggle .material-symbols-outlined,
     .mobile-pin-toggle .material-symbols-outlined,
-    .global-alert-toggle .material-symbols-outlined {
+    .global-alert-toggle .material-symbols-outlined,
+    .desktop-theme-toggle .material-symbols-outlined,
+    .mobile-theme-toggle .material-symbols-outlined {
       font-size: 20px;
       color: #ffe56a;
     }
-    .desktop-bell-toggle:hover, .mobile-bell-toggle:hover, .desktop-pin-toggle:hover, .mobile-pin-toggle:hover, .global-alert-toggle:hover {
+    .desktop-bell-toggle:hover, .mobile-bell-toggle:hover, .desktop-pin-toggle:hover, .mobile-pin-toggle:hover, .global-alert-toggle:hover, .desktop-theme-toggle:hover, .mobile-theme-toggle:hover {
       background: rgba(220,30,30,0.2);
       border-color: var(--red);
     }
@@ -958,6 +1437,7 @@
       top: 80px;
       right: 20px;
       width: min(340px, calc(100vw - 48px));
+      max-height: calc(100dvh - 120px) !important;
       z-index: 35;
       border-radius: 4px;
       border: 1px solid var(--line);
@@ -1024,14 +1504,17 @@
       position: fixed;
       inset: 0;
       z-index: 90;
-      display: grid;
-      place-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
       padding: 20px;
       background: rgba(0,0,0,0.68);
       backdrop-filter: blur(10px);
     }
     .problem-modal__card {
       width: min(560px, 100%);
+      margin: auto 0;
       border-radius: 4px;
       border: 1px solid var(--line);
       background: rgba(8,8,8,0.96);
@@ -1070,6 +1553,55 @@
     }
 
     /* ── NOTIFICATION PANEL ── */
+    .join-popup {
+      position: fixed;
+      inset: 0;
+      z-index: 130;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(12px);
+    }
+    .join-popup__card {
+      width: min(420px, 100%);
+      border-radius: 4px;
+      border: 1px solid rgba(220,30,30,0.35);
+      background: rgba(10,10,10,0.98);
+      box-shadow: var(--shadow), var(--glow-red);
+      padding: 28px 24px;
+      display: grid;
+      gap: 18px;
+      animation: panel-in 0.22s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    .join-popup__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid rgba(220,30,30,0.15);
+      padding-bottom: 12px;
+    }
+    .join-popup__title {
+      margin: 0;
+      font-family: "Orbitron", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 1.15rem;
+      color: #fff;
+    }
+    .join-popup__message {
+      margin: 0;
+      color: rgba(240,240,240,0.85);
+      line-height: 1.6;
+      font-size: 0.98rem;
+    }
+    .join-popup__actions {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 6px;
+    }
+
     .notification-panel {
       position: fixed;
       top: 80px;
@@ -1103,28 +1635,16 @@
       gap: 8px;
       padding: 12px;
     }
-    .notification-item {
-      display: grid;
-      gap: 5px;
-      padding: 10px 12px;
-      border-radius: 3px;
-      text-align: left;
-      color: var(--text);
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(220,30,30,0.15);
-      transition: border-color 120ms ease;
+    .notification-item-clickable {
+      transition: all 120ms ease;
     }
-    .notification-item:hover { border-color: rgba(220,30,30,0.4); }
-    .notification-item__meta {
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-family: "Share Tech Mono", monospace;
+    .notification-item-clickable:hover {
+      border-color: rgba(220,30,30,0.4) !important;
+      background: rgba(255,255,255,0.06) !important;
     }
-    .notification-item__text {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-size: 0.9rem;
+    body.light-theme .notification-item-clickable:hover {
+      border-color: var(--red) !important;
+      background: rgba(171, 29, 29, 0.05) !important;
     }
 
     .message--mention {
@@ -1228,7 +1748,7 @@
       box-shadow: 0 0 6px rgba(220,30,30,0.6);
     }
 
-    .mobile-drawer, .mobile-brand, .mobile-bell-toggle, .mobile-pin-toggle, .global-alert-toggle { display: none; }
+    .mobile-drawer, .mobile-brand, .mobile-bell-toggle, .mobile-pin-toggle, .global-alert-toggle, .mobile-expand-toggle, .mobile-users-toggle { display: none; }
     .mobile-header__actions,
     .mobile-drawer__actions {
       display: inline-flex;
@@ -1252,6 +1772,9 @@
       padding: 20px;
     }
     .mobile-popup-overlay.active { display: grid; }
+    
+    /* FIX: Corrected syntax error for mobile popup card */
+    .mobile-popup-card {
       width: min(92vw, 420px);
       max-height: min(76dvh, 580px);
       border-radius: 6px;
@@ -1263,6 +1786,7 @@
       overflow: hidden;
       animation: panel-in 0.22s cubic-bezier(0.16,1,0.3,1) both;
     }
+    
     .mobile-popup-card__header {
       display: flex;
       justify-content: space-between;
@@ -1281,7 +1805,7 @@
       align-content: start;
     }
 
-    .hidden { display: none; }
+    .hidden { display: none !important; }
     .sr-only {
       position: absolute;
       width: 1px;
@@ -1307,18 +1831,7 @@
     .join-card .corner--bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
     .join-card .corner--br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
 
-    /* ── GRID BACKGROUND on chat room ── */
-    .chat-room::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(220,30,30,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(220,30,30,0.02) 1px, transparent 1px);
-      background-size: 40px 40px;
-      z-index: 0;
-    }
+
     .messages, .message-form { position: relative; z-index: 1; }
 
     /* ── LABEL STYLE ── */
@@ -1360,31 +1873,194 @@
       100% { transform: scale(1); }
     }
 
+    /* ── COUNTRY SELECTOR DRD ── */
+    .country-select-container {
+      display: grid;
+      gap: 6px;
+    }
+    .custom-dropdown {
+      position: relative;
+      width: 100%;
+    }
+    .dropdown-trigger {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid rgba(220,30,30,0.25);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      border-radius: 3px;
+      padding: 10px 14px;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 160ms ease;
+    }
+    .dropdown-trigger:hover, .dropdown-trigger:focus {
+      border-color: var(--red);
+      background: rgba(220,30,30,0.04);
+    }
+    .selected-flag-container {
+      margin-right: 10px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .selected-flag-container img {
+      width: 20px;
+      height: 14px;
+      object-fit: cover;
+      border-radius: 1px;
+    }
+    .selected-name {
+      flex-grow: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dropdown-arrow {
+      color: var(--muted);
+      transition: transform 160ms ease;
+    }
+    .custom-dropdown.active .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: rgba(8,8,8,0.98);
+      border: 1px solid var(--red);
+      border-radius: 4px;
+      box-shadow: var(--shadow), var(--glow-red);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      max-height: 280px;
+      overflow: hidden;
+      animation: panel-in 0.2s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    body.light-theme .dropdown-menu {
+      background: rgba(255,255,255,0.98);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08), var(--glow-red);
+    }
+    .dropdown-search-wrap {
+      padding: 8px;
+      border-bottom: 1px solid rgba(220,30,30,0.15);
+    }
+    .dropdown-search-wrap input {
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      border-radius: 3px;
+    }
+    .dropdown-options {
+      overflow-y: auto;
+      max-height: 220px;
+      min-height: 100px;
+    }
+    .dropdown-option {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 120ms ease;
+    }
+    .dropdown-option:hover {
+      background: rgba(220,30,30,0.1);
+    }
+    .dropdown-option img {
+      width: 20px;
+      height: 14px;
+      object-fit: cover;
+      margin-right: 10px;
+      border-radius: 1px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    body.light-theme .dropdown-option img {
+      border-color: rgba(0,0,0,0.1);
+    }
+    .dropdown-option .option-flag {
+      margin-right: 10px;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 14px;
+    }
+    .dropdown-option .option-name {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    
+    body.light-theme .dropdown-trigger {
+      background: #ffffff;
+      border-color: rgba(220,30,30,0.35);
+    }
+    body.light-theme .dropdown-trigger:hover {
+      background: rgba(220,30,30,0.02);
+      border-color: var(--red);
+    }
+
+    /* ── MESSAGE FLAG INDICATOR ── */
+    .message.message--has-flag {
+      padding-right: 48px;
+    }
+    .message__flag {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      display: inline-flex;
+      align-items: center;
+      pointer-events: none;
+    }
+    .message__flag img {
+      width: 22px;
+      height: 15px;
+      object-fit: cover;
+      border-radius: 1px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    body.light-theme .message__flag img {
+      border-color: rgba(0,0,0,0.15);
+    }
+    .message__flag .globe-icon {
+      font-size: 1.1rem;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 1080px) {
       .page-shell {
         padding: 0;
         place-items: stretch;
-        /* Lock page-shell so nothing can be scrolled */
         position: fixed;
         inset: 0;
         overflow: hidden;
       }
       .join-panel {
-        min-height: 100vh;
-        min-height: 100dvh;
-        display: grid;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-items: center;
+        justify-content: flex-start;
         padding: 16px;
         overflow-y: auto;
       }
-      /* When chat is visible, hide join panel completely */
       .join-panel.hidden {
         display: none !important;
       }
       .join-card, .chat-room, .chat-sidebar { border-radius: 4px; }
-      .join-card { padding: 28px 20px; }
+      .join-card {
+        padding: 28px 20px;
+        margin: auto 0;
+        flex-shrink: 0;
+        width: 100%;
+        max-width: 500px;
+      }
       
       .mobile-header { display: flex; }
       .mobile-brand {
@@ -1419,6 +2095,11 @@
         padding: calc(var(--mobile-header-h) + 12px) 12px calc(env(safe-area-inset-bottom, 0px) + 12px);
         gap: 12px;
       }
+      .chat-footer-branding {
+        display: block !important;
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2px);
+        margin-top: 2px;
+      }
       .media-panel { display: none !important; }
       .message { max-width: 100%; width: auto; }
       
@@ -1427,7 +2108,10 @@
       }
       /* Show mobile bell/pin/alert in header */
       .mobile-bell-toggle,
-      .mobile-pin-toggle {
+      .mobile-pin-toggle,
+      .mobile-theme-toggle,
+      .mobile-expand-toggle,
+      .mobile-users-toggle {
         display: inline-grid;
         width: 36px;
         height: 36px;
@@ -1449,9 +2133,43 @@
         border: 1px solid rgba(220,30,30,0.25);
         color: var(--text);
       }
+      
+      /* Mobile header compression logic */
+      .mobile-brand {
+        transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+        max-width: 150px;
+        overflow: hidden;
+      }
+      .mobile-header.mobile-header--expanded .mobile-brand {
+        max-width: 0 !important;
+        opacity: 0 !important;
+        padding-right: 0 !important;
+        margin-right: 0 !important;
+      }
+      .mobile-header__collapsible {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        overflow: hidden;
+        max-width: 0;
+        opacity: 0;
+        transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+      }
+      .mobile-header.mobile-header--expanded .mobile-header__collapsible {
+        max-width: 140px;
+        opacity: 1;
+      }
+      #mobilePinToggle,
+      #mobileGlobalAlertToggle {
+        display: inline-grid !important;
+      }
+      #mobileMediaToggle:not(.hidden) {
+        display: inline-grid !important;
+      }
       .mobile-bell-toggle .material-symbols-outlined,
       .mobile-pin-toggle .material-symbols-outlined,
-      .global-alert-toggle .material-symbols-outlined {
+      .global-alert-toggle .material-symbols-outlined,
+      .mobile-theme-toggle .material-symbols-outlined {
         font-size: 18px;
         color: #FFFF55;
       }
@@ -1464,7 +2182,7 @@
         z-index: 60;
         backdrop-filter: blur(8px);
       }
-      .mobile-overlay.hidden { display: none; }
+      .mobile-overlay.hidden { display: none !important; }
       .mobile-media {
         position: fixed;
         inset: 0;
@@ -1473,7 +2191,7 @@
         display: grid;
         grid-template-rows: auto minmax(0,1fr);
       }
-      .mobile-media.hidden { display: none; }
+      .mobile-media.hidden { display: none !important; }
       .chat-sidebar--left, .chat-sidebar--right { display: none; }
       
       .mobile-drawer {
@@ -1521,7 +2239,7 @@
         grid-template-columns: minmax(0,1fr) auto;
         gap: 10px;
         align-items: center;
-        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
+        padding-bottom: 2px;
       }
       .message-form textarea { min-height: 52px; max-height: 140px; }
       .send-icon-btn { width: 52px; height: 52px; border-radius: 3px; align-self: end; }
@@ -1555,23 +2273,26 @@
       }
       .desktop-bell-toggle { display: none; }
     }
-</style>
+  </style>
 </head>
 <body>
- <div class="video-bg">
+  <div class="video-bg">
     <video autoplay muted loop playsinline>
-      <source src="https://dlngrofficial.github.io/dlngrchat2/pink-puff-clouds.1920x1080.mp4" type="video/mp4">
+      <source src="chatback.mp4" type="video/mp4">
     </video>
   </div>
 
   <div class="page-shell">
-    <!-- JOIN PANEL -->
     <section class="join-panel" id="joinPanel">
       <div class="join-card">
         <span class="corner corner--tl"></span>
         <span class="corner corner--tr"></span>
         <span class="corner corner--bl"></span>
         <span class="corner corner--br"></span>
+
+        <button type="button" class="theme-icon-btn" id="joinThemeToggleBtn" aria-label="Toggle Theme">
+          <span class="material-symbols-outlined" id="joinThemeIcon">light_mode</span>
+        </button>
 
         <div class="dlngr-logo">
           <span class="logo-dl">DL</span><span class="logo-ngr">NGR</span>
@@ -1583,40 +2304,135 @@
 
         <form class="join-form" id="joinForm">
           <label for="username" class="label">Your handle</label>
-          <input id="username" name="username" type="text" maxlength="24"
+          <input id="username" name="username" type="text" minlength="2" maxlength="24" pattern="[A-Za-z0-9_. -]{2,24}"
             placeholder="Enter callsign..." autocomplete="nickname" required>
+          <div id="usernameWarning" class="profanity-warning hidden" style="color: var(--red); font-size: 0.75rem; text-align: left; padding: 2px 0; font-family: var(--font-mono); margin-top: 4px; font-weight: bold;">
+            [WARNING] Callsign contains inappropriate language.
+          </div>
+
+          <div class="country-select-container">
+            <label class="label">Select Region / Country</label>
+            <div class="custom-dropdown" id="countryDropdown">
+              <button type="button" class="dropdown-trigger" id="countryDropdownTrigger">
+                <span class="selected-flag-container" id="selectedFlagContainer">🌐</span>
+                <span class="selected-name" id="selectedCountryName">Universal (Global)</span>
+                <span class="material-symbols-outlined dropdown-arrow">arrow_drop_down</span>
+              </button>
+              <div class="dropdown-menu hidden" id="countryDropdownMenu">
+                <div class="dropdown-search-wrap">
+                  <input type="text" id="countrySearchInput" placeholder="Search country..." autocomplete="off">
+                </div>
+                <div class="dropdown-options" id="countryDropdownOptions">
+                  <!-- Generated dynamically via JS -->
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="selectedCountryCode" name="countryCode" value="GLOBAL">
+          </div>
+
           <div class="password-wrap hidden" id="passwordWrap">
             <label for="roomPassword" class="label">Access Code</label>
             <input id="roomPassword" name="roomPassword" type="password"
               placeholder="Enter code..." autocomplete="current-password">
           </div>
+          
+          <div class="human-check">
+            <div class="human-check__top">
+              <label class="label">Human Check</label>
+              <button type="button" class="message-action" id="captchaRefreshBtn">Refresh</button>
+            </div>
+            <canvas id="captchaCanvas" width="160" height="40" style="background: rgba(255,255,255,0.05); border-radius: 3px; margin-bottom: 8px;"></canvas>
+            
+            <input id="captchaAnswer" name="captchaAnswer" type="text" inputmode="text"
+              placeholder="Type the code..." autocomplete="off" required>
+            <label class="bot-field" aria-hidden="true">
+              Website
+              <input id="joinWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+            </label>
+          </div>
+
+          <div class="join-options">
+            <label class="option-toggle">
+              <input id="stayLoggedInInput" type="checkbox" checked>
+              <span>
+                <strong>Stay logged in</strong>
+                <small>Keep this handle saved on this device.</small>
+              </span>
+            </label>
+            <label class="option-toggle">
+              <input id="publicCodeInput" type="checkbox">
+              <span>
+                <strong>Show unique code</strong>
+                <small>Turn on only if you want others to see your code.</small>
+              </span>
+            </label>
+          </div>
+        
+          
           <button type="submit" class="primary-btn">Initialize Connection</button>
           <p class="helper-text" id="joinStatus">Your handle is only visible inside this channel.</p>
         </form>
       </div>
     </section>
 
-    <!-- CHAT PANEL -->
+    <div class="join-popup hidden" id="joinPopup" aria-hidden="true">
+      <div class="join-popup__card" role="dialog" aria-modal="true" aria-labelledby="joinPopupTitle">
+        <div class="join-popup__header">
+          <div>
+            <p class="eyebrow" id="joinPopupEyebrow">// Connection Notice</p>
+            <h2 class="join-popup__title" id="joinPopupTitle">Connection blocked</h2>
+          </div>
+          <button type="button" class="media-close-btn" id="joinPopupCloseBtn" aria-label="Close notice"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+        </div>
+        <p class="join-popup__message" id="joinPopupMessage">Please check the details and try again.</p>
+        <div class="join-popup__actions">
+          <button type="button" class="primary-btn" id="joinPopupOkBtn">OK</button>
+        </div>
+      </div>
+    </div>
+
     <main class="chat-panel hidden" id="chatPanel">
-      <!-- MOBILE FIXED HEADER -->
       <header class="mobile-header">
         <div class="mobile-brand">DLNGR CHAT</div>
 
-        <div class="mobile-header__right">
-          <button type="button" class="mobile-media-toggle hidden" id="mobileMediaToggle" aria-label="Open shared media">
+        <div class="mobile-header__right" style="display: flex; align-items: center; gap: 10px;">
+          <!-- 1. Arrow (always visible) -->
+          <button type="button" class="mobile-expand-toggle" id="mobileHeaderExpandBtn" aria-label="Toggle actions" style="background: none; border: none; color: var(--red); cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; transition: opacity 0.2s;">
+            <span class="material-symbols-outlined" id="mobileExpandIcon">chevron_left</span>
           </button>
-          <button type="button" class="global-alert-toggle" id="mobileGlobalAlertToggle" aria-label="Open creator alert">
-            <span class="material-symbols-outlined">campaign</span>
-            <span class="global-alert-toggle__badge hidden" id="mobileGlobalAlertBadge">!</span>
-          </button>
+
+          <!-- 2. Collapsible Group (slides out smoothly!) -->
+          <div class="mobile-header__collapsible" id="mobileHeaderCollapsible">
+            <button type="button" class="mobile-media-toggle hidden" id="mobileMediaToggle" aria-label="Open shared media">
+            </button>
+            <button type="button" class="global-alert-toggle" id="mobileGlobalAlertToggle" aria-label="Open creator alert">
+              <span class="material-symbols-outlined">campaign</span>
+              <span class="global-alert-toggle__badge hidden" id="mobileGlobalAlertBadge">!</span>
+            </button>
+            <button type="button" class="mobile-pin-toggle" id="mobilePinToggle" aria-label="View pinned message">
+              <span class="material-symbols-outlined">push_pin</span>
+              <span class="mobile-pin-toggle__badge hidden" id="mobilePinBadge">1</span>
+            </button>
+          </div>
+
+          <!-- 3. Mentions (always visible) -->
           <button type="button" class="mobile-bell-toggle" id="mobileBellToggle" aria-label="Open notifications">
             <span class="material-symbols-outlined">notifications</span>
             <span class="mobile-bell-toggle__badge hidden" id="mobileBellBadge">0</span>
           </button>
-          <button type="button" class="mobile-pin-toggle" id="mobilePinToggle" aria-label="View pinned message">
-            <span class="material-symbols-outlined">push_pin</span>
-            <span class="mobile-pin-toggle__badge hidden" id="mobilePinBadge">1</span>
+
+          <!-- 4. Active Users (always visible) -->
+          <button type="button" class="mobile-users-toggle" id="mobileUsersToggleBtn" aria-label="View active users" style="background: none; border: none; color: var(--red); cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; width: 36px; height: 36px; transition: opacity 0.2s;">
+            <span class="material-symbols-outlined">group</span>
+            <span class="mobile-users-badge" id="mobileUsersBadge" style="position: absolute; top: 2px; right: 2px; background: var(--red); color: #fff; font-size: 0.58rem; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: bold;">0</span>
           </button>
+
+          <!-- 5. Theme switch (always visible) -->
+          <button type="button" class="mobile-theme-toggle" id="mobileThemeToggleBtn" aria-label="Toggle Theme">
+            <span class="material-symbols-outlined" id="mobileThemeIcon">light_mode</span>
+          </button>
+
+          <!-- 6. Menu (always visible) -->
           <button type="button" class="mobile-toggle" id="mobileSidebarToggle" aria-label="Open details panel">
             <span></span><span></span><span></span><span></span>
           </button>
@@ -1643,12 +2459,12 @@
 
       <aside class="mobile-drawer hidden" id="mobileDrawer">
         <div class="mobile-drawer__header">
-          <p class="eyebrow">// Node Details</p>
+          <p class="eyebrow">// User Details</p>
           <button type="button" class="media-close-btn" id="mobileDrawerCloseBtn" aria-label="Close details"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
         </div>
         <div class="mobile-drawer__content">
           <div class="user-pill">
-            <span class="user-pill__label">NODE:</span>
+            <span class="user-pill__label">USERNAME:</span>
             <strong id="mobileActiveUsername">Guest</strong>
             <span class="tag-badge hidden" id="mobileActiveUserTag"></span>
           </div>
@@ -1657,14 +2473,18 @@
           </div>
           <div class="sidebar-actions">
             <button type="button" class="secondary-btn" id="mobileChangeNameBtn">Change Handle</button>
+            <button type="button" class="secondary-btn" id="mobileIdentityCodeToggleBtn">Show My Code</button>
             <button type="button" class="secondary-btn" id="mobileClearChatBtn">Clear Channel</button>
             <button type="button" class="secondary-btn" id="mobileLogoutBtn">Disconnect</button>
             <button type="button" class="secondary-btn" id="mobileProblemBtn">Having Issue?</button>
           </div>
           <div class="users-header">
-            <p class="eyebrow">// Active Nodes</p>
+            <p class="eyebrow">// Active USERS</p>
             <h2 class="users-title">Online Now</h2>
             <p class="users-count" id="mobileOnlineCount">0 users online</p>
+            <div class="users-search-wrap" style="padding: 4px 16px 12px 16px; width: 100%; box-sizing: border-box;">
+              <input type="text" id="mobileUserSearchInput" placeholder="Search users..." autocomplete="off" style="width: 100%; padding: 6px 12px; font-size: 0.85rem; border: 1px solid rgba(220,30,30,0.25); background: rgba(0,0,0,0.3); color: var(--text); font-family: var(--font-mono); border-radius: 4px; box-sizing: border-box; outline: none; transition: border-color 0.2s ease;">
+            </div>
           </div>
           <div class="users-list" id="mobileOnlineUsers"></div>
         </div>
@@ -1677,7 +2497,6 @@
         <div class="mobile-media__body" id="mobileMediaBody"></div>
       </div>
 
-      <!-- LEFT SIDEBAR -->
       <aside class="chat-sidebar chat-sidebar--left">
         <div class="chat-header">
           <div class="dlngr-logo" style="font-size:1.4rem; margin-bottom:8px;">
@@ -1693,7 +2512,7 @@
         </div>
         <div class="sidebar-stack">
           <div class="user-pill">
-            <span class="user-pill__label">NODE:</span>
+            <span class="user-pill__label">USER:</span>
             <strong id="activeUsername">Guest</strong>
             <span class="tag-badge hidden" id="activeUserTag"></span>
           </div>
@@ -1702,6 +2521,7 @@
           </div>
           <div class="sidebar-actions">
             <button type="button" class="secondary-btn" id="changeNameBtn">Change Handle</button>
+            <button type="button" class="secondary-btn" id="identityCodeToggleBtn">Show My Code</button>
             <button type="button" class="secondary-btn" id="clearChatBtn">Clear Channel</button>
             <button type="button" class="secondary-btn" id="logoutBtn">Disconnect</button>
             <button type="button" class="secondary-btn" id="problemBtn">Having Issue?</button>
@@ -1709,13 +2529,48 @@
         </div>
       </aside>
 
-      <!-- CHAT ROOM -->
       <section class="chat-room">
         <div class="messages" id="messages" aria-live="polite"></div>
+        
+        <!-- Emoji Drawer Overlay -->
+        <div id="emojiDrawer" class="reply-bar hidden" style="position: absolute; bottom: 80px; left: 16px; right: 16px; height: 180px; background: rgba(10,10,10,0.96); border: 1px solid rgba(220,30,30,0.25); border-radius: 4px; z-index: 100; backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 10px; box-sizing: border-box; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(220,30,30,0.15); padding-bottom: 6px; margin-bottom: 6px;">
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--red); font-weight: bold;">// Select Emoji</span>
+            <button type="button" id="emojiDrawerCloseBtn" style="background: none; border: none; color: var(--muted); cursor: pointer; display: flex; align-items: center;"><span class="material-symbols-outlined" style="font-size: 16px;">close</span></button>
+          </div>
+          <div id="emojiGrid" style="flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)); gap: 6px; justify-items: center; align-content: start; padding-bottom: 4px;"></div>
+        </div>
+
+        <!-- GIF Drawer Overlay -->
+        <div id="gifDrawer" class="reply-bar hidden" style="position: absolute; bottom: 80px; left: 16px; right: 16px; height: 260px; background: rgba(10,10,10,0.96); border: 1px solid rgba(220,30,30,0.25); border-radius: 4px; z-index: 100; backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 10px; box-sizing: border-box; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(220,30,30,0.15); padding-bottom: 6px; margin-bottom: 6px; gap: 10px;">
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--red); font-weight: bold; white-space: nowrap;">// Search GIFs</span>
+            <input type="text" id="gifSearchInput" placeholder="Search Giphy..." style="flex-grow: 1; padding: 4px 8px; font-size: 0.8rem; border: 1px solid rgba(220,30,30,0.2); background: rgba(0,0,0,0.4); color: var(--text); font-family: var(--font-mono); border-radius: 3px; outline: none;">
+            <button type="button" id="gifDrawerCloseBtn" style="background: none; border: none; color: var(--muted); cursor: pointer; display: flex; align-items: center;"><span class="material-symbols-outlined" style="font-size: 16px;">close</span></button>
+          </div>
+          <div id="gifGrid" style="flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding-bottom: 4px; align-content: start;"></div>
+        </div>
+
         <form class="message-form" id="messageForm">
+          <div id="replyBar" class="reply-bar hidden" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; background: rgba(0,0,0,0.15); border-left: 3px solid var(--red); border-bottom: 1px solid rgba(220,30,30,0.15); width: 100%; box-sizing: border-box; grid-column: span 3; font-family: var(--font-mono); margin-bottom: 4px;">
+            <div style="display: flex; flex-direction: column; overflow: hidden; font-size: 0.8rem; text-align: left;">
+              <span style="color: var(--red); font-weight: bold; font-size: 0.75rem;" id="replyBarAuthor">Replying to @user</span>
+              <span style="color: var(--text); opacity: 0.8; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" id="replyBarText">Message snippet...</span>
+            </div>
+            <button type="button" id="replyBarCloseBtn" style="background: none; border: none; color: var(--muted); cursor: pointer; display: flex; align-items: center; padding: 4px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
+          </div>
+          <div id="profanityWarning" class="profanity-warning hidden" style="grid-column: span 3; color: var(--red); font-size: 0.75rem; text-align: left; padding: 2px 12px; font-family: var(--font-mono); margin-bottom: 2px; font-weight: bold;">
+            [WARNING] Inappropriate language detected. Transmission blocked.
+          </div>
           <label for="messageInput" class="sr-only">Write a message</label>
-          <textarea id="messageInput" name="messageInput" rows="1"
-            placeholder="Transmit message..." required></textarea>
+          <div style="position: relative; width: 100%; display: flex; align-items: center;">
+            <textarea id="messageInput" name="messageInput" rows="1"
+              placeholder="Transmit message..." required style="padding-right: 76px; resize: none; box-sizing: border-box;"></textarea>
+            <div class="input-actions-wrap" style="position: absolute; right: 12px; display: flex; gap: 8px; align-items: center; z-index: 10;">
+              <button type="button" id="gifBtn" class="input-action-btn" title="Search GIFs" style="background: none; border: none; color: var(--muted); cursor: pointer; display: flex; align-items: center; padding: 2px; transition: color 0.2s;"><span class="material-symbols-outlined" style="font-size: 20px;">gif_box</span></button>
+              <button type="button" id="emojiBtn" class="input-action-btn" title="Pick Emoji" style="background: none; border: none; color: var(--muted); cursor: pointer; display: flex; align-items: center; padding: 2px; transition: color 0.2s;"><span class="material-symbols-outlined" style="font-size: 20px;">mood</span></button>
+            </div>
+          </div>
           <button type="button" class="edit-cancel-btn hidden" id="editCancelBtn" aria-label="Cancel editing"><span class="material-symbols-outlined" style="font-size:20px;">close</span></button>
           <button type="submit" class="send-icon-btn" id="sendMessageBtn" aria-label="Send message">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -1723,12 +2578,12 @@
             </svg>
           </button>
         </form>
+        <div class="chat-footer-branding" id="chatFooterBranding" style="text-align: center; font-size: 0.65rem; font-family: 'Orbitron', monospace; letter-spacing: 0.25em; color: var(--muted); opacity: 0.4; margin-top: 6px; display: none;">DLNGR CHAT</div>
       </section>
 
-      <!-- RIGHT SIDEBAR -->
       <aside class="chat-sidebar chat-sidebar--right">
         <div class="users-header">
-          <p class="eyebrow">// Active Nodes</p>
+          <p class="eyebrow">// Active Users</p>
           <div class="users-title-row">
             <h2 class="users-title">Online Now</h2>
             <div class="title-actions">
@@ -1740,9 +2595,15 @@
                 <span><span class="material-symbols-outlined" style="color: #FFFF55;">pinboard</span></span>
                 <span class="desktop-pin-toggle__badge hidden" id="desktopPinBadge">1</span>
               </button>
+              <button type="button" class="desktop-theme-toggle" id="themeToggleBtn" aria-label="Toggle Theme">
+                <span class="material-symbols-outlined" id="themeIcon">light_mode</span>
+              </button>
             </div>
           </div>
           <p class="users-count" id="onlineCount">0 users online</p>
+          <div class="users-search-wrap" style="padding: 4px 16px 12px 16px; width: 100%; box-sizing: border-box;">
+            <input type="text" id="userSearchInput" placeholder="Search users..." autocomplete="off" style="width: 100%; padding: 6px 12px; font-size: 0.85rem; border: 1px solid rgba(220,30,30,0.25); background: rgba(0,0,0,0.3); color: var(--text); font-family: var(--font-mono); border-radius: 4px; box-sizing: border-box; outline: none; transition: border-color 0.2s ease;">
+          </div>
         </div>
         <div class="users-list" id="onlineUsers"></div>
         <div class="users-footer">
@@ -1815,7 +2676,53 @@
     </div>
   </div>
 
-  <!-- MOBILE POPUP OVERLAY (for pin & alert on mobile) -->
+  <div class="problem-modal hidden" id="moderationModal" aria-hidden="true">
+    <div class="problem-modal__card" style="max-width: 440px;">
+      <div class="problem-modal__header">
+        <div>
+          <p class="eyebrow">// Administration</p>
+          <h2 class="problem-modal__title" id="modModalTitle">Moderate User</h2>
+          <p class="problem-modal__copy">Apply enforcement actions to this user.</p>
+        </div>
+        <button type="button" class="media-close-btn" id="modCloseBtn" aria-label="Close moderation panel"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+      </div>
+      <div class="problem-form" style="display: grid; gap: 16px;">
+        <input type="hidden" id="modTargetUser">
+        
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="primary-btn" id="modKickBtn" style="background: var(--red); flex: 1;">Kick Out</button>
+          <button type="button" class="primary-btn" id="modBanBtn" style="background: #000; border-color: #000; flex: 1;">Ban Username</button>
+        </div>
+        
+        <hr style="border: none; border-top: 1px solid rgba(220,30,30,0.15); margin: 4px 0;">
+        
+        <div>
+          <label class="label" for="modWordLimitSelect">Words Write Limit</label>
+          <div style="display: flex; gap: 10px; margin-top: 6px;">
+            <select id="modWordLimitSelect" class="dropdown-trigger" style="flex-grow: 1; min-height: 40px; padding: 4px 10px; background: rgba(0,0,0,0.3); color: var(--text);">
+              <option value="none">Unlimited</option>
+              <option value="5">5 Words</option>
+              <option value="10">10 Words</option>
+              <option value="15">15 Words</option>
+              <option value="20">20 Words</option>
+            </select>
+            <button type="button" class="secondary-btn" id="modWordLimitApplyBtn" style="min-width: 100px;">Apply</button>
+          </div>
+        </div>
+        
+        <div>
+          <label class="label" for="modMuteInput">Mute / Temporary Ban (Minutes)</label>
+          <div style="display: flex; gap: 10px; margin-top: 6px;">
+            <input type="number" id="modMuteInput" step="any" min="0.001" placeholder="Duration in minutes (e.g. 5 or 0.1)..." style="flex-grow: 1; min-height: 40px; padding: 4px 10px; background: rgba(0,0,0,0.3); color: var(--text); border: 1px solid rgba(220,30,30,0.25); border-radius: 4px; font-family: var(--font-mono); outline: none;">
+            <button type="button" class="secondary-btn" id="modMuteApplyBtn" style="min-width: 100px;">Mute</button>
+          </div>
+        </div>
+        
+        <p class="problem-status" id="modStatus" style="margin-top: 4px;"></p>
+      </div>
+    </div>
+  </div>
+
   <div class="mobile-popup-overlay hidden" id="mobilePopupOverlay">
     <div class="mobile-popup-card" id="mobilePopupCard">
       <div class="mobile-popup-card__header">
@@ -1828,6 +2735,24 @@
     </div>
   </div>
 
+  <!-- Mobile Active Users Popup -->
+  <div class="mobile-popup-overlay hidden" id="mobileUsersPopup" style="z-index: 120;">
+    <div class="mobile-popup-card" id="mobileUsersPopupCard" style="display: flex; flex-direction: column; max-height: 80vh; width: min(440px, 92vw);">
+      <div class="mobile-popup-card__header" style="border-bottom: 1px solid rgba(220,30,30,0.15); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <p class="eyebrow" id="mobileUsersPopupTitle" style="margin: 0;">// Active Users</p>
+        <button type="button" class="media-close-btn" id="mobileUsersPopupCloseBtn" aria-label="Close popup">
+          <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+        </button>
+      </div>
+      <div class="mobile-popup-card__body" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 12px 0 0 0;">
+        <div class="users-search-wrap" style="width: 100%; box-sizing: border-box; padding: 0 4px;">
+          <input type="text" id="mobilePopupUserSearchInput" placeholder="Search users..." autocomplete="off" style="width: 100%; padding: 8px 12px; font-size: 0.85rem; border: 1px solid rgba(220,30,30,0.25); background: rgba(0,0,0,0.3); color: var(--text); font-family: var(--font-mono); border-radius: 4px; box-sizing: border-box; outline: none; transition: border-color 0.2s ease;">
+        </div>
+        <div class="users-list" id="mobilePopupOnlineUsers" style="flex: 1; overflow-y: auto; display: grid; align-content: start; gap: 8px; padding: 4px;"></div>
+      </div>
+    </div>
+  </div>
+
 <script type="module" >
     
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1836,6 +2761,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   limit,
@@ -1843,7 +2769,8 @@ import {
   orderBy,
   query,
   serverTimestamp,
-  setDoc
+  setDoc,
+  where
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1857,15 +2784,69 @@ const firebaseConfig = {
   measurementId: "G-1PLJSM7QFM"
 };
 
-const NAME_RULES = [
-  { match: "includes", value: "udit", password: "dlngr1" },
-  { match: "includes", value: "dlngr", password: "dlngr1" },
-  { match: "exact", value: "supergaming94", password: "dlngr1", tagKey: "admin" }
-];
+let currentUserTagKey = localStorage.getItem("dlngrchat_user_tag_key") || null;
+let currentUserWordLimit = localStorage.getItem("dlngrchat_user_word_limit") ? Number(localStorage.getItem("dlngrchat_user_word_limit")) : null;
+let currentUserPassword = localStorage.getItem("dlngrchat_user_password") || "";
+
+async function fetchUserPolicy(username) {
+  if (!firebaseReady || !db) return null;
+  try {
+    const cleanName = normalizeNameKey(username);
+    const docRef = doc(db, "user_policies", cleanName);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data.wordLimit ? Number(data.wordLimit) : null;
+    }
+  } catch (e) {
+    console.error("Error fetching user policy:", e);
+  }
+  return null;
+}
+
+async function getProtectedUserRule(username) {
+  if (!firebaseReady || !db) return null;
+  try {
+    const cleanName = normalizeNameKey(username);
+    const docRef = doc(db, "protected_users", cleanName);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    }
+  } catch (e) {
+    console.error("Error fetching credentials from Firestore:", e);
+  }
+  return null;
+}
+
+async function checkBannedOrMuted(username) {
+  if (!firebaseReady || !db) return { ok: true };
+  try {
+    const cleanName = normalizeNameKey(username);
+    const docRef = doc(db, "banned_users", cleanName);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const expiresAt = data.expiresAt;
+      if (!expiresAt) {
+        return { ok: false, message: "You are permanently banned from this chat room." };
+      }
+      const expiryMs = expiresAt.toMillis();
+      if (expiryMs > Date.now()) {
+        const dateStr = new Date(expiryMs).toLocaleString();
+        return { ok: false, message: `You are muted/temp-banned until ${dateStr}.` };
+      }
+    }
+  } catch (e) {
+    console.error("Error checking banned status:", e);
+  }
+  return { ok: true };
+}
 
 const USER_TAGS = [
   { key: "creator", label: "Creator", names: ["udit"], badgeClass: "tag-badge--creator", messageClass: "message--creator" },
-  { key: "admin", label: "Admin", names: ["supergaming94"], badgeClass: "tag-badge--admin", messageClass: "message--admin" }
+  { key: "admin", label: "Admin", names: ["supergaming94"], badgeClass: "tag-badge--admin", messageClass: "message--admin" },
+  { key: "verified", label: "Verified", names: ["dlngr"], badgeClass: "tag-badge--verified", messageClass: "message--verified" }
 ];
 
 const MEDIA_SHORTCUTS = {
@@ -1876,15 +2857,21 @@ const STORAGE_KEYS = {
   username: "dlngrchat_username",
   draft: "dlngrchat_draft",
   sessionId: "dlngrchat_session_id",
+  identityCode: "dlngrchat_identity_code",
+  stayLoggedIn: "dlngrchat_stay_logged_in",
+  publicIdentityCode: "dlngrchat_public_identity_code",
   seenMentions: "dlngrchat_seen_mentions",
   handledLogoutAll: "dlngrchat_handled_logout_all",
-  handledBroadcast: "dlngrchat_handled_broadcast"
+  handledBroadcast: "dlngrchat_handled_broadcast",
+  theme: "dlngrchat_theme"
 };
 
 const ROOM_NAME = "main-room";
 const MAX_MESSAGES = 120;
 const PRESENCE_TTL_MS = 45000;
 const PRESENCE_REFRESH_MS = 15000;
+const CAPTCHA_MIN_JOIN_MS = 1200;
+const IDENTITY_CODE_LENGTH = 4;
 
 const joinPanel = document.getElementById("joinPanel");
 const chatPanel = document.getElementById("chatPanel");
@@ -1893,6 +2880,16 @@ const messageForm = document.getElementById("messageForm");
 const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("roomPassword");
 const passwordWrap = document.getElementById("passwordWrap");
+const captchaAnswerInput = document.getElementById("captchaAnswer");
+const captchaRefreshBtn = document.getElementById("captchaRefreshBtn");
+const joinWebsiteInput = document.getElementById("joinWebsite");
+const stayLoggedInInput = document.getElementById("stayLoggedInInput");
+const publicCodeInput = document.getElementById("publicCodeInput");
+const joinPopup = document.getElementById("joinPopup");
+const joinPopupTitle = document.getElementById("joinPopupTitle");
+const joinPopupMessage = document.getElementById("joinPopupMessage");
+const joinPopupCloseBtn = document.getElementById("joinPopupCloseBtn");
+const joinPopupOkBtn = document.getElementById("joinPopupOkBtn");
 const messageInput = document.getElementById("messageInput");
 const joinStatus = document.getElementById("joinStatus");
 const activeUsername = document.getElementById("activeUsername");
@@ -1906,6 +2903,7 @@ const mobileOnlineCount = document.getElementById("mobileOnlineCount");
 const messagesContainer = document.getElementById("messages");
 const messageTemplate = document.getElementById("messageTemplate");
 const changeNameBtn = document.getElementById("changeNameBtn");
+const identityCodeToggleBtn = document.getElementById("identityCodeToggleBtn");
 const clearChatBtn = document.getElementById("clearChatBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const problemBtn = document.getElementById("problemBtn");
@@ -1923,9 +2921,63 @@ const mobileMediaCloseBtn = document.getElementById("mobileMediaCloseBtn");
 const mobileDrawer = document.getElementById("mobileDrawer");
 const mobileDrawerCloseBtn = document.getElementById("mobileDrawerCloseBtn");
 const mobileChangeNameBtn = document.getElementById("mobileChangeNameBtn");
+const mobileIdentityCodeToggleBtn = document.getElementById("mobileIdentityCodeToggleBtn");
 const mobileClearChatBtn = document.getElementById("mobileClearChatBtn");
 const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
 const mobileProblemBtn = document.getElementById("mobileProblemBtn");
+const joinThemeToggleBtn = document.getElementById("joinThemeToggleBtn");
+const joinThemeIcon = document.getElementById("joinThemeIcon");
+const themeToggleBtn = document.getElementById("themeToggleBtn");
+const themeIcon = document.getElementById("themeIcon");
+const mobileThemeToggleBtn = document.getElementById("mobileThemeToggleBtn");
+const mobileThemeIcon = document.getElementById("mobileThemeIcon");
+const chatFooterBranding = document.getElementById("chatFooterBranding");
+const countryDropdown = document.getElementById("countryDropdown");
+const countryDropdownTrigger = document.getElementById("countryDropdownTrigger");
+const selectedFlagContainer = document.getElementById("selectedFlagContainer");
+const selectedCountryName = document.getElementById("selectedCountryName");
+const countryDropdownMenu = document.getElementById("countryDropdownMenu");
+const countrySearchInput = document.getElementById("countrySearchInput");
+const countryDropdownOptions = document.getElementById("countryDropdownOptions");
+const selectedCountryCodeInput = document.getElementById("selectedCountryCode");
+const moderationModal = document.getElementById("moderationModal");
+const modModalTitle = document.getElementById("modModalTitle");
+const modCloseBtn = document.getElementById("modCloseBtn");
+const modTargetUser = document.getElementById("modTargetUser");
+const modKickBtn = document.getElementById("modKickBtn");
+const modBanBtn = document.getElementById("modBanBtn");
+const modWordLimitSelect = document.getElementById("modWordLimitSelect");
+const modWordLimitApplyBtn = document.getElementById("modWordLimitApplyBtn");
+const modMuteInput = document.getElementById("modMuteInput");
+const modMuteApplyBtn = document.getElementById("modMuteApplyBtn");
+const userSearchInput = document.getElementById("userSearchInput");
+const mobileUserSearchInput = document.getElementById("mobileUserSearchInput");
+const mobileUsersToggleBtn = document.getElementById("mobileUsersToggleBtn");
+const mobileUsersBadge = document.getElementById("mobileUsersBadge");
+const mobileUsersPopup = document.getElementById("mobileUsersPopup");
+const mobileUsersPopupCloseBtn = document.getElementById("mobileUsersPopupCloseBtn");
+const mobilePopupUserSearchInput = document.getElementById("mobilePopupUserSearchInput");
+const mobilePopupOnlineUsers = document.getElementById("mobilePopupOnlineUsers");
+const mobileHeaderExpandBtn = document.getElementById("mobileHeaderExpandBtn");
+const mobileExpandIcon = document.getElementById("mobileExpandIcon");
+const mobileHeader = document.querySelector(".mobile-header");
+const modStatus = document.getElementById("modStatus");
+const replyBar = document.getElementById("replyBar");
+const profanityWarning = document.getElementById("profanityWarning");
+const usernameWarning = document.getElementById("usernameWarning");
+const emojiBtn = document.getElementById("emojiBtn");
+const gifBtn = document.getElementById("gifBtn");
+const emojiDrawer = document.getElementById("emojiDrawer");
+const gifDrawer = document.getElementById("gifDrawer");
+const emojiGrid = document.getElementById("emojiGrid");
+const gifGrid = document.getElementById("gifGrid");
+const gifSearchInput = document.getElementById("gifSearchInput");
+const emojiDrawerCloseBtn = document.getElementById("emojiDrawerCloseBtn");
+const gifDrawerCloseBtn = document.getElementById("gifDrawerCloseBtn");
+const replyBarAuthor = document.getElementById("replyBarAuthor");
+const replyBarText = document.getElementById("replyBarText");
+const replyBarCloseBtn = document.getElementById("replyBarCloseBtn");
+let replyingToMessage = null;
 const desktopBellToggle = document.getElementById("desktopBellToggle");
 const desktopBellBadge = document.getElementById("desktopBellBadge");
 const mobileBellToggle = document.getElementById("mobileBellToggle");
@@ -1967,12 +3019,15 @@ let controlRef = null;
 let pinnedRef = null;
 let creatorInboxRef = null;
 let siteNotificationsRef = null;
+let visitorLogsRef = null;
+let deletedMessagesRef = null;
 let unsubscribeMessages = null;
 let unsubscribePresence = null;
 let unsubscribeMedia = null;
 let unsubscribeControl = null;
 let unsubscribePinned = null;
 let unsubscribeSiteNotifications = null;
+let unsubscribeOwnPresence = null;
 let firebaseReady = false;
 let presenceHeartbeat = null;
 let presencePruneTimer = null;
@@ -1986,44 +3041,358 @@ let seenMentions = new Set();
 let broadcastToastTimer = null;
 let broadcastExpiryTimer = null;
 let editingMessageId = null;
+let currentIdentityCode = "";
+let captchaExpectedAnswer = "";
+let captchaCreatedAt = 0;
+let stayLoggedIn = localStorage.getItem(STORAGE_KEYS.stayLoggedIn) !== "false";
+let publicIdentityCode = localStorage.getItem(STORAGE_KEYS.publicIdentityCode) === "true";
+let currentTheme = localStorage.getItem(STORAGE_KEYS.theme) || "dark";
+
+const COUNTRY_DATA = "GLOBAL:Universal (Global)|DZ:Algeria|AR:Argentina|AU:Australia|AT:Austria|BD:Bangladesh|BE:Belgium|BR:Brazil|CA:Canada|CL:Chile|CN:China|CO:Colombia|HR:Croatia|CZ:Czech Republic|DK:Denmark|EG:Egypt|FI:Finland|FR:France|DE:Germany|GR:Greece|HK:Hong Kong|HU:Hungary|IS:Iceland|IN:India|ID:Indonesia|IR:Iran|IQ:Iraq|IE:Ireland|IL:Israel|IT:Italy|JP:Japan|JO:Jordan|KZ:Kazakhstan|KE:Kenya|KR:South Korea|KW:Kuwait|MY:Malaysia|MX:Mexico|MA:Morocco|NL:Netherlands|NZ:New Zealand|NG:Nigeria|NO:Norway|PK:Pakistan|PS:Palestine|PE:Peru|PH:Philippines|PL:Poland|PT:Portugal|QA:Qatar|RO:Romania|RU:Russian Federation|SA:Saudi Arabia|SG:Singapore|ZA:South Africa|ES:Spain|LK:Sri Lanka|SE:Sweden|CH:Switzerland|TW:Taiwan|TH:Thailand|TN:Tunisia|TR:Turkey|UA:Ukraine|AE:United Arab Emirates|GB:United Kingdom|US:United States|UY:Uruguay|VE:Venezuela|VN:Viet Nam";
+const COUNTRIES = COUNTRY_DATA.split("|").map(item => {
+  const [code, name] = item.split(":");
+  return { code, name };
+});
+let currentUserCountry = localStorage.getItem("dlngrchat_country_code") || "GLOBAL";
 
 function hasFirebaseConfig() {
   return Object.values(firebaseConfig).every((value) => value && !String(value).startsWith("PASTE_YOUR_"));
 }
-function normalizeName(name) { return (name || "").trim().replace(/\s+/g, " ").slice(0, 24); }
+function normalizeName(name) { return (name || "").trim().replace(/\s+/g, " ").replace(/[^a-z0-9_. -]/gi, "").slice(0, 24); }
 function normalizeNameKey(name) { return normalizeName(name).toLowerCase(); }
 function formatTime(timestamp) {
   return new Intl.DateTimeFormat([], { hour: "numeric", minute: "2-digit" }).format(new Date(timestamp));
 }
 function escapeHtml(value) {
-  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+  return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
+
+const BANNED_PATTERNS = [
+  /f+u+c+k+(?:[ei]ng?|e[dr]|e?s|face|head|er)?/i,
+  /s+h+i+t+(?:[ei]ng?|e[dr]|e?s|face|head|bag|y)?/i,
+  /b+i+t+c+h+(?:es|ing?|ed|y)?/i,
+  /c+u+n+t+s?/i,
+  /a+s+s+h+o+l+e+s?/i,
+  /a+r+s+e+h+o+l+e+s?/i,
+  /b+a+s+t+a+r+d+s?/i,
+  /d+i+c+k+(?:head|s)?/i,
+  /p+u+s+s+y|p+u+s+s+i+e+s/i,
+  /n+i+g+g+e+r+s?|n+i+g+g+a+s?/i,
+  /f+a+g+g+o+t+s?|f+a+g+s?/i,
+  /r+e+t+a+r+d+(?:ed|s)?/i,
+  /s+l+u+t+t?y|s+l+u+t+s/i,
+  /w+h+o+r+e+s?/i,
+  /t+w+a+t+s?/i,
+  /w+a+n+k+(?:er|ers|ing)?/i,
+  /m+o+t+h+e+r+f+u+c+k+(?:er|ers|ing)?/i,
+  /c+o+c+k+s+u+c+k+er/i,
+  /k+i+k+e+s?/i,
+  /c+h+i+n+k+s?/i,
+  /s+p+i+c+s?/i,
+  /d+y+k+e+s?/i,
+  /r+a+p+e+s?|r+a+p+i+n+g/i
+];
+function containsProfanity(text) {
+  const superCleanText = text.replace(/[^a-zA-Z]/g, "").toLowerCase();
+  const isMatchCompact = BANNED_PATTERNS.some(pattern => pattern.test(superCleanText));
+  if (isMatchCompact) return true;
+
+  const cleanText = text.replace(/[^a-zA-Z]/g, " ").toLowerCase();
+  const words = cleanText.split(/\s+/);
+  return words.some(word => {
+    return BANNED_PATTERNS.some(pattern => {
+      const match = word.match(pattern);
+      return match && match[0] === word;
+    });
+  });
+}
+
+/* ── UPGRADED CAPTCHA SYSTEM (CANVAS-BASED) ── */
+function generateCaptchaString(length = 5) {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; 
+  let result = "";
+  for(let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+  return result;
+}
+
+function refreshCaptchaChallenge() {
+  const canvas = document.getElementById("captchaCanvas");
+  if (!canvas) return;
+  captchaExpectedAnswer = generateCaptchaString(5);
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Background dots (noise)
+  for(let i=0; i<30; i++) {
+    ctx.fillStyle = `rgba(220, 30, 30, ${Math.random() * 0.5})`;
+    ctx.beginPath();
+    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.font = "bold 22px 'Share Tech Mono', monospace";
+  ctx.fillStyle = currentTheme === "light" ? "rgba(26, 26, 26, 0.95)" : "rgba(240, 240, 240, 0.9)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  // Characters with slight random rotation
+  for(let i = 0; i < captchaExpectedAnswer.length; i++) {
+    ctx.save();
+    ctx.translate(20 + i * 28, 20);
+    const angle = (Math.random() - 0.5) * 0.4;
+    ctx.rotate(angle);
+    ctx.fillText(captchaExpectedAnswer[i], 0, 0);
+    ctx.restore();
+  }
+
+  // Intersecting lines (noise)
+  for(let i=0; i<4; i++) {
+    ctx.strokeStyle = `rgba(220, 30, 30, ${Math.random() * 0.5})`;
+    ctx.beginPath();
+    ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+    ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+    ctx.stroke();
+  }
+
+  captchaAnswerInput.value = "";
+  captchaCreatedAt = Date.now();
+}
+
+function validateHumanCheck() {
+  // Honeypot check
+  if (joinWebsiteInput.value.trim()) return { ok: false, message: "Verification failed. Refresh and try again." };
+  
+  if (Date.now() - captchaCreatedAt < CAPTCHA_MIN_JOIN_MS) {
+    return { ok: false, message: "Take a moment to complete the human check." };
+  }
+  
+  // Case-insensitive check
+  if (captchaAnswerInput.value.trim().toUpperCase() !== captchaExpectedAnswer) {
+    return { ok: false, message: "Human check did not match. Try the new code." };
+  }
+  return { ok: true };
+}
+
+/* ── IDENTITY CODE SYSTEM ── */
+function createIdentityCode() {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = new Uint8Array(IDENTITY_CODE_LENGTH);
+  if (globalThis.crypto?.getRandomValues) globalThis.crypto.getRandomValues(bytes);
+  else for (let index = 0; index < bytes.length; index += 1) bytes[index] = Math.floor(Math.random() * 256);
+  return [...bytes].map((byte) => alphabet[byte % alphabet.length]).join("");
+}
+function getOrCreateIdentityCode() {
+  if (!stayLoggedIn) return createIdentityCode();
+  const saved = localStorage.getItem(STORAGE_KEYS.identityCode) || "";
+  if (/^[A-Z0-9]{4}$/.test(saved)) return saved;
+  const nextCode = createIdentityCode();
+  localStorage.setItem(STORAGE_KEYS.identityCode, nextCode);
+  return nextCode;
+}
+function makeIdentityCodeFromSeed(seed) {
+  const text = String(seed || "");
+  if (!text) return "";
+  let hash = 2166136261;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+  }
+  return (hash >>> 0).toString(36).toUpperCase().padStart(IDENTITY_CODE_LENGTH, "0").slice(-IDENTITY_CODE_LENGTH);
+}
+function getMessageIdentityCode(message) {
+  if (message?.authorIdentityCodeVisible === false) return "";
+  return message?.authorIdentityCode || "";
+}
+function getCurrentPublicIdentityCode() {
+  return publicIdentityCode ? currentIdentityCode : "";
+}
+function setNameWithIdentity(element, name, identityCode, suffix = "") {
+  if (!element) return;
+  element.textContent = "";
+  const nameText = document.createElement("span");
+  nameText.textContent = name || "Guest";
+  element.appendChild(nameText);
+  const code = identityCode || "";
+  if (code) {
+    const codeText = document.createElement("span");
+    codeText.className = "identity-code";
+    codeText.textContent = `#${code}`;
+    element.append(" ", codeText);
+  }
+  if (suffix) element.append(` ${suffix}`);
+}
+async function syncPublicIdentityChoice() {
+  if (!currentUser || !currentPresenceId || !firebaseReady) return;
+  const publicCode = getCurrentPublicIdentityCode();
+  if (presenceRef) {
+    await setDoc(doc(presenceRef, currentPresenceId), {
+      identityCode: publicCode || null,
+      identityCodeVisible: Boolean(publicCode),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  }
+  if (!messagesRef) return;
+  const snapshot = await getDocs(query(messagesRef, limit(MAX_MESSAGES)));
+  await Promise.all(snapshot.docs.map((snapshotDoc) => {
+    const message = messageFromSnapshot(snapshotDoc);
+    if (message.ownerSessionId !== currentPresenceId) return Promise.resolve();
+    return setDoc(doc(db, "rooms", ROOM_NAME, "messages", snapshotDoc.id), {
+      authorIdentityCode: publicCode || null,
+      authorIdentityCodeVisible: Boolean(publicCode)
+    }, { merge: true });
+  }));
+  if (pinnedRef && pinnedMessages.length) {
+    const nextPins = pinnedMessages.map((item) => {
+      const belongsToCurrentUser = item.author === currentUser && (!item.authorIdentityCode || item.authorIdentityCode === currentIdentityCode);
+      return belongsToCurrentUser ? { ...item, authorIdentityCode: publicCode || null } : item;
+    });
+    await setDoc(pinnedRef, { items: nextPins, updatedAt: serverTimestamp() }, { merge: true });
+  }
+}
+function setPublicIdentityPreference(enabled, sync = false) {
+  publicIdentityCode = enabled;
+  localStorage.setItem(STORAGE_KEYS.publicIdentityCode, enabled ? "true" : "false");
+  if (publicCodeInput) publicCodeInput.checked = enabled;
+  const label = enabled ? "Hide My Code" : "Show My Code";
+  if (identityCodeToggleBtn) identityCodeToggleBtn.textContent = label;
+  if (mobileIdentityCodeToggleBtn) mobileIdentityCodeToggleBtn.textContent = label;
+  setNameWithIdentity(activeUsername, currentUser || "Guest", getCurrentPublicIdentityCode());
+  setNameWithIdentity(mobileActiveUsername, currentUser || "Guest", getCurrentPublicIdentityCode());
+  renderMessages();
+  renderOnlineUsers();
+  if (sync) syncPublicIdentityChoice().catch(() => { setJoinStatus("Could not update code privacy.", true); });
+}
+function applyTheme(theme) {
+  currentTheme = theme;
+  localStorage.setItem(STORAGE_KEYS.theme, theme);
+  const nextIcon = theme === "light" ? "dark_mode" : "light_mode";
+  if (theme === "light") {
+    document.body.classList.add("light-theme");
+  } else {
+    document.body.classList.remove("light-theme");
+  }
+  if (joinThemeIcon) joinThemeIcon.textContent = nextIcon;
+  if (themeIcon) themeIcon.textContent = nextIcon;
+  if (mobileThemeIcon) mobileThemeIcon.textContent = nextIcon;
+}
+function selectCountry(code, savePreference = true) {
+  const country = COUNTRIES.find(c => c.code === code) || COUNTRIES[0];
+  currentUserCountry = country.code;
+  if (savePreference) {
+    localStorage.setItem("dlngrchat_country_code", country.code);
+  }
+  if (selectedCountryCodeInput) selectedCountryCodeInput.value = country.code;
+  if (selectedCountryName) selectedCountryName.textContent = country.name;
+  
+  if (selectedFlagContainer) {
+    if (country.code === "GLOBAL") {
+      selectedFlagContainer.innerHTML = "🌐";
+    } else {
+      selectedFlagContainer.innerHTML = `<img src="https://flagcdn.com/24x18/${country.code.toLowerCase()}.png" alt="${country.name}">`;
+    }
+  }
+}
+
+function populateCountryOptions() {
+  if (!countryDropdownOptions) return;
+  countryDropdownOptions.innerHTML = "";
+  
+  COUNTRIES.forEach(country => {
+    const div = document.createElement("div");
+    div.className = "dropdown-option";
+    div.dataset.code = country.code;
+    
+    if (country.code === "GLOBAL") {
+      div.innerHTML = `<span class="option-flag">🌐</span><span class="option-name">${country.name}</span>`;
+    } else {
+      div.innerHTML = `<img src="https://flagcdn.com/24x18/${country.code.toLowerCase()}.png" alt="${country.name}"><span class="option-name">${country.name}</span>`;
+    }
+    
+    div.addEventListener("click", () => {
+      selectCountry(country.code);
+      closeCountryDropdown();
+    });
+    
+    countryDropdownOptions.appendChild(div);
+  });
+}
+
+function filterCountryOptions(query) {
+  const lowerQuery = query.toLowerCase().trim();
+  const options = countryDropdownOptions.querySelectorAll(".dropdown-option");
+  options.forEach(opt => {
+    const name = opt.querySelector(".option-name").textContent.toLowerCase();
+    if (name.includes(lowerQuery)) {
+      opt.style.display = "flex";
+    } else {
+      opt.style.display = "none";
+    }
+  });
+}
+
+function toggleCountryDropdown() {
+  if (countryDropdownMenu) {
+    const isHidden = countryDropdownMenu.classList.toggle("hidden");
+    countryDropdown.classList.toggle("active", !isHidden);
+    if (!isHidden && countrySearchInput) {
+      countrySearchInput.value = "";
+      filterCountryOptions("");
+      countrySearchInput.focus();
+    }
+  }
+}
+
+function closeCountryDropdown() {
+  if (countryDropdownMenu) {
+    countryDropdownMenu.classList.add("hidden");
+    countryDropdown.classList.remove("active");
+  }
+}
+
+async function autoDetectCountry() {
+  const saved = localStorage.getItem("dlngrchat_country_code");
+  if (saved) {
+    selectCountry(saved, false);
+  } else {
+    selectCountry("GLOBAL", false);
+  }
+}
+
 function autoResizeTextarea() {
+  if (!messageInput) return;
   messageInput.style.height = "auto";
   messageInput.style.height = `${messageInput.scrollHeight}px`;
 }
-function updateSendButtonState() { sendMessageBtn.disabled = !messageInput.value.trim(); }
+function updateSendButtonState() { if (sendMessageBtn) sendMessageBtn.disabled = !messageInput.value.trim(); }
 function updateEditStateUI() {
-  editCancelBtn.classList.toggle("hidden", !editingMessageId);
-  messageInput.placeholder = editingMessageId ? "Editing message..." : "Transmit message...";
+  if (editCancelBtn) editCancelBtn.classList.toggle("hidden", !editingMessageId);
+  if (messageInput) messageInput.placeholder = editingMessageId ? "Editing message..." : "Transmit message...";
+}
+function showJoinPopup(title, message) {
+  joinPopupTitle.textContent = title || "Connection blocked";
+  joinPopupMessage.textContent = message || "Please check the details and try again.";
+  joinPopup.classList.remove("hidden");
+  joinPopup.setAttribute("aria-hidden", "false");
+  window.setTimeout(() => joinPopupOkBtn.focus(), 30);
+}
+function closeJoinPopup() {
+  joinPopup.classList.add("hidden");
+  joinPopup.setAttribute("aria-hidden", "true");
 }
 function setJoinStatus(message, isError = false) {
-  joinStatus.textContent = message;
-  joinStatus.style.color = isError ? "var(--warning)" : "";
+  if (joinStatus) {
+    joinStatus.textContent = message;
+    joinStatus.style.color = isError ? "var(--warning)" : "";
+  }
+  if (isError && !joinPanel.classList.contains("hidden")) showJoinPopup("Connection blocked", message);
 }
-function getMatchedRule(name) {
-  const key = normalizeNameKey(name);
-  return NAME_RULES.find((rule) => {
-    const value = normalizeNameKey(rule.value);
-    return rule.match === "exact" ? key === value : key.includes(value);
-  }) || null;
-}
-function getRequiredPassword(name) { return getMatchedRule(name)?.password || null; }
 function getTagDefinition(name) {
   const key = normalizeNameKey(name);
-  const ruleTagKey = getMatchedRule(name)?.tagKey;
-  if (ruleTagKey) return USER_TAGS.find((tag) => tag.key === ruleTagKey) || null;
+  if (key === normalizeNameKey(currentUser) && currentUserTagKey) {
+    return USER_TAGS.find((tag) => tag.key === currentUserTagKey) || null;
+  }
   if (key.includes("udit")) return USER_TAGS.find((tag) => tag.key === "creator") || null;
+  if (key.includes("dlngr")) return USER_TAGS.find((tag) => tag.key === "verified") || null;
   return USER_TAGS.find((tag) => tag.names.some((tagName) => normalizeNameKey(tagName) === key)) || null;
 }
 function isElevatedUser(name = currentUser) {
@@ -2034,7 +3403,7 @@ function isCreatorUser(name = currentUser) { return getTagDefinition(name)?.key 
 function getLiveUsers() {
   return onlineSessions
     .filter((user) => Date.now() - user.lastSeen < PRESENCE_TTL_MS)
-    .sort((l, r) => l.name.localeCompare(r.name));
+    .sort((l, r) => l.name.localeCompare(r.name) || (l.identityCode || "").localeCompare(r.identityCode || ""));
 }
 function getOnlineMentionTargets() {
   const targets = new Set();
@@ -2066,48 +3435,226 @@ function hasOnlyEveryoneMention(message) {
   return !/@[a-z0-9_]+/i.test(withoutEveryone);
 }
 function applyTagBadge(element, tagDefinition) {
+  if (!element) return;
   element.className = "tag-badge";
   if (!tagDefinition) { element.textContent = ""; element.classList.add("hidden"); return; }
   element.textContent = tagDefinition.label;
   element.classList.remove("hidden");
   if (tagDefinition.badgeClass) element.classList.add(tagDefinition.badgeClass);
 }
-function updatePasswordPrompt() {
-  const requiredPassword = getRequiredPassword(usernameInput.value);
+async function updatePasswordPrompt() {
+  if (!passwordWrap || !passwordInput || !usernameInput) return;
+  const name = usernameInput.value.trim();
+  if (name.length < 2) {
+    passwordWrap.classList.add("hidden");
+    passwordInput.required = false;
+    passwordInput.value = "";
+    return;
+  }
+  const rule = await getProtectedUserRule(name);
+  const requiredPassword = rule ? rule.password : null;
   passwordWrap.classList.toggle("hidden", !requiredPassword);
   passwordInput.required = Boolean(requiredPassword);
   if (!requiredPassword) passwordInput.value = "";
 }
-function closeNotifications() { notificationPanel.classList.add("hidden"); }
+function closeNotifications() { if (notificationPanel) notificationPanel.classList.add("hidden"); }
 function toggleNotifications() {
   closePinPanel();
   closeAlertPanel();
-  notificationPanel.classList.toggle("hidden");
+  if (notificationPanel) notificationPanel.classList.toggle("hidden");
 }
-function closePinPanel() { pinPanel.classList.add("hidden"); }
+function closePinPanel() { if (pinPanel) pinPanel.classList.add("hidden"); }
 function togglePinPanel() {
   if (!pinnedMessages.length) return;
   closeNotifications();
   closeAlertPanel();
-  pinPanel.classList.toggle("hidden");
+  if (pinPanel) pinPanel.classList.toggle("hidden");
 }
-function closeAlertPanel() { alertPanel.classList.add("hidden"); }
+function closeAlertPanel() { if (alertPanel) alertPanel.classList.add("hidden"); }
 function toggleAlertPanel() {
   closeNotifications();
   closePinPanel();
-  alertPanel.classList.toggle("hidden");
+  if (alertPanel) alertPanel.classList.toggle("hidden");
 }
 function openProblemModal() {
+  if (!problemModal) return;
   problemModal.classList.remove("hidden");
   problemModal.setAttribute("aria-hidden", "false");
-  problemStatus.textContent = "";
-  setTimeout(() => problemSubjectInput.focus(), 30);
+  if (problemStatus) problemStatus.textContent = "";
+  setTimeout(() => problemSubjectInput && problemSubjectInput.focus(), 30);
 }
 function closeProblemModal() {
+  if (!problemModal) return;
   problemModal.classList.add("hidden");
   problemModal.setAttribute("aria-hidden", "true");
 }
+function openModerationModal(targetUsername) {
+  if (!moderationModal || !modModalTitle || !modTargetUser || !modStatus) return;
+  modTargetUser.value = targetUsername;
+  modModalTitle.textContent = `Moderate Node: @${targetUsername}`;
+  modStatus.textContent = "";
+  modStatus.className = "problem-status";
+  
+  if (modWordLimitSelect) modWordLimitSelect.value = "none";
+  if (modMuteInput) modMuteInput.value = "";
+  
+  moderationModal.classList.remove("hidden");
+  moderationModal.setAttribute("aria-hidden", "false");
+}
+function closeModerationModal() {
+  if (!moderationModal) return;
+  moderationModal.classList.add("hidden");
+  moderationModal.setAttribute("aria-hidden", "true");
+}
+function openReplyState(message) {
+  if (!replyBar || !replyBarAuthor || !replyBarText || !messageInput) return;
+  replyingToMessage = message;
+  replyBarAuthor.textContent = `Replying to @${message.author}`;
+  replyBarText.textContent = message.text;
+  replyBar.classList.remove("hidden");
+  messageInput.focus();
+}
+function closeReplyState() {
+  if (!replyBar) return;
+  replyingToMessage = null;
+  replyBar.classList.add("hidden");
+}
+
+/* ── EMOJI & GIF DRAWER HELPERS ── */
+const POPULAR_EMOJIS = [
+  "😀","😃","😄","😁","😆","😅","😂","🤣","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚",
+  "😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🥸","🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","☹️",
+  "😣","😖","😫","😩","🥺","😢","😭","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓",
+  "🤗","🤔","🫣","🤭","🤫","🤥","😶","😐","😑","😬","🫨","🙄","😯","😦","😧","😮","😲","🥱","😴","🤤",
+  "😪","😵","😵‍💫","🤐","🥴","🤢","🤮","🤧","😷","🤒","🤕","👍","👎","👊","✊","🤛","🤜","🤞","✌️","🤟",
+  "🤘","👌","🤌","🤏","👈","👉","👆","👇","🖐️","✋","🖖","👋","✍️","👏","🙌","👐","🤲","🙏","🤝","❤️",
+  "🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","❤️‍🔥","❤️‍🩹","💖","💗","💓","💞","💕","💟","❣️","🧠","🗣️",
+  "🔥","✨","🌟","🎉","🎈","💥","💯","🚀","💻","🎮","🍕","🍻","👑","💎","🌐"
+];
+
+function initEmojiDrawer() {
+  if (!emojiGrid) return;
+  emojiGrid.innerHTML = "";
+  POPULAR_EMOJIS.forEach(emoji => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = emoji;
+    btn.style.cssText = "background: none; border: none; font-size: 1.3rem; cursor: pointer; padding: 2px; transition: transform 0.1s;";
+    btn.addEventListener("mouseover", () => btn.style.transform = "scale(1.25)");
+    btn.addEventListener("mouseout", () => btn.style.transform = "scale(1)");
+    btn.addEventListener("click", () => {
+      if (messageInput) {
+        const start = messageInput.selectionStart;
+        const end = messageInput.selectionEnd;
+        const text = messageInput.value;
+        messageInput.value = text.substring(0, start) + emoji + text.substring(end);
+        messageInput.focus();
+        messageInput.selectionStart = messageInput.selectionEnd = start + emoji.length;
+        messageInput.dispatchEvent(new Event("input"));
+      }
+    });
+    emojiGrid.appendChild(btn);
+  });
+}
+
+function openEmojiDrawer() {
+  closeGifDrawer();
+  if (emojiDrawer) {
+    emojiDrawer.classList.remove("hidden");
+    initEmojiDrawer();
+  }
+}
+
+function closeEmojiDrawer() {
+  if (emojiDrawer) emojiDrawer.classList.add("hidden");
+}
+
+let gifSearchTimeout = null;
+function openGifDrawer() {
+  closeEmojiDrawer();
+  if (gifDrawer) {
+    gifDrawer.classList.remove("hidden");
+    loadTrendingGifs();
+  }
+}
+
+function closeGifDrawer() {
+  if (gifDrawer) gifDrawer.classList.add("hidden");
+}
+
+const GIPHY_API_KEY = "EKY1hIVRKEVkeYfDJ4GOqyR2vmo2BnMQ";
+
+async function loadTrendingGifs() {
+  if (!gifGrid) return;
+  gifGrid.innerHTML = `<span style="grid-column: span 3; font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); text-align: center; padding: 12px;">Loading trending...</span>`;
+  try {
+    const res = await fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=12&rating=g`);
+    const data = await res.json();
+    renderGifs(data.data || []);
+  } catch (err) {
+    gifGrid.innerHTML = `<span style="grid-column: span 3; font-family: var(--font-mono); font-size: 0.75rem; color: var(--red); text-align: center; padding: 12px;">Error loading GIFs.</span>`;
+  }
+}
+
+async function searchGifs(query) {
+  if (!gifGrid) return;
+  if (!query.trim()) {
+    loadTrendingGifs();
+    return;
+  }
+  gifGrid.innerHTML = `<span style="grid-column: span 3; font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); text-align: center; padding: 12px;">Searching...</span>`;
+  try {
+    const res = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=12&rating=g`);
+    const data = await res.json();
+    renderGifs(data.data || []);
+  } catch (err) {
+    gifGrid.innerHTML = `<span style="grid-column: span 3; font-family: var(--font-mono); font-size: 0.75rem; color: var(--red); text-align: center; padding: 12px;">Error searching GIFs.</span>`;
+  }
+}
+
+function renderGifs(results) {
+  if (!gifGrid) return;
+  gifGrid.innerHTML = "";
+  if (results.length === 0) {
+    gifGrid.innerHTML = `<span style="grid-column: span 3; font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); text-align: center; padding: 12px;">No results found.</span>`;
+    return;
+  }
+  results.forEach(item => {
+    const previewUrl = item.images?.fixed_height_small?.url || item.images?.fixed_height?.url;
+    const fullUrl = item.images?.original?.url;
+    if (!previewUrl || !fullUrl) return;
+
+    const img = document.createElement("img");
+    img.src = previewUrl;
+    img.alt = item.title || "GIF";
+    img.style.cssText = "width: 100%; height: 60px; object-fit: cover; border-radius: 2px; cursor: pointer; border: 1px solid rgba(220,30,30,0.1); transition: border-color 0.2s;";
+    img.addEventListener("mouseover", () => img.style.borderColor = "var(--red)");
+    img.addEventListener("mouseout", () => img.style.borderColor = "rgba(220,30,30,0.1)");
+    img.addEventListener("click", async () => {
+      closeGifDrawer();
+      try {
+        const payload = { 
+          author: currentUser, 
+          text: fullUrl, 
+          type: "user", 
+          tagKey: getTagDefinition(currentUser)?.key || null 
+        };
+        if (replyingToMessage) {
+          payload.replyToId = replyingToMessage.id;
+          payload.replyToAuthor = replyingToMessage.author;
+          payload.replyToText = replyingToMessage.text;
+        }
+        await addMessage(payload);
+        closeReplyState();
+      } catch {
+        setJoinStatus("Transmission failed. Check your Firebase setup.", true);
+      }
+    });
+    gifGrid.appendChild(img);
+  });
+}
 function scrollToMessage(messageId) {
+  if (!messagesContainer) return;
   const target = messagesContainer.querySelector(`[data-message-id="${messageId}"]`);
   if (!target) return;
   target.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -2115,7 +3662,7 @@ function scrollToMessage(messageId) {
   window.setTimeout(() => target.classList.remove("message--mention-flash"), 2200);
 }
 function showBroadcastToast(text) {
-  if (!text) return;
+  if (!text || !broadcastToast || !broadcastToastText) return;
   broadcastToastText.textContent = text;
   broadcastToast.classList.remove("hidden");
   if (broadcastToastTimer) window.clearTimeout(broadcastToastTimer);
@@ -2133,10 +3680,11 @@ function scheduleBroadcastExpiryRender() {
 function renderPinnedState() {
   const hasPinned = pinnedMessages.length > 0;
   const badgeText = pinnedMessages.length > 99 ? "99+" : String(pinnedMessages.length);
-  desktopPinBadge.textContent = badgeText;
-  mobilePinBadge.textContent = badgeText;
-  desktopPinBadge.classList.toggle("hidden", !hasPinned);
-  mobilePinBadge.classList.toggle("hidden", !hasPinned);
+  if (desktopPinBadge) desktopPinBadge.textContent = badgeText;
+  if (mobilePinBadge) mobilePinBadge.textContent = badgeText;
+  if (desktopPinBadge) desktopPinBadge.classList.toggle("hidden", !hasPinned);
+  if (mobilePinBadge) mobilePinBadge.classList.toggle("hidden", !hasPinned);
+  if (!pinPanelBody) return;
   if (!hasPinned) {
     pinPanelBody.innerHTML = "<p class='empty-users'>No pinned message yet.</p>";
     return;
@@ -2147,7 +3695,7 @@ function renderPinnedState() {
     card.className = "pinned-preview";
     card.innerHTML = `
       <div class="pinned-preview__top">
-        <strong>${escapeHtml(item.author || "Unknown")}</strong>
+        <strong>${escapeHtml(item.author || "Unknown")}${item.authorIdentityCode ? ` <span class="identity-code">#${escapeHtml(item.authorIdentityCode)}</span>` : ""}</strong>
         <span class="pinned-preview__meta">Pinned by ${escapeHtml(item.pinnedBy || "Creator")} • ${formatTime(item.pinnedAt || Date.now())}</span>
       </div>
       <p class="pinned-preview__text">${escapeHtml(item.text).replaceAll("\n", "<br>")}</p>
@@ -2173,7 +3721,7 @@ function renderPinnedState() {
 function renderBroadcastState() {
   const isActive = Boolean(activeBroadcast?.text) && Number(activeBroadcast.expiresAt || 0) > Date.now();
   if (!isActive) {
-    broadcastToast.classList.add("hidden");
+    if (broadcastToast) broadcastToast.classList.add("hidden");
     return;
   }
   scheduleBroadcastExpiryRender();
@@ -2187,10 +3735,11 @@ function maybeShowActiveBroadcast() {
 }
 function renderSiteNotifications() {
   const count = siteNotifications.length;
-  globalAlertBadge.textContent = count > 99 ? "99+" : String(count);
-  mobileGlobalAlertBadge.textContent = count > 99 ? "99+" : String(count);
-  globalAlertBadge.classList.toggle("hidden", count === 0);
-  mobileGlobalAlertBadge.classList.toggle("hidden", count === 0);
+  if (globalAlertBadge) globalAlertBadge.textContent = count > 99 ? "99+" : String(count);
+  if (mobileGlobalAlertBadge) mobileGlobalAlertBadge.textContent = count > 99 ? "99+" : String(count);
+  if (globalAlertBadge) globalAlertBadge.classList.toggle("hidden", count === 0);
+  if (mobileGlobalAlertBadge) mobileGlobalAlertBadge.classList.toggle("hidden", count === 0);
+  if (!alertPanelBody) return;
   if (count === 0) {
     alertPanelBody.innerHTML = "<p class='empty-users'>No site notifications yet.</p>";
     return;
@@ -2211,7 +3760,11 @@ function renderSiteNotifications() {
 }
 function cancelEditingMessage(statusMessage = "Message edit cancelled.") {
   editingMessageId = null;
-  messageInput.value = "";
+  if (messageInput) {
+    messageInput.value = "";
+    messageInput.style.borderColor = "";
+  }
+  if (profanityWarning) profanityWarning.classList.add("hidden");
   localStorage.removeItem(STORAGE_KEYS.draft);
   autoResizeTextarea();
   updateSendButtonState();
@@ -2220,13 +3773,15 @@ function cancelEditingMessage(statusMessage = "Message edit cancelled.") {
 }
 function startEditingMessage(message) {
   editingMessageId = message.id;
-  messageInput.value = message.text;
-  localStorage.setItem(STORAGE_KEYS.draft, messageInput.value);
-  autoResizeTextarea();
-  updateSendButtonState();
-  updateEditStateUI();
-  messageInput.focus();
-  messageInput.setSelectionRange(messageInput.value.length, messageInput.value.length);
+  if (messageInput) {
+    messageInput.value = message.text;
+    localStorage.setItem(STORAGE_KEYS.draft, messageInput.value);
+    autoResizeTextarea();
+    updateSendButtonState();
+    updateEditStateUI();
+    messageInput.focus();
+    messageInput.setSelectionRange(messageInput.value.length, messageInput.value.length);
+  }
   setJoinStatus("Editing message. Press Enter to save or Esc to cancel.");
 }
 function getLatestEditableMessage() {
@@ -2243,37 +3798,45 @@ function renderNotifications() {
   const unseenDirectMentions = unseenMentions.filter((message) => !hasOnlyEveryoneMention(message));
   const count = unseenMentions.length;
   const countText = String(count);
-  desktopBellBadge.textContent = countText;
-  mobileBellBadge.textContent = countText;
-  desktopBellBadge.classList.toggle("hidden", count === 0);
-  mobileBellBadge.classList.toggle("hidden", count === 0);
+  if (desktopBellBadge) desktopBellBadge.textContent = countText;
+  if (mobileBellBadge) mobileBellBadge.textContent = countText;
+  if (desktopBellBadge) desktopBellBadge.classList.toggle("hidden", count === 0);
+  if (mobileBellBadge) mobileBellBadge.classList.toggle("hidden", count === 0);
+  if (!notificationList) return;
   if (count === 0) {
     notificationList.innerHTML = "<p class='empty-users'>No mentions yet.</p>";
     lastDirectMentionCount = 0;
     return;
   }
-  if (unseenDirectMentions.length > lastDirectMentionCount) notificationPanel.classList.remove("hidden");
+  if (unseenDirectMentions.length > lastDirectMentionCount && notificationPanel) notificationPanel.classList.remove("hidden");
   lastDirectMentionCount = unseenDirectMentions.length;
   notificationList.innerHTML = "";
   mentionMessages.slice().reverse().forEach((message) => {
-    const button = document.createElement("button");
-    const meta = document.createElement("span");
-    const text = document.createElement("span");
-    button.type = "button";
-    button.className = "notification-item";
-    meta.className = "notification-item__meta";
-    text.className = "notification-item__text";
-    meta.textContent = `${message.author} • ${formatTime(message.timestamp || Date.now())}`;
-    text.textContent = message.text;
-    button.append(meta, text);
-    button.addEventListener("click", () => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "site-notification-item notification-item-clickable";
+    card.style.textAlign = "left";
+    card.style.cursor = "pointer";
+    card.style.width = "100%";
+    card.style.border = "1px solid rgba(220,30,30,0.16)";
+    card.style.transition = "all 120ms ease";
+    
+    card.innerHTML = `
+      <div class="site-notification-item__top">
+        <strong class="site-notification-item__title">${escapeHtml(message.author || "Unknown")}</strong>
+        <span class="site-notification-item__meta">${formatTime(message.timestamp || Date.now())}</span>
+      </div>
+      <p class="site-notification-item__body">${escapeHtml(message.text || "")}</p>
+    `;
+    
+    card.addEventListener("click", () => {
       seenMentions.add(message.id);
       localStorage.setItem(STORAGE_KEYS.seenMentions, JSON.stringify([...seenMentions]));
       closeNotifications();
       renderNotifications();
       scrollToMessage(message.id);
     });
-    notificationList.appendChild(button);
+    notificationList.appendChild(card);
   });
 }
 
@@ -2299,10 +3862,10 @@ function toYouTubeEmbed(url) {
 function resolveMediaUrl(type, url) {
   return type === "yt" ? toYouTubeEmbed(url) : normalizeWebsiteUrl(url);
 }
-function clearNode(node) { node.innerHTML = ""; }
+function clearNode(node) { if (node) node.innerHTML = ""; }
 function buildMediaFrame(target, mediaState) {
   clearNode(target);
-  if (!mediaState?.url) return;
+  if (!target || !mediaState?.url) return;
   const frame = document.createElement("iframe");
   frame.className = "media-frame";
   frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
@@ -2311,16 +3874,18 @@ function buildMediaFrame(target, mediaState) {
   frame.src = mediaState.url;
   target.appendChild(frame);
 }
-function closeMobileMedia() { mobileMedia.classList.add("hidden"); }
+function closeMobileMedia() { if (mobileMedia) mobileMedia.classList.add("hidden"); }
 function renderSharedMedia() {
   const hasMedia = Boolean(sharedMediaState?.url);
   const fullForViewers = Boolean(sharedMediaState?.fullForViewers);
   const creatorView = isCreatorUser();
-  mediaPanel.classList.toggle("hidden", !hasMedia);
-  mobileMediaToggle.classList.toggle("hidden", !hasMedia);
-  mobileMediaToggle.classList.toggle("mobile-media-toggle--alert", hasMedia);
-  chatPanel.classList.toggle("chat-panel--with-media", hasMedia);
-  chatPanel.classList.toggle("media-full-viewer", hasMedia && fullForViewers && !creatorView && window.innerWidth > 760);
+  if (mediaPanel) mediaPanel.classList.toggle("hidden", !hasMedia);
+  if (mobileMediaToggle) mobileMediaToggle.classList.toggle("hidden", !hasMedia);
+  if (mobileMediaToggle) mobileMediaToggle.classList.toggle("mobile-media-toggle--alert", hasMedia);
+  if (chatPanel) {
+    chatPanel.classList.toggle("chat-panel--with-media", hasMedia);
+    chatPanel.classList.toggle("media-full-viewer", hasMedia && fullForViewers && !creatorView && window.innerWidth > 760);
+  }
   if (!hasMedia) { clearNode(mediaPanelBody); clearNode(mobileMediaBody); closeMobileMedia(); return; }
   buildMediaFrame(mediaPanelBody, sharedMediaState);
   buildMediaFrame(mobileMediaBody, sharedMediaState);
@@ -2347,17 +3912,30 @@ async function sendCreatorBroadcast(text) {
   }, { merge: true });
 }
 async function performLocalLogout(message = "Connection terminated.") {
+  const previousUser = currentUser;
   await stopPresence();
   currentUser = "";
-  localStorage.removeItem(STORAGE_KEYS.username);
+  currentIdentityCode = "";
+  if (stayLoggedIn && previousUser) {
+    localStorage.setItem(STORAGE_KEYS.username, previousUser);
+  } else {
+    localStorage.removeItem(STORAGE_KEYS.username);
+    localStorage.removeItem(STORAGE_KEYS.identityCode);
+  }
   localStorage.removeItem(STORAGE_KEYS.draft);
   localStorage.removeItem(STORAGE_KEYS.sessionId);
+  localStorage.removeItem("dlngrchat_user_password");
+  localStorage.removeItem("dlngrchat_user_tag_key");
+  localStorage.removeItem("dlngrchat_user_word_limit");
+  currentUserPassword = "";
+  currentUserTagKey = null;
+  currentUserWordLimit = null;
   editingMessageId = null;
-  messageInput.value = "";
-  passwordInput.value = "";
-  usernameInput.value = "";
-  clearChatBtn.classList.add("hidden");
-  mobileClearChatBtn.classList.add("hidden");
+  if (messageInput) messageInput.value = "";
+  if (passwordInput) passwordInput.value = "";
+  if (usernameInput) usernameInput.value = stayLoggedIn && previousUser ? previousUser : "";
+  if (clearChatBtn) clearChatBtn.classList.add("hidden");
+  if (mobileClearChatBtn) mobileClearChatBtn.classList.add("hidden");
   setChatView(false);
   closeProblemModal();
   updatePasswordPrompt();
@@ -2413,17 +3991,19 @@ async function handleCreatorCommand(text) {
   return true;
 }
 function setChatView(enabled) {
-  joinPanel.classList.toggle("hidden", enabled);
-  chatPanel.classList.toggle("hidden", !enabled);
-  chatPanel.classList.remove("is-sidebar-open");
-  mobileOverlay.classList.add("hidden");
-  mobileDrawer.classList.add("hidden");
+  if (joinPanel) joinPanel.classList.toggle("hidden", enabled);
+  if (chatPanel) {
+    chatPanel.classList.toggle("hidden", !enabled);
+    chatPanel.classList.remove("is-sidebar-open");
+  }
+  if (mobileOverlay) mobileOverlay.classList.add("hidden");
+  if (mobileDrawer) mobileDrawer.classList.add("hidden");
   closeNotifications();
   closePinPanel();
   closeAlertPanel();
   if (enabled) {
-    activeUsername.textContent = currentUser;
-    mobileActiveUsername.textContent = currentUser;
+    setNameWithIdentity(activeUsername, currentUser, getCurrentPublicIdentityCode());
+    setNameWithIdentity(mobileActiveUsername, currentUser, getCurrentPublicIdentityCode());
     applyTagBadge(activeUserTag, getTagDefinition(currentUser));
     applyTagBadge(mobileActiveUserTag, getTagDefinition(currentUser));
     updateSendButtonState();
@@ -2431,45 +4011,60 @@ function setChatView(enabled) {
     renderPinnedState();
     renderBroadcastState();
     maybeShowActiveBroadcast();
-    setTimeout(() => messageInput.focus(), 30);
+    setTimeout(() => messageInput && messageInput.focus(), 30);
   } else {
-    setTimeout(() => usernameInput.focus(), 30);
+    setTimeout(() => usernameInput && usernameInput.focus(), 30);
   }
 }
 function persistUser(name) {
   currentUser = name;
-  localStorage.setItem(STORAGE_KEYS.username, name);
-  activeUsername.textContent = name;
-  mobileActiveUsername.textContent = name;
+  currentIdentityCode = getOrCreateIdentityCode();
+  if (stayLoggedIn) localStorage.setItem(STORAGE_KEYS.username, name);
+  else localStorage.removeItem(STORAGE_KEYS.username);
+  setNameWithIdentity(activeUsername, name, getCurrentPublicIdentityCode());
+  setNameWithIdentity(mobileActiveUsername, name, getCurrentPublicIdentityCode());
   applyTagBadge(activeUserTag, getTagDefinition(name));
   applyTagBadge(mobileActiveUserTag, getTagDefinition(name));
-  clearChatBtn.classList.toggle("hidden", !isElevatedUser(name));
-  mobileClearChatBtn.classList.toggle("hidden", !isElevatedUser(name));
+  if (clearChatBtn) clearChatBtn.classList.toggle("hidden", !isElevatedUser(name));
+  if (mobileClearChatBtn) mobileClearChatBtn.classList.toggle("hidden", !isElevatedUser(name));
 }
 async function addMessage(message) {
   if (!firebaseReady || !messagesRef) throw new Error("Firebase not ready.");
   const mentionMeta = buildMentionMeta(message.text);
+  const publicCode = message.authorIdentityCode ?? getCurrentPublicIdentityCode();
   return addDoc(messagesRef, {
     author: message.author,
     text: message.text,
     type: message.type,
     tagKey: message.tagKey || null,
     ownerSessionId: message.ownerSessionId || currentPresenceId || null,
+    authorIdentityCode: publicCode || null,
+    authorIdentityCodeVisible: Boolean(publicCode),
+    authorUuid: message.authorUuid || currentPresenceId || null,
+    authorCountryCode: message.authorCountryCode || currentUserCountry || "GLOBAL",
     mentionAll: mentionMeta.mentionAll,
     mentionAllFor: mentionMeta.mentionAllFor,
     editedAt: null,
+    replyToId: message.replyToId || null,
+    replyToAuthor: message.replyToAuthor || null,
+    replyToText: message.replyToText || null,
     createdAt: serverTimestamp()
   });
+}
+function isOwnMessage(message) {
+  if (!message || !currentPresenceId) return false;
+  if (message.ownerSessionId) return message.ownerSessionId === currentPresenceId;
+  return Boolean(message.authorIdentityCode && message.authorIdentityCode === currentIdentityCode && message.author === currentUser);
 }
 function canDeleteMessage(message) {
   if (message.type === "system") return false;
   if (isElevatedUser()) return true;
-  return Boolean(currentPresenceId && message.ownerSessionId === currentPresenceId);
+  return isOwnMessage(message);
 }
 function canEditMessage(message) {
   if (message.type !== "user") return false;
   if (isElevatedUser()) return true;
-  return Boolean(currentPresenceId && message.ownerSessionId === currentPresenceId);
+  return isOwnMessage(message);
 }
 function canPinMessage(message) {
   return isCreatorUser() && message.type === "user";
@@ -2482,11 +4077,43 @@ async function copyMessageText(text, button) {
     window.setTimeout(() => { button.textContent = previous; }, 1200);
   } catch { setJoinStatus("Copy failed.", true); }
 }
-async function deleteMessageById(id) {
-  if (!messagesRef || !id) return;
-  try { await deleteDoc(doc(db, "rooms", ROOM_NAME, "messages", id)); }
+
+/* ── DELETED MESSAGE ARCHIVING SYSTEM ── */
+function buildDeletedMessageArchive(message, reason) {
+  return {
+    room: ROOM_NAME,
+    reason,
+    originalMessageId: message.id || "",
+    name: message.author || "Unknown",
+    author: message.author || "Unknown",
+    uuid: message.ownerSessionId || message.authorUuid || null,
+    authorUuid: message.ownerSessionId || message.authorUuid || null,
+    authorIdentityCode: getMessageIdentityCode(message) || null,
+    text: message.text || "",
+    type: message.type || "user",
+    tagKey: message.tagKey || null,
+    mentionAll: Boolean(message.mentionAll),
+    mentionAllFor: Array.isArray(message.mentionAllFor) ? message.mentionAllFor : [],
+    createdAtMs: Number(message.timestamp || 0) || null,
+    editedAtMs: Number(message.editedAt || 0) || null,
+    deletedByName: currentUser || "Unknown",
+    deletedByUuid: currentPresenceId || null,
+    deletedByIdentityCode: currentIdentityCode || null,
+    deletedAtMs: Date.now(),
+    deletedAt: serverTimestamp()
+  };
+}
+async function archiveAndDeleteMessage(message, reason = "user_delete") {
+  if (!messagesRef || !deletedMessagesRef || !message?.id) return;
+  await addDoc(deletedMessagesRef, buildDeletedMessageArchive(message, reason));
+  await deleteDoc(doc(db, "rooms", ROOM_NAME, "messages", message.id));
+}
+async function deleteMessageById(message) {
+  if (!messagesRef || !message?.id) return;
+  try { await archiveAndDeleteMessage(message); }
   catch { setJoinStatus("Could not delete that message.", true); }
 }
+
 async function saveEditedMessage(id, nextText) {
   if (!messagesRef || !id || !nextText) return;
   const mentionMeta = buildMentionMeta(nextText);
@@ -2505,6 +4132,7 @@ async function pinMessageById(message) {
       messageId: message.id,
       text: message.text,
       author: message.author,
+      authorIdentityCode: getMessageIdentityCode(message) || null,
       pinnedBy: currentUser,
       pinnedAt: Date.now()
     }
@@ -2525,10 +4153,18 @@ async function clearPinnedMessage(messageId) {
   }, { merge: true });
 }
 function renderMessageText(message) {
+  const text = message.text.trim();
   const editedSuffix = Number(message.editedAt || 0) > 0 ? " <span class=\"message__edited\">(edited)</span>" : "";
+  const isImageRef = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp)(?:\?.*)?)$/i.test(text) || 
+                     /^(https?:\/\/media\.tenor\.com\/.*)$/i.test(text) ||
+                     /^(https?:\/\/.*giphy\.com\/.*)$/i.test(text);
+  if (isImageRef) {
+    return `<div class="message__image-wrap" style="margin-top: 4px; max-width: 320px; overflow: hidden; border-radius: 4px; border: 1px solid rgba(220,30,30,0.15);"><img src="${escapeHtml(text)}" alt="transmitted media" style="width: 100%; height: auto; display: block;"></div>${editedSuffix}`;
+  }
   return `${escapeHtml(message.text).replaceAll("\n", "<br>")}${editedSuffix}`;
 }
 function renderMessages() {
+  if (!messagesContainer) return;
   messagesContainer.innerHTML = "";
   if (messages.length === 0) {
     const emptyState = document.createElement("article");
@@ -2550,15 +4186,116 @@ function renderMessages() {
     const deleteButton = fragment.querySelector(".message__delete");
     const tagDefinition = USER_TAGS.find((tag) => tag.key === message.tagKey) || getTagDefinition(message.author);
     const hasMention = messageMentionsCurrentUser(message);
-    author.textContent = message.author;
+    
+    setNameWithIdentity(author, message.author, getMessageIdentityCode(message));
+    
+    if (isElevatedUser(currentUser) && normalizeNameKey(message.author) !== normalizeNameKey(currentUser)) {
+      author.style.cursor = "pointer";
+      author.addEventListener("click", () => {
+        openModerationModal(message.author);
+      });
+    }
+    
     time.textContent = formatTime(message.timestamp || Date.now());
     text.innerHTML = renderMessageText(message);
     applyTagBadge(tagBadge, tagDefinition);
+
+    if (message.type === "user") {
+      card.classList.add("message--has-flag");
+      const flagContainer = document.createElement("span");
+      flagContainer.className = "message__flag";
+      const countryCode = message.authorCountryCode || "GLOBAL";
+      const country = COUNTRIES.find(c => c.code === countryCode) || COUNTRIES[0];
+      if (countryCode === "GLOBAL") {
+        flagContainer.innerHTML = `<span class="globe-icon" title="${country.name}">🌐</span>`;
+      } else {
+        flagContainer.innerHTML = `<img src="https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png" alt="${countryCode}" title="${country.name}">`;
+      }
+      card.appendChild(flagContainer);
+    }
     copyButton.addEventListener("click", () => copyMessageText(message.text, copyButton));
     card.dataset.messageId = message.id;
     if (message.type === "system") card.classList.add("message--system");
-    else if (message.author === currentUser) card.classList.add("message--self");
+    else if (isOwnMessage(message)) card.classList.add("message--self");
     if (hasMention) card.classList.add("message--mention");
+
+    if (message.replyToText) {
+      const quoteDiv = document.createElement("div");
+      quoteDiv.className = "message__reply-quote";
+      quoteDiv.dataset.targetId = message.replyToId;
+      quoteDiv.innerHTML = `
+        <strong style="color: var(--red); display: block; font-size: 0.8rem;">@${message.replyToAuthor}</strong>
+        <span style="color: var(--text); opacity: 0.8; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: block;">${message.replyToText}</span>
+      `;
+      quoteDiv.addEventListener("click", () => {
+        scrollToMessage(message.replyToId);
+        const targetCard = messagesContainer.querySelector(`[data-message-id="${message.replyToId}"]`);
+        if (targetCard) {
+          targetCard.classList.remove("message--highlight");
+          void targetCard.offsetWidth;
+          targetCard.classList.add("message--highlight");
+          window.setTimeout(() => { targetCard.classList.remove("message--highlight"); }, 1500);
+        }
+      });
+      card.insertBefore(quoteDiv, text);
+    }
+
+    if (message.type !== "system") {
+      const replyBtn = document.createElement("button");
+      replyBtn.type = "button";
+      replyBtn.className = "message__reply-btn";
+      replyBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size: 20px;">reply</span>`;
+      replyBtn.addEventListener("click", () => {
+        openReplyState(message);
+      });
+      card.appendChild(replyBtn);
+
+      let startX = 0;
+      let startY = 0;
+      let deltaX = 0;
+      let isSwipe = false;
+      
+      card.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        card.classList.add("message--dragging");
+        isSwipe = false;
+        if (replyBtn) replyBtn.style.transition = "none";
+      }, { passive: true });
+      
+      card.addEventListener("touchmove", (e) => {
+        const currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+        
+        if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
+          isSwipe = true;
+          const pull = Math.max(deltaX, -80);
+          card.style.transform = `translateX(${pull}px)`;
+          if (replyBtn) {
+            const progress = Math.min(Math.abs(pull) / 50, 1.2);
+            replyBtn.style.opacity = String(progress);
+            replyBtn.style.right = `${-50 + progress * 24}px`;
+            replyBtn.style.transform = `translateY(-50%) scale(${progress})`;
+          }
+        }
+      }, { passive: false });
+      
+      card.addEventListener("touchend", () => {
+        card.classList.remove("message--dragging");
+        card.style.transform = "";
+        if (replyBtn) {
+          replyBtn.style.transition = "all 0.2s ease";
+          replyBtn.style.opacity = "";
+          replyBtn.style.right = "";
+          replyBtn.style.transform = "";
+        }
+        if (isSwipe && deltaX < -50) {
+          openReplyState(message);
+        }
+      }, { passive: true });
+    }
     const isPinned = pinnedMessages.some((item) => item.messageId === message.id);
     if (isPinned) card.classList.add("message--pinned");
     if (tagDefinition?.messageClass) card.classList.add("message--tagged", tagDefinition.messageClass);
@@ -2575,7 +4312,7 @@ function renderMessages() {
     }
     if (canDeleteMessage(message)) {
       deleteButton.classList.remove("hidden");
-      deleteButton.addEventListener("click", () => deleteMessageById(message.id));
+      deleteButton.addEventListener("click", () => deleteMessageById(message));
     }
     messagesContainer.appendChild(fragment);
   });
@@ -2583,6 +4320,7 @@ function renderMessages() {
   renderNotifications();
 }
 function renderUserList(target, users) {
+  if (!target) return;
   target.innerHTML = "";
   if (users.length === 0) {
     const emptyState = document.createElement("p");
@@ -2602,21 +4340,41 @@ function renderUserList(target, users) {
     main.className = "user-card__main";
     dot.className = "user-dot";
     name.className = "user-name";
-    name.textContent = user.sessionId === currentPresenceId ? `${user.name} (You)` : user.name;
+    setNameWithIdentity(name, user.name, user.identityCode || "", user.sessionId === currentPresenceId ? "(You)" : "");
     applyTagBadge(badge, tagDefinition);
     main.append(dot, name);
     card.append(main);
     if (!badge.classList.contains("hidden")) card.append(badge);
+    
+    if (isElevatedUser(currentUser) && normalizeNameKey(user.name) !== normalizeNameKey(currentUser)) {
+      card.style.cursor = "pointer";
+      card.addEventListener("click", () => {
+        openModerationModal(user.name);
+      });
+    }
+    
     target.appendChild(card);
   });
 }
 function renderOnlineUsers() {
   const liveUsers = getLiveUsers();
   const countText = `${liveUsers.length} node${liveUsers.length === 1 ? "" : "s"} online`;
-  onlineCount.textContent = countText;
-  mobileOnlineCount.textContent = countText;
+  if (onlineCount) onlineCount.textContent = countText;
+  if (mobileOnlineCount) mobileOnlineCount.textContent = countText;
+  if (mobileUsersBadge) mobileUsersBadge.textContent = liveUsers.length;
   renderUserList(onlineUsers, liveUsers);
   renderUserList(mobileOnlineUsers, liveUsers);
+  renderUserList(mobilePopupOnlineUsers, liveUsers);
+  
+  if (userSearchInput && userSearchInput.value) {
+    filterOnlineUsersList(userSearchInput.value, onlineUsers);
+  }
+  if (mobileUserSearchInput && mobileUserSearchInput.value) {
+    filterOnlineUsersList(mobileUserSearchInput.value, mobileOnlineUsers);
+  }
+  if (mobilePopupUserSearchInput && mobilePopupUserSearchInput.value) {
+    filterOnlineUsersList(mobilePopupUserSearchInput.value, mobilePopupOnlineUsers);
+  }
 }
 function setupFirebase() {
   if (!hasFirebaseConfig()) { setJoinStatus("Add Firebase keys before using live chat.", true); return; }
@@ -2629,6 +4387,8 @@ function setupFirebase() {
   pinnedRef = doc(db, "rooms", ROOM_NAME, "shared", "pinned");
   creatorInboxRef = collection(db, "creatorInbox");
   siteNotificationsRef = collection(db, "siteNotifications");
+  visitorLogsRef = collection(db, "rooms", ROOM_NAME, "visitorLogs");
+  deletedMessagesRef = collection(db, "rooms", ROOM_NAME, "deletedMessages");
   firebaseReady = true;
   subscribeToMessages();
   subscribeToPresence();
@@ -2637,25 +4397,33 @@ function setupFirebase() {
   subscribeToPinnedMessage();
   subscribeToSiteNotifications();
 }
+function messageFromSnapshot(snapshotDoc) {
+  const data = snapshotDoc.data();
+  return {
+    id: snapshotDoc.id,
+    author: data.author || "Unknown",
+    text: data.text || "",
+    type: data.type || "user",
+    tagKey: data.tagKey || null,
+    ownerSessionId: data.ownerSessionId || data.authorUuid || null,
+    authorUuid: data.authorUuid || data.ownerSessionId || null,
+    authorIdentityCode: data.authorIdentityCode || null,
+    authorIdentityCodeVisible: data.authorIdentityCodeVisible !== false,
+    authorCountryCode: data.authorCountryCode || "GLOBAL",
+    mentionAll: Boolean(data.mentionAll),
+    mentionAllFor: Array.isArray(data.mentionAllFor) ? data.mentionAllFor : [],
+    timestamp: data.createdAt?.toMillis?.() || Date.now(),
+    editedAt: data.editedAt?.toMillis?.() || 0,
+    replyToId: data.replyToId || null,
+    replyToAuthor: data.replyToAuthor || null,
+    replyToText: data.replyToText || null
+  };
+}
 function subscribeToMessages() {
   if (!firebaseReady || !messagesRef) return;
   const messagesQuery = query(messagesRef, orderBy("createdAt", "asc"), limit(MAX_MESSAGES));
   unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
-    messages = snapshot.docs.map((snapshotDoc) => {
-      const data = snapshotDoc.data();
-      return {
-        id: snapshotDoc.id,
-        author: data.author || "Unknown",
-        text: data.text || "",
-        type: data.type || "user",
-        tagKey: data.tagKey || null,
-        ownerSessionId: data.ownerSessionId || null,
-        mentionAll: Boolean(data.mentionAll),
-        mentionAllFor: Array.isArray(data.mentionAllFor) ? data.mentionAllFor : [],
-        timestamp: data.createdAt?.toMillis?.() || Date.now(),
-        editedAt: data.editedAt?.toMillis?.() || 0
-      };
-    });
+    messages = snapshot.docs.map(messageFromSnapshot);
     renderMessages();
   });
 }
@@ -2664,7 +4432,14 @@ function subscribeToPresence() {
   unsubscribePresence = onSnapshot(presenceRef, (snapshot) => {
     onlineSessions = snapshot.docs.map((snapshotDoc) => {
       const data = snapshotDoc.data();
-      return { sessionId: snapshotDoc.id, name: data.name || "Guest", tagKey: data.tagKey || null, lastSeen: data.updatedAt?.toMillis?.() || 0 };
+      return {
+        sessionId: snapshotDoc.id,
+        name: data.name || "Guest",
+        identityCode: data.identityCode || null,
+        identityCodeVisible: data.identityCodeVisible !== false,
+        tagKey: data.tagKey || null,
+        lastSeen: data.updatedAt?.toMillis?.() || 0
+      };
     });
     renderOnlineUsers();
   });
@@ -2707,6 +4482,7 @@ function subscribeToPinnedMessage() {
           messageId: item.messageId || "",
           text: item.text || "",
           author: item.author || "",
+          authorIdentityCode: item.authorIdentityCode || null,
           pinnedBy: item.pinnedBy || "Creator",
           pinnedAt: Number(item.pinnedAt || 0)
         }))
@@ -2714,6 +4490,7 @@ function subscribeToPinnedMessage() {
           messageId: data.messageId || "",
           text: data.text || "",
           author: data.author || "",
+          authorIdentityCode: data.authorIdentityCode || null,
           pinnedBy: data.pinnedBy || "Creator",
           pinnedAt: Number(data.pinnedAt || 0)
         }] : []);
@@ -2741,21 +4518,74 @@ function subscribeToSiteNotifications() {
     renderSiteNotifications();
   });
 }
+
+/* ── IP LOGGING SYSTEM ── */
+async function fetchJsonWithTimeout(url, timeoutMs = 3500) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { cache: "no-store", signal: controller.signal });
+    if (!response.ok) throw new Error("IP lookup failed.");
+    return await response.json();
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+async function logVisitorSession(name) {
+  if (!visitorLogsRef || !currentPresenceId) return;
+  await addDoc(visitorLogsRef, {
+    room: ROOM_NAME,
+    name,
+    normalizedName: normalizeNameKey(name),
+    identityCode: currentIdentityCode || null,
+    sessionId: currentPresenceId,
+    uuid: currentPresenceId,
+    userAgent: navigator.userAgent || "",
+    platform: navigator.platform || "",
+    language: navigator.language || "",
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+    referrer: document.referrer || "",
+    page: window.location.href,
+    joinedAtMs: Date.now(),
+    joinedAt: serverTimestamp()
+  });
+}
 async function startPresence(name) {
   if (!presenceRef) return;
   const tagDefinition = getTagDefinition(name);
-  currentPresenceId = localStorage.getItem(STORAGE_KEYS.sessionId) || crypto.randomUUID();
-  localStorage.setItem(STORAGE_KEYS.sessionId, currentPresenceId);
+  currentIdentityCode = currentIdentityCode || getOrCreateIdentityCode();
+  currentPresenceId = stayLoggedIn ? (localStorage.getItem(STORAGE_KEYS.sessionId) || crypto.randomUUID()) : crypto.randomUUID();
+  if (stayLoggedIn) localStorage.setItem(STORAGE_KEYS.sessionId, currentPresenceId);
+  else localStorage.removeItem(STORAGE_KEYS.sessionId);
+  const publicCode = getCurrentPublicIdentityCode();
   const writePresence = () => setDoc(doc(presenceRef, currentPresenceId), {
     name,
+    identityCode: publicCode || null,
+    identityCodeVisible: Boolean(publicCode),
+    uuid: currentPresenceId,
     tagKey: tagDefinition?.key || null,
     updatedAt: serverTimestamp()
   });
   await writePresence();
   if (presenceHeartbeat) window.clearInterval(presenceHeartbeat);
   presenceHeartbeat = window.setInterval(() => { writePresence().catch(() => {}); }, PRESENCE_REFRESH_MS);
+
+  if (unsubscribeOwnPresence) { unsubscribeOwnPresence(); unsubscribeOwnPresence = null; }
+  unsubscribeOwnPresence = onSnapshot(doc(presenceRef, currentPresenceId), (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      if (data.status === "kicked") {
+        performLocalLogout("You have been kicked out by an Administrator.").catch(() => {});
+      }
+    } else {
+      performLocalLogout("You have been kicked out by an Administrator.").catch(() => {});
+    }
+  }, (err) => {
+    performLocalLogout("You have been kicked out by an Administrator.").catch(() => {});
+  });
 }
 async function stopPresence() {
+  if (unsubscribeOwnPresence) { unsubscribeOwnPresence(); unsubscribeOwnPresence = null; }
   if (presenceHeartbeat) { window.clearInterval(presenceHeartbeat); presenceHeartbeat = null; }
   if (presenceRef && currentPresenceId) {
     try { await deleteDoc(doc(presenceRef, currentPresenceId)); }
@@ -2766,13 +4596,15 @@ async function stopPresence() {
 async function joinChat(name) {
   persistUser(name);
   await startPresence(name);
+  logVisitorSession(name).catch(() => {});
   setChatView(true);
   renderMessages();
   renderOnlineUsers();
 }
 function hasActiveDuplicateName(name) {
   const normalized = normalizeNameKey(name);
-  return getLiveUsers().some((user) => normalizeNameKey(user.name) === normalized && user.sessionId !== currentPresenceId);
+  const ownSessionId = currentPresenceId || (stayLoggedIn ? localStorage.getItem(STORAGE_KEYS.sessionId) : "");
+  return onlineSessions.some((user) => normalizeNameKey(user.name) === normalized && user.sessionId !== ownSessionId && (Date.now() - user.lastSeen < PRESENCE_TTL_MS));
 }
 async function submitProblemReport() {
   if (!creatorInboxRef || !currentUser) throw new Error("Join the chat first.");
@@ -2791,29 +4623,113 @@ async function submitProblemReport() {
   });
 }
 
+function updateStayLoggedInPreference(enabled) {
+  stayLoggedIn = enabled;
+  localStorage.setItem(STORAGE_KEYS.stayLoggedIn, enabled ? "true" : "false");
+  if (stayLoggedInInput) stayLoggedInInput.checked = enabled;
+  if (!enabled) {
+    localStorage.removeItem(STORAGE_KEYS.username);
+    localStorage.removeItem(STORAGE_KEYS.sessionId);
+    localStorage.removeItem(STORAGE_KEYS.identityCode);
+  } else {
+    if (currentUser) localStorage.setItem(STORAGE_KEYS.username, currentUser);
+    if (currentPresenceId) localStorage.setItem(STORAGE_KEYS.sessionId, currentPresenceId);
+    if (currentIdentityCode) localStorage.setItem(STORAGE_KEYS.identityCode, currentIdentityCode);
+  }
+}
+
 // ── EVENT LISTENERS ──
 joinForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const name = normalizeName(usernameInput.value);
-  const requiredPassword = getRequiredPassword(name);
-  const submittedPassword = passwordInput.value;
-  if (!name) { setJoinStatus("Enter a callsign before connecting.", true); return; }
-  if (requiredPassword && submittedPassword !== requiredPassword) { setJoinStatus("Protected callsign. Enter the correct access code.", true); return; }
-  if (hasActiveDuplicateName(name)) { setJoinStatus("That handle is already online. Choose a different one.", true); return; }
+  const verification = validateHumanCheck();
+  
+  if (!name || name.length < 2) { setJoinStatus("Enter a 2-24 character callsign before connecting.", true); return; }
+  if (containsProfanity(name)) {
+    setJoinStatus("Callsign contains inappropriate language. Choose a different handle.", true);
+    refreshCaptchaChallenge();
+    return;
+  }
+  if (!verification.ok) { setJoinStatus(verification.message, true); refreshCaptchaChallenge(); return; }
   if (!firebaseReady) { setJoinStatus("System not ready. Check Firebase config.", true); return; }
+  
+  const banCheck = await checkBannedOrMuted(name);
+  if (!banCheck.ok) {
+    setJoinStatus(banCheck.message, true);
+    refreshCaptchaChallenge();
+    return;
+  }
+  
   try {
+    const rule = await getProtectedUserRule(name);
+    const requiredPassword = rule ? rule.password : null;
+    const submittedPassword = passwordInput.value;
+    
+    if (requiredPassword && submittedPassword !== requiredPassword) { 
+      setJoinStatus("Protected callsign. Enter the correct access code.", true); 
+      return; 
+    }
+    
+    if (hasActiveDuplicateName(name)) { 
+      setJoinStatus("This name has been taken. Try another handle.", true); 
+      return; 
+    }
+    
+    updateStayLoggedInPreference(stayLoggedInInput.checked);
+    setPublicIdentityPreference(publicCodeInput.checked);
     setJoinStatus("Establishing connection...");
     await stopPresence();
+    
+    currentUserTagKey = rule ? (rule.tagKey || null) : null;
+    if (currentUserTagKey) {
+      localStorage.setItem("dlngrchat_user_tag_key", currentUserTagKey);
+    } else {
+      localStorage.removeItem("dlngrchat_user_tag_key");
+    }
+    
+    currentUserPassword = submittedPassword || "";
+    if (currentUserPassword) {
+      localStorage.setItem("dlngrchat_user_password", currentUserPassword);
+    } else {
+      localStorage.removeItem("dlngrchat_user_password");
+    }
+    
+    const policyLimit = await fetchUserPolicy(name);
+    currentUserWordLimit = policyLimit;
+    if (policyLimit) {
+      localStorage.setItem("dlngrchat_user_word_limit", String(policyLimit));
+    } else {
+      localStorage.removeItem("dlngrchat_user_word_limit");
+    }
+    
     await joinChat(name);
     passwordInput.value = "";
-    setJoinStatus("Your handle is only visible inside this channel.");
-  } catch { setJoinStatus("Connection failed. Check Firebase rules.", true); }
+    refreshCaptchaChallenge();
+    setJoinStatus(publicIdentityCode ? "Connected. Your unique code is visible." : "Connected. Your unique code is hidden from others.");
+  } catch (err) { 
+    console.error("Join submission error:", err);
+    setJoinStatus("Connection failed. Check Firebase rules.", true); 
+  }
 });
 
 messageForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const text = messageInput.value.trim();
   if (!text || !currentUser || !firebaseReady) return;
+  
+  if (containsProfanity(text)) {
+    setJoinStatus("Message blocked. Inappropriate language detected.", true);
+    messageInput.focus();
+    return;
+  }
+  
+  const limit = currentUserWordLimit || 2000;
+  const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+  if (wordCount > limit) {
+    setJoinStatus(`Message blocked. Your word limit is ${limit} words (you wrote ${wordCount}).`, true);
+    messageInput.focus();
+    return;
+  }
   try {
     if (editingMessageId) {
       await saveEditedMessage(editingMessageId, text);
@@ -2835,8 +4751,22 @@ messageForm.addEventListener("submit", async (event) => {
       messageInput.focus();
       return;
     }
-    await addMessage({ author: currentUser, text, type: "user", tagKey: getTagDefinition(currentUser)?.key || null });
+    const payload = { 
+      author: currentUser, 
+      text, 
+      type: "user", 
+      tagKey: getTagDefinition(currentUser)?.key || null 
+    };
+    if (replyingToMessage) {
+      payload.replyToId = replyingToMessage.id;
+      payload.replyToAuthor = replyingToMessage.author;
+      payload.replyToText = replyingToMessage.text;
+    }
+    await addMessage(payload);
+    closeReplyState();
     messageInput.value = "";
+    messageInput.style.borderColor = "";
+    if (profanityWarning) profanityWarning.classList.add("hidden");
     localStorage.removeItem(STORAGE_KEYS.draft);
     autoResizeTextarea();
     updateSendButtonState();
@@ -2844,11 +4774,97 @@ messageForm.addEventListener("submit", async (event) => {
   } catch { setJoinStatus("Transmission failed. Check your Firebase setup.", true); }
 });
 
-usernameInput.addEventListener("input", updatePasswordPrompt);
+captchaRefreshBtn.addEventListener("click", refreshCaptchaChallenge);
+stayLoggedInInput.addEventListener("change", () => updateStayLoggedInPreference(stayLoggedInInput.checked));
+publicCodeInput.addEventListener("change", () => setPublicIdentityPreference(publicCodeInput.checked));
+joinPopupCloseBtn.addEventListener("click", closeJoinPopup);
+joinPopupOkBtn.addEventListener("click", closeJoinPopup);
+joinPopup.addEventListener("click", (event) => { if (event.target === joinPopup) closeJoinPopup(); });
+identityCodeToggleBtn.addEventListener("click", () => setPublicIdentityPreference(!publicIdentityCode, true));
+mobileIdentityCodeToggleBtn.addEventListener("click", () => setPublicIdentityPreference(!publicIdentityCode, true));
+
+const handleThemeToggle = () => {
+  const nextTheme = currentTheme === "dark" ? "light" : "dark";
+  applyTheme(nextTheme);
+  refreshCaptchaChallenge();
+};
+if (joinThemeToggleBtn) joinThemeToggleBtn.addEventListener("click", handleThemeToggle);
+if (themeToggleBtn) themeToggleBtn.addEventListener("click", handleThemeToggle);
+if (mobileThemeToggleBtn) mobileThemeToggleBtn.addEventListener("click", handleThemeToggle);
+
+function filterOnlineUsersList(query, targetListEl) {
+  const lowerQuery = query.toLowerCase().trim();
+  const cards = targetListEl.querySelectorAll(".user-card");
+  cards.forEach(card => {
+    const userNameEl = card.querySelector(".user-name");
+    const nameText = userNameEl ? userNameEl.textContent.toLowerCase() : "";
+    if (nameText.includes(lowerQuery)) {
+      card.style.display = "flex";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+if (userSearchInput) {
+  userSearchInput.addEventListener("input", () => {
+    filterOnlineUsersList(userSearchInput.value, onlineUsers);
+  });
+}
+if (mobileUserSearchInput) {
+  mobileUserSearchInput.addEventListener("input", () => {
+    filterOnlineUsersList(mobileUserSearchInput.value, mobileOnlineUsers);
+  });
+}
+if (mobilePopupUserSearchInput) {
+  mobilePopupUserSearchInput.addEventListener("input", () => {
+    filterOnlineUsersList(mobilePopupUserSearchInput.value, mobilePopupOnlineUsers);
+  });
+}
+
+if (countryDropdownTrigger) {
+  countryDropdownTrigger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleCountryDropdown();
+  });
+}
+if (countrySearchInput) {
+  countrySearchInput.addEventListener("input", () => {
+    filterCountryOptions(countrySearchInput.value);
+  });
+  countrySearchInput.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+}
+window.addEventListener("click", (event) => {
+  if (countryDropdown && !countryDropdown.contains(event.target)) {
+    closeCountryDropdown();
+  }
+});
+
+usernameInput.addEventListener("input", () => {
+  updatePasswordPrompt();
+  const hasProfanity = containsProfanity(usernameInput.value);
+  if (hasProfanity) {
+    usernameInput.style.borderColor = "var(--red)";
+    if (usernameWarning) usernameWarning.classList.remove("hidden");
+  } else {
+    usernameInput.style.borderColor = "";
+    if (usernameWarning) usernameWarning.classList.add("hidden");
+  }
+});
 messageInput.addEventListener("input", () => {
   localStorage.setItem(STORAGE_KEYS.draft, messageInput.value);
   autoResizeTextarea();
   updateSendButtonState();
+  
+  const hasProfanity = containsProfanity(messageInput.value);
+  if (hasProfanity) {
+    messageInput.style.borderColor = "var(--red)";
+    if (profanityWarning) profanityWarning.classList.remove("hidden");
+  } else {
+    messageInput.style.borderColor = "";
+    if (profanityWarning) profanityWarning.classList.add("hidden");
+  }
 });
 messageInput.addEventListener("keydown", (event) => {
   if (event.key === "ArrowUp" && !messageInput.value.trim() && !editingMessageId) {
@@ -2878,16 +4894,17 @@ mobileChangeNameBtn.addEventListener("click", async () => {
 logoutBtn.addEventListener("click", async () => { await performLocalLogout("Connection terminated."); });
 mobileLogoutBtn.addEventListener("click", async () => { closeMobileSidebar(); await performLocalLogout("Connection terminated."); });
 [problemBtn, mobileProblemBtn].forEach((button) => {
+  if (!button) return;
   button.addEventListener("click", () => {
     if (button === mobileProblemBtn) closeMobileSidebar();
     openProblemModal();
   });
 });
-problemCloseBtn.addEventListener("click", closeProblemModal);
-problemModal.addEventListener("click", (event) => {
+if (problemCloseBtn) problemCloseBtn.addEventListener("click", closeProblemModal);
+if (problemModal) problemModal.addEventListener("click", (event) => {
   if (event.target === problemModal) closeProblemModal();
 });
-problemForm.addEventListener("submit", async (event) => {
+if (problemForm) problemForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   problemStatus.textContent = "Sending...";
   try {
@@ -2902,40 +4919,219 @@ problemForm.addEventListener("submit", async (event) => {
     problemStatus.textContent = error.message || "Could not send your issue.";
   }
 });
-editCancelBtn.addEventListener("click", () => cancelEditingMessage());
+// ── EMOJI & GIF DRAWER EVENT LISTENERS ──
+if (emojiBtn) emojiBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (emojiDrawer.classList.contains("hidden")) {
+    openEmojiDrawer();
+  } else {
+    closeEmojiDrawer();
+  }
+});
+if (gifBtn) gifBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (gifDrawer.classList.contains("hidden")) {
+    openGifDrawer();
+  } else {
+    closeGifDrawer();
+  }
+});
+if (emojiDrawerCloseBtn) emojiDrawerCloseBtn.addEventListener("click", closeEmojiDrawer);
+if (gifDrawerCloseBtn) gifDrawerCloseBtn.addEventListener("click", closeGifDrawer);
 
-clearChatBtn.addEventListener("click", async () => {
+if (gifSearchInput) {
+  gifSearchInput.addEventListener("click", (e) => e.stopPropagation());
+  gifSearchInput.addEventListener("input", () => {
+    window.clearTimeout(gifSearchTimeout);
+    gifSearchTimeout = window.setTimeout(() => {
+      searchGifs(gifSearchInput.value);
+    }, 400);
+  });
+}
+
+document.addEventListener("click", (e) => {
+  if (emojiDrawer && !emojiDrawer.classList.contains("hidden") && !emojiDrawer.contains(e.target)) {
+    closeEmojiDrawer();
+  }
+  if (gifDrawer && !gifDrawer.classList.contains("hidden") && !gifDrawer.contains(e.target)) {
+    closeGifDrawer();
+  }
+  if (pinPanel && !pinPanel.classList.contains("hidden") && !pinPanel.contains(e.target)) {
+    closePinPanel();
+  }
+  if (alertPanel && !alertPanel.classList.contains("hidden") && !alertPanel.contains(e.target)) {
+    closeAlertPanel();
+  }
+  if (notificationPanel && !notificationPanel.classList.contains("hidden") && !notificationPanel.contains(e.target)) {
+    closeNotifications();
+  }
+  if (mobileUsersPopup && !mobileUsersPopup.classList.contains("hidden") && !mobileUsersPopup.contains(e.target) && !mobileUsersToggleBtn.contains(e.target)) {
+    closeMobileUsersPopup();
+  }
+});
+
+// ── MODERATION HANDLERS ──
+if (replyBarCloseBtn) replyBarCloseBtn.addEventListener("click", closeReplyState);
+if (modCloseBtn) modCloseBtn.addEventListener("click", closeModerationModal);
+if (moderationModal) moderationModal.addEventListener("click", (e) => {
+  if (e.target === moderationModal) closeModerationModal();
+});
+
+if (modKickBtn) {
+  modKickBtn.addEventListener("click", async () => {
+    const targetName = modTargetUser.value;
+    if (!targetName) return;
+    modStatus.textContent = "Kicking user...";
+    modStatus.className = "problem-status";
+    try {
+      const q = query(presenceRef, where("name", "==", targetName));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        modStatus.textContent = "User presence not found.";
+        return;
+      }
+      for (const d of snap.docs) {
+        await setDoc(doc(presenceRef, d.id), { status: "kicked" }, { merge: true });
+      }
+      modStatus.textContent = "User kicked out successfully.";
+      window.setTimeout(closeModerationModal, 1200);
+    } catch (e) {
+      console.error(e);
+      modStatus.textContent = "Action failed. Check permissions.";
+    }
+  });
+}
+
+if (modBanBtn) {
+  modBanBtn.addEventListener("click", async () => {
+    const targetName = modTargetUser.value;
+    if (!targetName) return;
+    modStatus.textContent = "Banning username...";
+    modStatus.className = "problem-status";
+    try {
+      await setDoc(doc(db, "banned_users", targetName.toLowerCase()), {
+        username: targetName,
+        bannedBy: currentUser,
+        bannedAt: serverTimestamp(),
+        expiresAt: null,
+        adminPassword: currentUserPassword
+      });
+      
+      const q = query(presenceRef, where("name", "==", targetName));
+      const snap = await getDocs(q);
+      for (const d of snap.docs) {
+        await setDoc(doc(presenceRef, d.id), { status: "kicked" }, { merge: true });
+      }
+      
+      modStatus.textContent = "User permanently banned.";
+      window.setTimeout(closeModerationModal, 1200);
+    } catch (e) {
+      console.error(e);
+      modStatus.textContent = "Action failed. Check permissions.";
+    }
+  });
+}
+
+if (modWordLimitApplyBtn) {
+  modWordLimitApplyBtn.addEventListener("click", async () => {
+    const targetName = modTargetUser.value;
+    const val = modWordLimitSelect.value;
+    if (!targetName) return;
+    modStatus.textContent = "Applying word limit...";
+    modStatus.className = "problem-status";
+    try {
+      const limitNum = val === "none" ? null : Number(val);
+      await setDoc(doc(db, "user_policies", targetName.toLowerCase()), {
+        wordLimit: limitNum,
+        adminPassword: currentUserPassword
+      });
+      modStatus.textContent = "Word limit applied.";
+      window.setTimeout(closeModerationModal, 1200);
+    } catch (e) {
+      console.error(e);
+      modStatus.textContent = "Action failed. Check permissions.";
+    }
+  });
+}
+
+if (modMuteApplyBtn) {
+  modMuteApplyBtn.addEventListener("click", async () => {
+    const targetName = modTargetUser.value;
+    if (!targetName) return;
+    const durationMin = parseFloat(modMuteInput.value);
+    if (isNaN(durationMin) || durationMin <= 0) {
+      modStatus.textContent = "Enter a valid duration (e.g. 5 or 0.1).";
+      modStatus.className = "problem-status problem-status--error";
+      return;
+    }
+    modStatus.textContent = "Muting user...";
+    modStatus.className = "problem-status";
+    try {
+      const ms = durationMin * 60 * 1000;
+      const expiryDate = new Date(Date.now() + ms);
+      
+      await setDoc(doc(db, "banned_users", targetName.toLowerCase()), {
+        username: targetName,
+        bannedBy: currentUser,
+        bannedAt: serverTimestamp(),
+        expiresAt: expiryDate,
+        adminPassword: currentUserPassword
+      });
+      
+      const q = query(presenceRef, where("name", "==", targetName));
+      const snap = await getDocs(q);
+      for (const d of snap.docs) {
+        await setDoc(doc(presenceRef, d.id), { status: "kicked" }, { merge: true });
+      }
+      
+      modStatus.textContent = "User muted/temp-banned.";
+      window.setTimeout(closeModerationModal, 1200);
+    } catch (e) {
+      console.error(e);
+      modStatus.textContent = "Action failed. Check permissions.";
+    }
+  });
+}
+if (editCancelBtn) editCancelBtn.addEventListener("click", () => cancelEditingMessage());
+
+if (clearChatBtn) clearChatBtn.addEventListener("click", async () => {
   if (!firebaseReady || !messagesRef || !isElevatedUser()) return;
   clearChatBtn.disabled = true;
   try {
     const snapshot = await getDocs(query(messagesRef, limit(MAX_MESSAGES)));
-    await Promise.all(snapshot.docs.map((snapshotDoc) => deleteDoc(doc(db, "rooms", ROOM_NAME, "messages", snapshotDoc.id))));
+    await Promise.all(snapshot.docs.map((snapshotDoc) => archiveAndDeleteMessage(messageFromSnapshot(snapshotDoc), "channel_clear")));
   } catch { setJoinStatus("Could not clear channel.", true); }
   finally { clearChatBtn.disabled = false; }
 });
 
-mobileClearChatBtn.addEventListener("click", async () => {
+if (mobileClearChatBtn) mobileClearChatBtn.addEventListener("click", async () => {
   closeMobileSidebar();
   if (!firebaseReady || !messagesRef || !isElevatedUser()) return;
-  clearChatBtn.disabled = true;
+  if (clearChatBtn) clearChatBtn.disabled = true;
   mobileClearChatBtn.disabled = true;
   try {
     const snapshot = await getDocs(query(messagesRef, limit(MAX_MESSAGES)));
-    await Promise.all(snapshot.docs.map((snapshotDoc) => deleteDoc(doc(db, "rooms", ROOM_NAME, "messages", snapshotDoc.id))));
+    await Promise.all(snapshot.docs.map((snapshotDoc) => archiveAndDeleteMessage(messageFromSnapshot(snapshotDoc), "channel_clear")));
   } catch { setJoinStatus("Could not clear channel.", true); }
-  finally { clearChatBtn.disabled = false; mobileClearChatBtn.disabled = false; }
+  finally { if (clearChatBtn) clearChatBtn.disabled = false; mobileClearChatBtn.disabled = false; }
 });
 
-const savedUser = normalizeName(localStorage.getItem(STORAGE_KEYS.username) || "");
+const savedUser = stayLoggedIn ? normalizeName(localStorage.getItem(STORAGE_KEYS.username) || "") : "";
 const savedDraft = localStorage.getItem(STORAGE_KEYS.draft) || "";
 try { seenMentions = new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.seenMentions) || "[]")); }
 catch { seenMentions = new Set(); }
 
+refreshCaptchaChallenge();
+if (stayLoggedInInput) stayLoggedInInput.checked = stayLoggedIn;
+setPublicIdentityPreference(publicIdentityCode);
+applyTheme(currentTheme);
+populateCountryOptions();
+autoDetectCountry();
 setupFirebase();
 
-if (savedUser) usernameInput.value = savedUser;
+if (savedUser && usernameInput) usernameInput.value = savedUser;
 updatePasswordPrompt();
-messageInput.value = savedDraft;
+if (messageInput) messageInput.value = savedDraft;
 renderMessages();
 renderOnlineUsers();
 renderPinnedState();
@@ -2945,14 +5141,53 @@ autoResizeTextarea();
 updateSendButtonState();
 updateEditStateUI();
 
-if (savedUser && firebaseReady && !getRequiredPassword(savedUser) && !hasActiveDuplicateName(savedUser)) {
-  joinChat(savedUser).catch(() => { setJoinStatus("Saved node could not auto-connect. Join manually.", true); });
-} else {
-  if (savedUser && hasActiveDuplicateName(savedUser)) {
-    setJoinStatus("Your saved handle is already online elsewhere. Join with a different one.", true);
+async function checkStartupAutoConnect() {
+  if (!savedUser || !firebaseReady) {
+    if (usernameInput) usernameInput.focus();
+    return;
   }
-  usernameInput.focus();
+  try {
+    const rule = await getProtectedUserRule(savedUser);
+    const isProtected = Boolean(rule);
+    if (isProtected) {
+      if (usernameInput) {
+        usernameInput.value = savedUser;
+        await updatePasswordPrompt();
+      }
+      setJoinStatus("Complete the human check to reconnect.");
+      if (usernameInput) usernameInput.focus();
+      return;
+    }
+    const banCheck = await checkBannedOrMuted(savedUser);
+    if (!banCheck.ok) {
+      setJoinStatus(banCheck.message, true);
+      if (usernameInput) usernameInput.focus();
+      return;
+    }
+    
+    if (hasActiveDuplicateName(savedUser)) {
+      setJoinStatus("Your saved handle is already online elsewhere. Join with a different one.", true);
+      if (usernameInput) usernameInput.focus();
+      return;
+    }
+    
+    const policyLimit = await fetchUserPolicy(savedUser);
+    currentUserWordLimit = policyLimit;
+    if (policyLimit) {
+      localStorage.setItem("dlngrchat_user_word_limit", String(policyLimit));
+    } else {
+      localStorage.removeItem("dlngrchat_user_word_limit");
+    }
+    
+    setJoinStatus("Restoring connection...");
+    await joinChat(savedUser);
+  } catch (err) {
+    console.error("Startup auto-connect failed:", err);
+    setJoinStatus("Saved handle could not auto-connect. Join manually.", true);
+    if (usernameInput) usernameInput.focus();
+  }
 }
+checkStartupAutoConnect();
 
 // ── MOBILE POPUP (pin & alert on mobile) ──
 const mobilePopupOverlay = document.getElementById("mobilePopupOverlay");
@@ -2961,63 +5196,170 @@ const mobilePopupBody = document.getElementById("mobilePopupBody");
 const mobilePopupCloseBtn = document.getElementById("mobilePopupCloseBtn");
 
 function openMobilePopup(title, contentEl) {
+  if (!mobilePopupTitle || !mobilePopupBody || !mobilePopupOverlay) return;
   mobilePopupTitle.textContent = title;
   mobilePopupBody.innerHTML = contentEl ? contentEl.innerHTML : "<p class='empty-users'>Nothing here yet.</p>";
   mobilePopupOverlay.classList.remove("hidden");
   mobilePopupOverlay.classList.add("active");
 }
 function closeMobilePopup() {
+  if (!mobilePopupOverlay) return;
   mobilePopupOverlay.classList.add("hidden");
   mobilePopupOverlay.classList.remove("active");
 }
-mobilePopupCloseBtn.addEventListener("click", closeMobilePopup);
-mobilePopupOverlay.addEventListener("click", (e) => { if (e.target === mobilePopupOverlay) closeMobilePopup(); });
+if (mobilePopupCloseBtn) mobilePopupCloseBtn.addEventListener("click", closeMobilePopup);
+if (mobilePopupOverlay) mobilePopupOverlay.addEventListener("click", (e) => { if (e.target === mobilePopupOverlay) closeMobilePopup(); });
 
-// On mobile, pin and alert buttons open the center popup instead of the floating panel
-mobilePinToggle.addEventListener("click", () => {
+if (mobilePinToggle) mobilePinToggle.addEventListener("click", () => {
   if (window.innerWidth <= 1080) {
     openMobilePopup("// Pinned Message", pinPanelBody);
   }
 });
-mobileGlobalAlertToggle.addEventListener("click", () => {
+if (mobileGlobalAlertToggle) mobileGlobalAlertToggle.addEventListener("click", () => {
   if (window.innerWidth <= 1080) {
     openMobilePopup("// DLNGR Notifications", alertPanelBody);
   }
 });
 
-function closeMobileSidebar() {
-  chatPanel.classList.remove("is-sidebar-open");
-  mobileOverlay.classList.add("hidden");
-  mobileDrawer.classList.add("hidden");
+function openMobileUsersPopup() {
+  if (!mobileUsersPopup) return;
+  mobileUsersPopup.classList.remove("hidden");
+  mobileUsersPopup.classList.add("active");
+  renderOnlineUsers();
+  setTimeout(() => mobilePopupUserSearchInput && mobilePopupUserSearchInput.focus(), 30);
 }
-function openMobileSidebar() {
-  chatPanel.classList.add("is-sidebar-open");
-  mobileOverlay.classList.remove("hidden");
-  mobileDrawer.classList.remove("hidden");
+function closeMobileUsersPopup() {
+  if (!mobileUsersPopup) return;
+  mobileUsersPopup.classList.add("hidden");
+  mobileUsersPopup.classList.remove("active");
+  if (mobilePopupUserSearchInput) mobilePopupUserSearchInput.value = "";
+}
+if (mobileUsersToggleBtn) {
+  mobileUsersToggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openMobileUsersPopup();
+  });
+}
+if (mobileUsersPopupCloseBtn) {
+  mobileUsersPopupCloseBtn.addEventListener("click", closeMobileUsersPopup);
+}
+if (mobileUsersPopup) {
+  mobileUsersPopup.addEventListener("click", (e) => {
+    if (e.target === mobileUsersPopup) closeMobileUsersPopup();
+  });
 }
 
-mobileSidebarToggle.addEventListener("click", () => {
-  if (chatPanel.classList.contains("is-sidebar-open")) closeMobileSidebar();
+function closeMobileSidebar() {
+  if (chatPanel) chatPanel.classList.remove("is-sidebar-open");
+  if (mobileOverlay) mobileOverlay.classList.add("hidden");
+  if (mobileDrawer) mobileDrawer.classList.add("hidden");
+}
+function openMobileSidebar() {
+  if (chatPanel) chatPanel.classList.add("is-sidebar-open");
+  if (mobileOverlay) mobileOverlay.classList.remove("hidden");
+  if (mobileDrawer) mobileDrawer.classList.remove("hidden");
+}
+
+if (mobileSidebarToggle) mobileSidebarToggle.addEventListener("click", () => {
+  if (chatPanel && chatPanel.classList.contains("is-sidebar-open")) closeMobileSidebar();
   else openMobileSidebar();
 });
-mobileOverlay.addEventListener("click", closeMobileSidebar);
-mobileMediaToggle.addEventListener("click", () => {
+if (mobileHeaderExpandBtn && mobileHeader && mobileExpandIcon) {
+  mobileHeaderExpandBtn.addEventListener("click", () => {
+    mobileHeader.classList.toggle("mobile-header--expanded");
+    if (mobileHeader.classList.contains("mobile-header--expanded")) {
+      mobileExpandIcon.textContent = "chevron_right";
+    } else {
+      mobileExpandIcon.textContent = "chevron_left";
+    }
+  });
+}
+if (mobileOverlay) mobileOverlay.addEventListener("click", closeMobileSidebar);
+if (mobileMediaToggle) mobileMediaToggle.addEventListener("click", () => {
   if (!sharedMediaState?.url) return;
-  mobileMedia.classList.remove("hidden");
+  if (mobileMedia) mobileMedia.classList.remove("hidden");
 });
-mobileMediaCloseBtn.addEventListener("click", closeMobileMedia);
-mobileDrawerCloseBtn.addEventListener("click", closeMobileSidebar);
-desktopBellToggle.addEventListener("click", toggleNotifications);
-mobileBellToggle.addEventListener("click", toggleNotifications);
-desktopPinToggle.addEventListener("click", togglePinPanel);
-pinPanelCloseBtn.addEventListener("click", closePinPanel);
-globalAlertToggle.addEventListener("click", toggleAlertPanel);
-notificationCloseBtn.addEventListener("click", closeNotifications);
-alertPanelCloseBtn.addEventListener("click", closeAlertPanel);
-mediaCloseBtn.addEventListener("click", () => {
+if (mobileMediaCloseBtn) mobileMediaCloseBtn.addEventListener("click", closeMobileMedia);
+if (mobileDrawerCloseBtn) mobileDrawerCloseBtn.addEventListener("click", closeMobileSidebar);
+if (desktopBellToggle) {
+  desktopBellToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleNotifications();
+  });
+}
+if (mobileBellToggle) {
+  mobileBellToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleNotifications();
+  });
+}
+if (desktopPinToggle) {
+  desktopPinToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    togglePinPanel();
+  });
+}
+if (pinPanelCloseBtn) pinPanelCloseBtn.addEventListener("click", closePinPanel);
+if (globalAlertToggle) {
+  globalAlertToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleAlertPanel();
+  });
+}
+if (notificationCloseBtn) notificationCloseBtn.addEventListener("click", closeNotifications);
+if (alertPanelCloseBtn) alertPanelCloseBtn.addEventListener("click", closeAlertPanel);
+if (mediaCloseBtn) mediaCloseBtn.addEventListener("click", () => {
   if (isCreatorUser()) closeSharedMedia().catch(() => { setJoinStatus("Could not close feed.", true); });
 });
 window.addEventListener("resize", renderSharedMedia);
+
+// Keyboard offset and Visual Viewport resizing to keep texting bar visible on mobile
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", () => {
+    if (window.innerWidth <= 1080) {
+      const visualViewportHeight = window.visualViewport.height;
+      const isKeyboardOpen = window.innerHeight - visualViewportHeight > 100;
+      
+      if (isKeyboardOpen) {
+        if (chatPanel) {
+          chatPanel.style.height = `${visualViewportHeight}px`;
+          chatPanel.style.minHeight = `${visualViewportHeight}px`;
+        }
+        const chatRoom = document.querySelector(".chat-room");
+        if (chatRoom) {
+          chatRoom.style.height = `${visualViewportHeight}px`;
+          chatRoom.style.minHeight = `${visualViewportHeight}px`;
+          chatRoom.style.paddingBottom = "12px";
+        }
+        if (chatFooterBranding) {
+          chatFooterBranding.style.display = "none";
+        }
+        window.scrollTo(0, 0);
+      } else {
+        if (chatPanel) {
+          chatPanel.style.height = "";
+          chatPanel.style.minHeight = "";
+        }
+        const chatRoom = document.querySelector(".chat-room");
+        if (chatRoom) {
+          chatRoom.style.height = "";
+          chatRoom.style.minHeight = "";
+          chatRoom.style.paddingBottom = "";
+        }
+        if (chatFooterBranding) {
+          chatFooterBranding.style.display = "";
+        }
+      }
+    }
+  });
+}
+
+window.visualViewport?.addEventListener("scroll", () => {
+  if (window.innerWidth <= 1080) {
+    window.scrollTo(0, 0);
+  }
+});
+
 window.addEventListener("beforeunload", () => {
   if (unsubscribeMessages) unsubscribeMessages();
   if (unsubscribePresence) unsubscribePresence();
