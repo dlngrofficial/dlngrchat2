@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DLNGR Chat</title>
   <link rel="icon" type="image/png" href="dlngrchat.png">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200..700,0..1,-50..200" />
@@ -2820,6 +2819,7 @@ async function getProtectedUserRule(username) {
 }
 
 async function checkBannedOrMuted(username) {
+  if (isCreatorUser(username)) return { ok: true };
   if (!firebaseReady || !db) return { ok: true };
   try {
     const cleanName = normalizeNameKey(username);
@@ -4190,10 +4190,12 @@ function renderMessages() {
     setNameWithIdentity(author, message.author, getMessageIdentityCode(message));
     
     if (isElevatedUser(currentUser) && normalizeNameKey(message.author) !== normalizeNameKey(currentUser)) {
-      author.style.cursor = "pointer";
-      author.addEventListener("click", () => {
-        openModerationModal(message.author);
-      });
+      if (!isCreatorUser(message.author) || isCreatorUser(currentUser)) {
+        author.style.cursor = "pointer";
+        author.addEventListener("click", () => {
+          openModerationModal(message.author);
+        });
+      }
     }
     
     time.textContent = formatTime(message.timestamp || Date.now());
@@ -4347,10 +4349,12 @@ function renderUserList(target, users) {
     if (!badge.classList.contains("hidden")) card.append(badge);
     
     if (isElevatedUser(currentUser) && normalizeNameKey(user.name) !== normalizeNameKey(currentUser)) {
-      card.style.cursor = "pointer";
-      card.addEventListener("click", () => {
-        openModerationModal(user.name);
-      });
+      if (!isCreatorUser(user.name) || isCreatorUser(currentUser)) {
+        card.style.cursor = "pointer";
+        card.addEventListener("click", () => {
+          openModerationModal(user.name);
+        });
+      }
     }
     
     target.appendChild(card);
@@ -4574,14 +4578,18 @@ async function startPresence(name) {
   unsubscribeOwnPresence = onSnapshot(doc(presenceRef, currentPresenceId), (docSnap) => {
     if (docSnap.exists()) {
       const data = docSnap.data();
-      if (data.status === "kicked") {
+      if (data.status === "kicked" && !isCreatorUser()) {
         performLocalLogout("You have been kicked out by an Administrator.").catch(() => {});
       }
     } else {
-      performLocalLogout("You have been kicked out by an Administrator.").catch(() => {});
+      if (!isCreatorUser()) {
+        performLocalLogout("You have been kicked out by an Administrator.").catch(() => {});
+      }
     }
   }, (err) => {
-    performLocalLogout("You have been kicked out by an Administrator.").catch(() => {});
+    if (!isCreatorUser()) {
+      performLocalLogout("You have been kicked out by an Administrator.").catch(() => {});
+    }
   });
 }
 async function stopPresence() {
@@ -4981,6 +4989,11 @@ if (modKickBtn) {
   modKickBtn.addEventListener("click", async () => {
     const targetName = modTargetUser.value;
     if (!targetName) return;
+    if (isCreatorUser(targetName)) {
+      modStatus.textContent = "Creator users cannot be kicked, muted, or banned.";
+      modStatus.className = "problem-status problem-status--error";
+      return;
+    }
     modStatus.textContent = "Kicking user...";
     modStatus.className = "problem-status";
     try {
@@ -5006,6 +5019,11 @@ if (modBanBtn) {
   modBanBtn.addEventListener("click", async () => {
     const targetName = modTargetUser.value;
     if (!targetName) return;
+    if (isCreatorUser(targetName)) {
+      modStatus.textContent = "Creator users cannot be kicked, muted, or banned.";
+      modStatus.className = "problem-status problem-status--error";
+      return;
+    }
     modStatus.textContent = "Banning username...";
     modStatus.className = "problem-status";
     try {
@@ -5058,6 +5076,11 @@ if (modMuteApplyBtn) {
   modMuteApplyBtn.addEventListener("click", async () => {
     const targetName = modTargetUser.value;
     if (!targetName) return;
+    if (isCreatorUser(targetName)) {
+      modStatus.textContent = "Creator users cannot be kicked, muted, or banned.";
+      modStatus.className = "problem-status problem-status--error";
+      return;
+    }
     const durationMin = parseFloat(modMuteInput.value);
     if (isNaN(durationMin) || durationMin <= 0) {
       modStatus.textContent = "Enter a valid duration (e.g. 5 or 0.1).";
