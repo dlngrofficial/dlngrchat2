@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DLNGR Chat — Rules & Policy Node</title>
+  <link rel="icon" type="image/png" href="dlngrchat.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200..700,0..1,-50..200" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --bg2: #0f0f0f;
+      --panel: rgba(6, 6, 6, 0.72);
+      --panel-strong: rgba(6, 6, 6, 0.88);
+      --line: rgba(220, 30, 30, 0.22);
+      --line-soft: rgba(255, 255, 255, 0.08);
+      --text: #f0f0f0;
+      --muted: #999;
+      --red: #dc1e1e;
+      --red-bright: #ff2222;
+      --red-glow: rgba(220, 30, 30, 0.45);
+      --red-soft: rgba(220, 30, 30, 0.12);
+      --shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
+      --font-main: 'Rajdhani', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+      --header-h: 60px;
+    }
+
+    /* ── BASE RESET & THEME ── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── BACKGROUND VIDEO ── */
+    .video-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -2;
+      overflow: hidden;
+      background: #000;
+    }
+    .video-bg video {
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      opacity: 0.55;
+    }
+    .video-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 50% 50%, rgba(8,8,8,0.4) 0%, rgba(8,8,8,0.9) 100%),
+        linear-gradient(180deg, rgba(8,8,8,0.85) 0%, rgba(8,8,8,0.95) 100%);
+      z-index: 1;
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: calc(var(--header-h) + 20px) 16px 40px;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      z-index: 1;
+      position: relative;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(8, 8, 8, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dlngr-logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+    }
+    .logo-dl { color: #fff; }
+    .logo-ngr { color: var(--red); }
+    .logo-sub {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 1px solid rgba(220, 30, 30, 0.35);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: bold;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 10px rgba(220, 30, 30, 0.05);
+    }
+    .back-btn:hover {
+      background: var(--red-soft);
+      border-color: var(--red);
+      box-shadow: 0 0 15px var(--red-glow);
+    }
+
+    /* ── SIDEBAR NAV ── */
+    .sidebar {
+      position: sticky;
+      top: calc(var(--header-h) + 20px);
+      height: fit-content;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      backdrop-filter: blur(12px);
+    }
+
+    .sidebar-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(220, 30, 30, 0.15);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover, .nav-item.active {
+      color: var(--text);
+      background: rgba(225, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    .nav-item.active {
+      border-color: var(--red);
+      background: var(--red-soft);
+      color: var(--text);
+    }
+    .nav-item span {
+      font-size: 18px;
+    }
+
+    /* ── CONTENT AREA ── */
+    .content {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    .section-block {
+      scroll-margin-top: calc(var(--header-h) + 30px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      border-bottom: 1px solid rgba(220, 30, 30, 0.25);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title span {
+      color: var(--red);
+      font-size: 24px;
+    }
+
+    .intro-text {
+      font-size: 1.15rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .feature-card {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(220,30,30,0.12);
+      border-left: 3px solid var(--red);
+      border-radius: 4px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .feature-card h4 {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feature-card h4 span {
+      color: var(--red);
+      font-size: 18px;
+    }
+
+    .warning-alert {
+      background: rgba(255, 107, 53, 0.08);
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      border-left: 3px solid #ff6b35;
+      border-radius: 4px;
+      padding: 16px 20px;
+      color: #ffaa88;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .warning-alert span {
+      font-size: 22px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── USER RULES LIST ── */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .rule-tile {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line-soft);
+      border-radius: 4px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .rule-num {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--red);
+      font-weight: bold;
+    }
+    .rule-title {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--text);
+    }
+
+    /* ── RESPONSIVE DESIGN ── */
+    @media (max-width: 900px) {
+      .page-wrapper {
+        grid-template-columns: 1fr;
+        padding-top: calc(var(--header-h) + 12px);
+      }
+      .sidebar {
+        display: none; /* Hide sticky sidebar menu index on tablet/mobile for single column clarity */
+      }
+      .content {
+        padding: 20px;
+      }
+      .rules-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 0 16px;
+      }
+      .logo-sub {
+        display: none;
+      }
+      .content {
+        padding: 16px;
+        gap: 28px;
+      }
+      .section-title {
+        font-size: 1.15rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="video-bg">
+    <video autoplay muted loop playsinline>
+      <source src="https://dlngrofficial.github.io/dlngrchat2/chatback.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <header>
+    <div class="header-logo">
+      <div class="dlngr-logo">
+        <span class="logo-dl">DL</span><span class="logo-ngr">NGR</span>
+      </div>
+      <div class="logo-sub">// NODE POLICY</div>
+    </div>
+    <a href="openchatbackup.html" class="back-btn">
+      <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span>
+      <span>Return to Chat</span>
+    </a>
+  </header>
+
+  <div class="page-wrapper">
+    <!-- Sticky Navigation Menu -->
+    <aside class="sidebar">
+      <h3 class="sidebar-title">// Navigation</h3>
+      <a href="#rules-regulations" class="nav-item active" onclick="setActive(this)">
+        <span class="material-symbols-outlined">gavel</span>
+        <span>Rules & Standards</span>
+      </a>
+      <a href="#chat-features" class="nav-item" onclick="setActive(this)">
+        <span class="material-symbols-outlined">extension</span>
+        <span>Features & Guides</span>
+      </a>
+      <a href="#system-moderation" class="nav-item" onclick="setActive(this)">
+        <span class="material-symbols-outlined">security</span>
+        <span>Node Security</span>
+      </a>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="content">
+      
+      <!-- Section 1: Rules and Standards -->
+      <section class="section-block" id="rules-regulations">
+        <h2 class="section-title">
+          <span class="material-symbols-outlined">gavel</span>
+          <span>Rules & Behavioral Standards</span>
+        </h2>
+        <p class="intro-text">
+          Accessing the DLNGR Chat interface requires adherence to callsign regulations, moderation standards, and node stability policies. Please read these terms carefully.
+        </p>
+        
+        <div class="rules-grid">
+          <div class="rule-tile">
+            <span class="rule-num">RULE_01 //</span>
+            <h4 class="rule-title">Handle & Callsign Decency</h4>
+            <p>User callsigns (handles) must be between 2 and 24 characters and may contain letters, numbers, dots, spaces, or hyphens. Profanity filtration automatically rejects inappropriate language. Attempting to bypass the filtration using character lookalikes or homoglyphs is strictly prohibited.</p>
+          </div>
+          <div class="rule-tile">
+            <span class="rule-num">RULE_02 //</span>
+            <h4 class="rule-title">Authenticity & Anti-Masquerade</h4>
+            <p>Do not attempt to masquerade as another user. Your Identity Code is cryptographic proof of your session's unique identity. Making this code public appends a green verification tick to your callsign. Always verify users' identities through their public tokens.</p>
+          </div>
+          <div class="rule-tile">
+            <span class="rule-num">RULE_03 //</span>
+            <h4 class="rule-title">Channel Moderation & Reports</h4>
+            <p>Every message on the network can be reported. Flagging a message via the "Report" option adds the target to the administrative dashboard queue. Falsely reporting messages in bulk is considered a denial-of-service attack on nodes and will lead to an immediate ban.</p>
+          </div>
+          <div class="rule-tile">
+            <span class="rule-num">RULE_04 //</span>
+            <h4 class="rule-title">Abuse & Security Enforcement</h4>
+            <p>Administrators (orange badges) and Creators (red badges) have node administrative powers. They can mute users temporarily, block access codes, or issue permanent IP bans to preserve room comfort and safety.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Detailed Feature Guides -->
+      <section class="section-block" id="chat-features">
+        <h2 class="section-title">
+          <span class="material-symbols-outlined">extension</span>
+          <span>Detailed Feature Guide</span>
+        </h2>
+        <p>Explore the full suite of cybernetic features built into DLNGR Chat designed to provide security, speed, and real-time interaction.</p>
+
+        <!-- Identity Codes -->
+        <div class="feature-card">
+          <h4><span class="material-symbols-outlined">key</span>Identity Codes & Verification</h4>
+          <p>Upon connection, a random identity hash is assigned to your session. If you choose "Stay Logged In", this session code is securely cached in your browser. Clicking <strong>"Show My Code"</strong> displays your secret key. You can toggle public verification to append a clean green tag to your callsign, confirming you are the original owner of that handle.</p>
+        </div>
+
+        <!-- Speech-to-Text -->
+        <div class="feature-card">
+          <h4><span class="material-symbols-outlined">mic</span>Speech Transmission (Speech-to-Text)</h4>
+          <p>Tap the microphone button in the bottom bar to launch the Speech Transmission dialog. Once launched, tap the glowing microphone button inside the popup to record your speech. Your speech is transcribed in real-time into an editable preview textarea. When satisfied, click <strong>"Transmit"</strong> to post the compiled draft into the main channel instantly.</p>
+        </div>
+
+        <!-- Advanced Search -->
+        <div class="feature-card">
+          <h4><span class="material-symbols-outlined">search</span>Advanced Message Search</h4>
+          <p>Click the search icon in the bottom toolbar (or press `/`) to open the search bar at the top of the chat area. Enter keyword queries. The search engine dynamically highlights matching text cards in translucent red and shows the match count (e.g., 2/15). Use the up/down arrows overlay inside the input to cycle and scroll automatically to each matching message. Click the cross "X" button to hide the bar and clear highlighted states.</p>
+        </div>
+
+        <!-- Customizer -->
+        <div class="feature-card">
+          <h4><span class="material-symbols-outlined">palette</span>Theme Customizer</h4>
+          <p>Access the settings panel to configure custom colors. You can select pre-compiled aesthetic dots (Deep Blue, Forest Dark, Terracotta Dark) or pick a custom hexadecimal color for the sidebars, chat screen, and text elements. The Customizer saves your preference in your local cache, restoring your selected dashboard layout at login.</p>
+        </div>
+
+        <!-- Profile Avatars -->
+        <div class="feature-card">
+          <h4><span class="material-symbols-outlined">account_circle</span>Profile Avatars</h4>
+          <p>Choose from a curated collection of 17 custom animal and symbol workspace avatar icons, or load the classic blue grid fallback graphic. Clicking any avatar grid cell automatically sets the avatar, broadcasts the update to Firestore presence channels, and slides you back to the main settings page.</p>
+        </div>
+
+        <!-- Live Reactions -->
+        <div class="feature-card">
+          <h4><span class="material-symbols-outlined">add_reaction</span>Live Message Reactions</h4>
+          <p>On desktop, hover over a message card to reveal the floating emoji reaction menu. On mobile, tap on a message to bring up actions. Tap 😂, 👍, or 👎 to react instantly. Click the plus icon on the toolbar to open the search-integrated emoji picker modal. Search emojis dynamically or select from standard category grids to add live counters.</p>
+        </div>
+      </section>
+
+      <!-- Section 3: Node Security & Enforcement -->
+      <section class="section-block" id="system-moderation">
+        <h2 class="section-title">
+          <span class="material-symbols-outlined">security</span>
+          <span>Node Security & Enforcement</span>
+        </h2>
+        <p>The network relies on decentralized moderation capabilities to flag and purge offensive content without bypassing server rules.</p>
+        
+        <div class="feature-card">
+          <h4><span class="material-symbols-outlined">report</span>Enforcement Reporting System</h4>
+          <p>Clicking "Report" next to any message triggers a confirmation pop-up. Proceeding creates an administrative warning document associated with the message directly within the database stream. This securely bypasses Firestore rules by using the permissive channel stream, preventing server blocks.</p>
+        </div>
+
+        <div class="feature-card">
+          <h4><span class="material-symbols-outlined">admin_panel_settings</span>Moderator Dashboard</h4>
+          <p>Creators and Room Admins see an alert badge next to the theme switch when reported messages are active. Clicking the badge opens the <strong>"Reported Messages Dashboard"</strong> modal. From this dashboard, admins can review reported logs, moderate users (mute or ban), and dismiss logs from the queue.</p>
+        </div>
+
+        <div class="warning-alert">
+          <span class="material-symbols-outlined">warning</span>
+          <div>
+            <strong>OPERATIONAL_NOTICE:</strong> Violators of channel decency will be banned. IP/Notch identity codes are permanently logged by the firewalls to prevent returning offenders. Keep chat channels safe, clean, and cooperative.
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function setActive(el) {
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      el.classList.add('active');
+    }
+
+    // Scroll spy navigation highlights
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.section-block');
+      const navItems = document.querySelectorAll('.nav-item');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 140;
+        if (window.scrollY >= top) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === '#' + currentSectionId) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
